@@ -1,0 +1,3 @@
+puzzle_id	known_length	best_length	delta	records	unique_solutions	variants	source_files
+27	23	23	0	335	149	original,reflected	solve_bucket_fresh_len23_31650_0_1.tsv,solve_bucket_fresh_resume31650.tsv
+31	23	23	0	478	477	original,reflected	solve_bucket_fresh_fresh_len23_24_offset1.tsv
