@@ -1,3 +1,1 @@
-puzzle_id	known_length	best_length	delta	records	unique_solutions	variants	source_files
-27	23	23	0	335	149	original,reflected	solve_bucket_fresh_resume31650.tsv
-31	23	23	0	478	477	original,reflected	solve_bucket_fresh_fresh_len23_24_offset1.tsv
+puzzle_id	known_length	best_length	delta	records	unique_solutions	fresh_run_tag	slurm_job_id	slurm_array_task_id	beam_width	k1_radius
