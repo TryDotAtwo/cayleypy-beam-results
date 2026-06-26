@@ -1,0 +1,64 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31615_0_0.tsv	9200805	9102248	943	0	11	11	1	11	0	-d0.-f0.-d0.-r2.r0.f0.d0.f1.-d1.r1.f1		-d1.-f1.-r1.-d0.-r0.d1.-f0.d0.-f0.r0.d2.f0
+solution_repair_resident_31615_0_0.tsv	9200805	9102249	943	11	22	11	1	11	0	-d1.-f1.-r1.-d0.-r0.d1.-f0.d0.-f0.r0.d2	-d0.-f0.-d0.r0.-r2.f0.d0.f1.-d1.r1.f1	f0
+solution_repair_resident_31615_0_0.tsv	9200805	9102250	943	22	23	1	1	1	0	f0	-d0.-f0.-d0.r0.-r2.f0.d0.f1.-d1.r1.f1.-d1.-f1.-r1.-d0.-r0.d1.-f0.d0.-f0.r0.d2	
+solution_repair_resident_31615_0_0.tsv	9200806	9102251	943	0	11	11	1	11	0	f0.f0.d1.f0.d0.-d1.r0.f2.f2.-d0.f1		f2.-r2.-r2.f2.-d2.f1.-r2.-d1.r2.d1.r2.-f2
+solution_repair_resident_31615_0_0.tsv	9200806	9102252	943	11	22	11	1	11	0	f2.r2.r2.f2.-d2.f1.-r2.-d1.r2.d1.r2	-f0.-f0.d1.f0.d0.-d1.r0.f2.f2.-d0.f1	-f2
+solution_repair_resident_31615_0_0.tsv	9200806	9102253	943	22	23	1	1	1	0	-f2	-f0.-f0.d1.f0.d0.-d1.r0.f2.f2.-d0.f1.f2.-r2.-r2.f2.-d2.f1.-r2.-d1.r2.d1.r2	
+solution_repair_resident_31615_0_0.tsv	9200807	9102254	943	0	11	11	1	11	0	-f0.r1.f2.d1.-f2.-d2.f2.-r1.-r0.d0.f2		-d2.f1.r2.-r0.-r1.-f2.-r0.f0.d2.r1.-d0.-d0
+solution_repair_resident_31615_0_0.tsv	9200807	9102255	943	11	22	11	1	11	0	-d2.f1.-r0.r2.-r1.-f2.-r0.f0.d2.r1.-d0	-f0.-r0.-r2.-d0.f1.d0.-f2.-d0.r2.d0.f2	-d0
+solution_repair_resident_31615_0_0.tsv	9200807	9102256	943	22	23	1	1	1	0	-d0	-f0.-r0.-r2.-d0.f1.d0.-f2.-d0.r2.d0.f2.-d2.f1.r2.-r0.-r1.-f2.-r0.f0.d2.r1.-d0	
+solution_repair_resident_31615_0_0.tsv	9200808	9102257	943	0	11	11	1	11	0	-f0.r2.-d1.-r1.f2.r2.d0.f0.r2.d0.f0		d1.-f1.-r0.-r2.-r0.d1.-r1.-f1.r1.-f2.-d2.-r0
+solution_repair_resident_31615_0_0.tsv	9200808	9102258	943	11	22	11	1	11	0	d1.-f1.-r2.r0.r0.d1.-r1.-f1.r1.-f2.-d2	-f0.r2.-d1.-r1.f2.r2.d0.f0.r2.d0.f0	-r0
+solution_repair_resident_31615_0_0.tsv	9200808	9102259	943	22	23	1	1	1	0	-r0	-f0.r2.-d1.-r1.f2.r2.d0.f0.r2.d0.f0.d1.-f1.-r0.-r2.-r0.d1.-r1.-f1.r1.-f2.-d2	
+solution_repair_resident_31615_0_0.tsv	9200809	9102260	943	0	11	11	1	11	0	-f1.-d1.-f2.-r1.d2.-f2.-r0.r2.-d0.r1.f2		d0.r0.-d1.-r1.-d0.-f2.d1.-d2.f1.r2.-r1.d1
+solution_repair_resident_31615_0_0.tsv	9200809	9102261	943	11	22	11	1	11	0	d0.r0.-d1.-r1.-d0.-f2.d1.-d2.f1.r2.-r1	-f1.-d1.-f2.-r1.d2.-f2.r2.-r0.-d0.r1.f2	d1
+solution_repair_resident_31615_0_0.tsv	9200809	9102262	943	22	23	1	1	1	0	d1	-f1.-d1.-f2.-r1.d2.-f2.r2.-r0.-d0.r1.f2.d0.r0.-d1.-r1.-d0.-f2.d1.-d2.f1.r2.-r1	
+solution_repair_resident_31615_0_0.tsv	9200810	9102263	943	0	11	11	1	11	0	-f2.-d2.-r0.d2.-f1.-r2.r1.d1.-r1.f0.r1		-d2.f1.d2.-r0.d1.f1.-d2.-r2.f0.r0.f2.r2
+solution_repair_resident_31615_0_0.tsv	9200810	9102264	943	11	22	11	1	11	0	-d2.f1.d2.-r0.d1.f1.-d2.-r2.f0.r0.f2	-f2.-d2.-r0.d2.-f1.r1.-r2.d1.-r1.f0.r1	r2
+solution_repair_resident_31615_0_0.tsv	9200810	9102265	943	22	23	1	1	1	0	r2	-f2.-d2.-r0.d2.-f1.r1.-r2.d1.-r1.f0.r1.-d2.f1.d2.-r0.d1.f1.-d2.-r2.f0.r0.f2	
+solution_repair_resident_31615_0_0.tsv	9200811	9102266	943	0	11	11	1	11	0	-f2.-d1.d0.-f0.d2.f0.d0.-d2.r1.d2.r1		-f0.-d0.-r2.f0.-r2.d0.-r0.-d1.-d1.r0.r2.-d1
+solution_repair_resident_31615_0_0.tsv	9200811	9102267	943	11	22	11	1	11	0	-f0.-d0.-r2.f0.-r2.d0.-r0.d1.d1.r2.r0	-f2.d0.-d1.-f0.d2.f0.d0.-d2.r1.d2.r1	-d1
+solution_repair_resident_31615_0_0.tsv	9200811	9102268	943	22	23	1	1	1	0	-d1	-f2.d0.-d1.-f0.d2.f0.d0.-d2.r1.d2.r1.-f0.-d0.-r2.f0.-r2.d0.-r0.-d1.-d1.r0.r2	
+solution_repair_resident_31615_0_0.tsv	9200812	9102269	943	0	11	11	1	11	0	-f2.f0.-d1.-f0.-d1.-d2.r1.r1.-d2.r0.-d2		-r0.-d0.-r2.-d2.-f0.-d2.-f2.d2.f1.r2.-f1.-r0
+solution_repair_resident_31615_0_0.tsv	9200812	9102270	943	11	22	11	1	11	0	-r0.-d0.-r2.-d2.-f0.-d2.-f2.d2.f1.r2.-f1	-f2.f0.-d1.-f0.-d1.-d2.r1.r1.-d2.r0.-d2	-r0
+solution_repair_resident_31615_0_0.tsv	9200812	9102271	943	22	23	1	1	1	0	-r0	-f2.f0.-d1.-f0.-d1.-d2.r1.r1.-d2.r0.-d2.-r0.-d0.-r2.-d2.-f0.-d2.-f2.d2.f1.r2.-f1	
+solution_repair_resident_31615_0_0.tsv	9200813	9102272	943	0	11	11	1	11	0	-r2.r0.f2.-f1.-d0.f0.-d1.f2.d1.d1.f1		-d1.-r0.-f2.d0.-d2.-f1.r0.f0.-r0.f0.-d1.-r0
+solution_repair_resident_31615_0_0.tsv	9200813	9102273	943	11	22	11	1	11	0	-d1.-r0.-f2.d0.-d2.-f1.r0.f0.-r0.f0.-d1	-r2.r0.f2.-f1.-d0.f0.-d1.f2.d1.d1.f1	-r0
+solution_repair_resident_31615_0_0.tsv	9200813	9102274	943	22	23	1	1	1	0	-r0	-r2.r0.f2.-f1.-d0.f0.-d1.f2.d1.d1.f1.-d1.-r0.-f2.d0.-d2.-f1.r0.f0.-r0.f0.-d1	
+solution_repair_resident_31615_0_0.tsv	9200814	9102275	943	0	11	11	1	11	0	f0.f0.d1.f0.d0.-d1.r0.f2.f2.-d0.-f0		-d2.-d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1.f0
+solution_repair_resident_31615_0_0.tsv	9200814	9102276	943	11	22	11	1	11	0	-d2.-d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1	f0.f0.d1.f0.-d1.d0.r0.-f2.-f2.-d0.-f0	f0
+solution_repair_resident_31615_0_0.tsv	9200814	9102277	943	22	23	1	1	1	0	f0	f0.f0.d1.f0.-d1.d0.r0.-f2.-f2.-d0.-f0.-d2.-d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1	
+solution_repair_resident_31615_0_0.tsv	9200815	9102278	943	0	11	11	1	11	0	f2.-f0.f1.r1.f0.-r1.r0.-d2.f2.f2.-r0		-f0.r2.r2.f2.-d2.f1.-r2.-d1.r2.d1.r2.-f2
+solution_repair_resident_31615_0_0.tsv	9200815	9102279	943	11	22	11	1	11	0	-f0.r2.r2.f2.-d2.f1.-r2.-d1.r2.d1.r2	f0.f0.d1.f0.-d1.d0.r0.f1.-f2.f0.-r0	-f2
+solution_repair_resident_31615_0_0.tsv	9200815	9102280	943	22	23	1	1	1	0	-f2	f0.f0.d1.f0.-d1.d0.r0.f1.-f2.f0.-r0.-f0.r2.r2.f2.-d2.f1.-r2.-d1.r2.d1.r2	
+solution_repair_resident_31615_0_0.tsv	9200816	9102281	943	0	11	11	1	11	0	f0.f0.d1.f0.d0.-d1.r0.f2.f2.-d0.-f0		d2.d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1.f0
+solution_repair_resident_31615_0_0.tsv	9200816	9102282	943	11	22	11	1	11	0	-d2.-d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1	f0.f0.d1.f0.d0.-d1.r0.f2.f2.-d0.-f0	f0
+solution_repair_resident_31615_0_0.tsv	9200816	9102283	943	22	23	1	1	1	0	f0	f0.f0.d1.f0.d0.-d1.r0.f2.f2.-d0.-f0.d2.d2.f2.r0.f1.-d2.r1.d2.-r1.d2.f1	
+solution_repair_resident_31615_0_0.tsv	9200817	9102284	943	0	11	11	1	11	0	f2.-d0.-r0.-d0.f1.-d0.r0.f1.-d0.-r2.r1		-f2.-d2.f2.r2.f0.-d1.f1.d1.-f2.r0.d2.f0
+solution_repair_resident_31615_0_0.tsv	9200817	9102285	943	11	22	11	1	11	0	-f2.-d2.f2.r2.f0.-d1.f1.d1.-f2.r0.d2	f2.-d0.-r0.-d0.f1.-d0.r0.f1.-d0.r1.-r2	f0
+solution_repair_resident_31615_0_0.tsv	9200817	9102286	943	22	23	1	1	1	0	f0	f2.-d0.-r0.-d0.f1.-d0.r0.f1.-d0.r1.-r2.-f2.-d2.f2.r2.f0.-d1.f1.d1.-f2.r0.d2	
+solution_repair_resident_31615_0_0.tsv	9200818	9102287	943	0	11	11	1	11	0	r0.-d0.-r1.d2.r2.-f1.r2.-d2.-d0.-f1.r2		d0.-d2.-f0.d2.r1.d1.r2.-d1.-r1.f0.-r1.d2
+solution_repair_resident_31615_0_0.tsv	9200818	9102288	943	11	22	11	1	11	0	d0.-d2.-f0.d2.r1.d1.r2.-d1.-r1.f0.-r1	r0.-d0.-r1.-d0.-d1.-f0.-r1.-f0.d1.-f1.r2	d2
+solution_repair_resident_31615_0_0.tsv	9200818	9102289	943	22	23	1	1	1	0	d2	r0.-d0.-r1.-d0.-d1.-f0.-r1.-f0.d1.-f1.r2.d0.-d2.-f0.d2.r1.d1.r2.-d1.-r1.f0.-r1	
+solution_repair_resident_31615_0_0.tsv	9200819	9102290	943	0	11	11	1	11	0	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.-d2		d0.r2.d2.f1.d1.f2.-d1.-f1.-r2.-f1.-d0.-d1
+solution_repair_resident_31615_0_0.tsv	9200819	9102291	943	11	22	11	1	11	0	d0.r2.d2.f1.d1.f2.-d1.-f1.-r2.-f1.-d0	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.-d2	-d1
+solution_repair_resident_31615_0_0.tsv	9200819	9102292	943	22	23	1	1	1	0	-d1	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.-d2.d0.r2.d2.f1.d1.f2.-d1.-f1.-r2.-f1.-d0	
+solution_repair_resident_31615_0_0.tsv	9200820	9102293	943	0	11	11	1	11	0	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0		-d2.r2.-d0.-d1.r1.d1.r2.-d1.-r1.f0.-r1.d2
+solution_repair_resident_31615_0_0.tsv	9200820	9102294	943	11	22	11	1	11	0	-d2.r2.d2.f1.-d0.-d2.r2.-d1.-r1.f0.-r1	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0	d2
+solution_repair_resident_31615_0_0.tsv	9200820	9102295	943	22	23	1	1	1	0	d2	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0.-d2.r2.-d0.-d1.r1.d1.r2.-d1.-r1.f0.-r1	
+solution_repair_resident_31615_0_0.tsv	9200821	9102296	943	0	11	11	1	11	0	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0		-d2.r2.d2.f1.-d2.-d0.r2.-d1.-r1.f0.-r1.d2
+solution_repair_resident_31615_0_0.tsv	9200821	9102297	943	11	22	11	1	11	0	-d2.r2.d2.f1.-d0.-d2.r2.-d1.-r1.f0.-r1	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0	d2
+solution_repair_resident_31615_0_0.tsv	9200821	9102298	943	22	23	1	1	1	0	d2	r0.-d0.-r1.d2.r2.-f1.r2.d1.r1.f2.d0.-d2.r2.d2.f1.-d2.-d0.r2.-d1.-r1.f0.-r1	
+solution_repair_resident_31615_0_0.tsv	9200822	9102299	943	0	11	11	1	11	0	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.-r0		r2.d2.f1.-f0.r0.-d2.f2.r2.-d2.-f2.d2.f2
+solution_repair_resident_31615_0_0.tsv	9200822	9102300	943	11	22	11	1	11	0	r2.d2.-f0.f1.r0.-d2.f2.r2.-d2.-f2.d2	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.-r0	f2
+solution_repair_resident_31615_0_0.tsv	9200822	9102301	943	22	23	1	1	1	0	f2	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.-r0.r2.d2.f1.-f0.r0.-d2.f2.r2.-d2.-f2.d2	
+solution_repair_resident_31615_0_0.tsv	9200823	9102302	943	0	11	11	1	11	0	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.r2		-r0.d2.f1.-f0.r0.-d2.f2.r2.-d2.-f2.d2.f2
+solution_repair_resident_31615_0_0.tsv	9200823	9102303	943	11	22	11	1	11	0	-r0.d2.f1.-f0.r0.-d2.f2.r2.-d2.-f2.d2	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.r2	f2
+solution_repair_resident_31615_0_0.tsv	9200823	9102304	943	22	23	1	1	1	0	f2	r0.d2.r2.-d1.-r0.d1.-f2.r0.f1.d2.r2.-r0.d2.f1.-f0.r0.-d2.f2.r2.-d2.-f2.d2	
+solution_repair_resident_31615_0_0.tsv	9200824	9102305	943	0	11	11	1	11	0	r0.-f1.f2.r1.-f2.-f1.d0.d0.f2.d0.f2		-d0.r0.-r2.-f0.r2.f1.d2.-f1.f2.-d1.-f0.-r2
+solution_repair_resident_31615_0_0.tsv	9200824	9102306	943	11	22	11	1	11	0	-d0.-r2.r0.-f0.r2.f1.d2.f2.-f1.-d1.-f0	r0.f1.f1.-f0.d1.f0.-d0.-d0.f2.d0.f2	-r2
+solution_repair_resident_31615_0_0.tsv	9200824	9102307	943	22	23	1	1	1	0	-r2	r0.f1.f1.-f0.d1.f0.-d0.-d0.f2.d0.f2.-d0.r0.-r2.-f0.r2.f1.d2.-f1.f2.-d1.-f0	
+solution_repair_resident_31615_0_0.tsv	9200825	9102308	943	0	11	11	1	11	0	-r0.f1.-r2.-d2.r0.r1.f2.d0.r1.f2.-r1		-d2.-r1.d0.-f2.r0.d1.-f0.r1.f2.d1.-r1.-r1
+solution_repair_resident_31615_0_0.tsv	9200825	9102309	943	11	22	11	1	11	0	-d2.-r1.d0.-f2.r0.d1.-f0.r1.f2.d1.-r1	r1.r2.d1.-r2.f0.-r2.f2.d0.r1.f2.-r1	-r1
+solution_repair_resident_31615_0_0.tsv	9200825	9102310	943	22	23	1	1	1	0	-r1	r1.r2.d1.-r2.f0.-r2.f2.d0.r1.f2.-r1.-d2.-r1.d0.-f2.r0.d1.-f0.r1.f2.d1.-r1	

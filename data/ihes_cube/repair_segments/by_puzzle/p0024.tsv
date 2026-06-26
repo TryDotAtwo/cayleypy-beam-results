@@ -1,0 +1,19 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31613_0_0.tsv	9200214	9100352	24	0	11	11	1	-1	-12			d0.f0.-d2.-d0.-f2.-f2.d1
+solution_repair_resident_31613_0_0.tsv	9200214	9100353	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.-d1.d2.f2	
+solution_repair_resident_31613_0_0.tsv	9200215	9100354	24	0	11	11	1	-1	-12			d0.f0.-d2.-d0.f2.f2.d1
+solution_repair_resident_31613_0_0.tsv	9200215	9100355	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.-d1.d2.f2	
+solution_repair_resident_31613_0_0.tsv	9200216	9100356	24	0	11	11	1	-1	-12			d0.f0.d1.-r0.-r0.-d2.-d0
+solution_repair_resident_31613_0_0.tsv	9200216	9100357	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.-d1.d2.f2	
+solution_repair_resident_31613_0_0.tsv	9200217	9100358	24	0	11	11	1	-1	-12			d0.f0.d1.r0.r0.-d2.-d0
+solution_repair_resident_31613_0_0.tsv	9200217	9100359	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.-d1.d2.f2	
+solution_repair_resident_31613_0_0.tsv	9200218	9100360	24	0	11	11	1	-1	-12			-d2.-d1.r0.d1.-f2.-f2.d1
+solution_repair_resident_31613_0_0.tsv	9200218	9100361	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.d2.-d1.f2	
+solution_repair_resident_31613_0_0.tsv	9200219	9100362	24	0	11	11	1	-1	-12			d0.f0.-d0.-d2.f2.f2.d1
+solution_repair_resident_31613_0_0.tsv	9200219	9100363	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.-r1.-r1.f2.r2.d2.-d1.f2	
+solution_repair_resident_31613_0_0.tsv	9200220	9100364	24	0	11	11	1	-1	-12			-d1.-d2.r0.d1.f2.f2.d1
+solution_repair_resident_31613_0_0.tsv	9200220	9100365	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.r1.r1.f2.r2.d2.-d1.f2	
+solution_repair_resident_31613_0_0.tsv	9200221	9100366	24	0	11	11	1	-1	-12			d0.f0.-d2.-d0.f2.f2.d1
+solution_repair_resident_31613_0_0.tsv	9200221	9100367	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.r1.r1.f2.r2.d2.-d1.f2	
+solution_repair_resident_31613_0_0.tsv	9200222	9100368	24	0	11	11	1	-1	-12			d0.f0.d1.r0.r0.-d2.-d0
+solution_repair_resident_31613_0_0.tsv	9200222	9100369	24	11	18	7	1	-1	-8		f0.-d1.-r0.-f2.r1.r1.f2.r2.d2.-d1.f2	

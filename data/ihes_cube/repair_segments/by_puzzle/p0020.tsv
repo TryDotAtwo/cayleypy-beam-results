@@ -1,0 +1,45 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31613_0_0.tsv	9200156	9100236	20	0	11	11	1	-1	-12			r2.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200156	9100237	20	11	14	3	1	3	0	r2.-d2.d0	-r2.-f0.f2.r0.f0.f1.-r2.f1.-d0.f0.r0	
+solution_repair_resident_31613_0_0.tsv	9200157	9100238	20	0	11	11	1	-1	-12			r0.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200157	9100239	20	11	14	3	1	3	0	r0.-d2.d0	-r2.-f0.f2.r0.f1.f0.-r2.f1.-d0.f0.r2	
+solution_repair_resident_31613_0_0.tsv	9200158	9100240	20	0	11	11	1	-1	-12			r0.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200158	9100241	20	11	14	3	1	3	0	r0.-d2.d0	-r2.-f2.f1.-f2.-d2.-f2.-r2.f1.-d0.f0.r2	
+solution_repair_resident_31613_0_0.tsv	9200159	9100242	20	0	11	11	1	-1	-12			r0.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200159	9100243	20	11	14	3	1	3	0	r0.-d2.d0	-r2.f1.-f2.-f2.-d2.-f2.-r2.f1.-d0.f0.r2	
+solution_repair_resident_31613_0_0.tsv	9200160	9100244	20	0	11	11	1	-1	-12			r0.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200160	9100245	20	11	14	3	1	3	0	r0.-d2.d0	-r2.f2.-f0.r0.f1.f0.-r2.f1.-d0.f0.r2	
+solution_repair_resident_31613_0_0.tsv	9200161	9100246	20	0	11	11	1	-1	-12			-d0.-d0.d1
+solution_repair_resident_31613_0_0.tsv	9200161	9100247	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200162	9100248	20	0	11	11	1	-1	-12			-d0.d1.-d0
+solution_repair_resident_31613_0_0.tsv	9200162	9100249	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200163	9100250	20	0	11	11	1	-1	-12			d0.d0.d1
+solution_repair_resident_31613_0_0.tsv	9200163	9100251	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200164	9100252	20	0	11	11	1	-1	-12			d0.d1.d0
+solution_repair_resident_31613_0_0.tsv	9200164	9100253	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200165	9100254	20	0	11	11	1	-1	-12			d1.-d0.-d0
+solution_repair_resident_31613_0_0.tsv	9200165	9100255	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200166	9100256	20	0	11	11	1	-1	-12			-r1.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200166	9100257	20	11	14	3	1	3	0	-r1.-d2.d0	r0.r1.-d0.d2.r0.d0.d1.-r2.d1.f2.d0	
+solution_repair_resident_31613_0_0.tsv	9200167	9100258	20	0	11	11	1	-1	-12			-d0.d1.-d0
+solution_repair_resident_31613_0_0.tsv	9200167	9100259	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200168	9100260	20	0	11	11	1	-1	-12			d0.d0.d1
+solution_repair_resident_31613_0_0.tsv	9200168	9100261	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200169	9100262	20	0	11	11	1	-1	-12			d1.-d0.-d0
+solution_repair_resident_31613_0_0.tsv	9200169	9100263	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200170	9100264	20	0	11	11	1	-1	-12			d1.d0.d0
+solution_repair_resident_31613_0_0.tsv	9200170	9100265	20	11	14	3	1	3	0	d0.d1.d0	r0.r1.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200171	9100266	20	0	11	11	1	-1	-12			-d0.d1.-d0
+solution_repair_resident_31613_0_0.tsv	9200171	9100267	20	11	14	3	1	3	0	d0.d1.d0	r1.r0.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200172	9100268	20	0	11	11	1	-1	-12			d0.d1.d0
+solution_repair_resident_31613_0_0.tsv	9200172	9100269	20	11	14	3	1	3	0	d0.d1.d0	r1.r0.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200173	9100270	20	0	11	11	1	-1	-12			d1.-d0.-d0
+solution_repair_resident_31613_0_0.tsv	9200173	9100271	20	11	14	3	1	3	0	d0.d1.d0	r1.r0.-d0.d2.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200174	9100272	20	0	11	11	1	-1	-12			-r1.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200174	9100273	20	11	14	3	1	3	0	-r1.-d2.d0	r1.r0.-d0.d2.r0.d0.d1.-r2.d1.f2.d0	
+solution_repair_resident_31613_0_0.tsv	9200175	9100274	20	0	11	11	1	-1	-12			-r1.-d2.d0
+solution_repair_resident_31613_0_0.tsv	9200175	9100275	20	11	14	3	1	3	0	-r1.-d2.d0	r1.r0.-d0.d2.r0.d1.d0.-r2.d1.f2.d0	
+solution_repair_resident_31613_0_0.tsv	9200176	9100276	20	0	11	11	1	-1	-12			d0.d0.d1
+solution_repair_resident_31613_0_0.tsv	9200176	9100277	20	11	14	3	1	3	0	d0.d1.d0	r1.r0.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	
+solution_repair_resident_31613_0_0.tsv	9200177	9100278	20	0	11	11	1	-1	-12			d1.-d0.-d0
+solution_repair_resident_31613_0_0.tsv	9200177	9100279	20	11	14	3	1	3	0	d0.d1.d0	r1.r0.d2.-d0.r0.-d2.f0.d1.r2.d0.f1	

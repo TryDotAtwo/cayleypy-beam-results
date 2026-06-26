@@ -1,0 +1,9 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31613_0_0.tsv	9200644	9101507	48	0	11	11	1	-1	-12			-r1.-f2.r2.f0.-d2.f2.-d2.r1.-r2.f0.-d1
+solution_repair_resident_31613_0_0.tsv	9200644	9101508	48	11	22	11	1	11	0	-r1.-f2.r2.f0.-d2.f2.-d2.-r2.r1.f0.-d1	-f1.r0.f2.r1.f1.r0.-r2.f2.d1.-r2.-d0	
+solution_repair_resident_31613_0_0.tsv	9200645	9101509	48	0	11	11	1	11	0	r0.-d0.-f0.-f0.-d1.-d1.-f0.-d0.f1.d0.-f2		r0.-d0.-f1.-r0.-f2.-f2.d1.-d2.f2.d0.f0
+solution_repair_resident_31613_0_0.tsv	9200645	9101510	48	11	22	11	1	-1	-12		r0.-d0.-f0.-f0.d1.d1.-f0.-d0.f1.d0.-f2	
+solution_repair_resident_31613_0_0.tsv	9200646	9101511	48	0	11	11	1	11	0	r0.-d0.-f0.-f0.-d1.-d1.-f0.-d0.f1.d0.-f2		r0.-d0.-f1.-r0.-f2.-f2.-d2.d1.f2.d0.f0
+solution_repair_resident_31613_0_0.tsv	9200646	9101512	48	11	22	11	1	-1	-12		r0.-d0.f0.f0.d1.d1.-f0.-d0.f1.d0.-f2	
+solution_repair_resident_31613_0_0.tsv	9200647	9101513	48	0	11	11	1	11	0	r0.-d0.-f0.-f0.-d1.-d1.-f0.-d0.f1.d0.-f2		r0.-d0.-f1.-r0.-f2.-f2.d1.-d2.f2.d0.f0
+solution_repair_resident_31613_0_0.tsv	9200647	9101514	48	11	22	11	1	-1	-12		r0.-d0.f0.f0.d1.d1.-f0.-d0.f1.d0.-f2	

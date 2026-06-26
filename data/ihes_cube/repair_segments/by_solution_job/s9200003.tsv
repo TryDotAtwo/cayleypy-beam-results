@@ -1,0 +1,2 @@
+source_file	solution_job_id	repair_id	search_depth	window	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path
+solution_repair_segments_9200003_31610.tsv	9200003	9100005	7	11	0	11	11	1	11	0	f1.-r2.-r2.d2.-d0.r2.d0.-d2.r2.r2.-f1

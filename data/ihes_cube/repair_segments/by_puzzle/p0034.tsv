@@ -1,0 +1,5 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31613_0_0.tsv	9200420	9100893	34	0	11	11	1	11	0	-r1.f2.r0.-d0.-r0.-f0.-d1.-r1.-f1.-d2.r2		-f1.d0.-r0.d1.r1.-f1.f2.-r2.r0
+solution_repair_resident_31613_0_0.tsv	9200420	9100894	34	11	20	9	1	-1	-10		-r1.f2.r0.-d0.-r0.-f0.-d1.-r1.-f1.-d2.r2	
+solution_repair_resident_31613_0_0.tsv	9200421	9100895	34	0	11	11	1	11	0	-r1.f2.r0.-d0.-r0.-f0.-d1.-r1.-f1.-d2.r2		-f1.d0.-r0.d1.r1.-f1.f2.r0.-r2
+solution_repair_resident_31613_0_0.tsv	9200421	9100896	34	11	20	9	1	-1	-10		-r1.f2.r0.-d0.-r0.-f0.-d1.-r1.-f1.-d2.r2	

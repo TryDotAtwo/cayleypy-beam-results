@@ -1,0 +1,3 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31613_0_0.tsv	9200738	9101759	56	0	11	11	1	-1	-12			f2.d2.-r2.f1.r0.f0.-r0.f0.d2.-r1.d2
+solution_repair_resident_31613_0_0.tsv	9200738	9101760	56	11	22	11	1	-1	-12		f2.-d0.f1.-d0.-r1.d0.f1.r0.-d1.f1.d2	

@@ -1,0 +1,4 @@
+solution_job_id	records	source_files
+9200001	19	solution_repair_segments_9200001_31557.tsv,solution_repair_segments_9200001_31606.tsv,solution_repair_segments_9200001_31608.tsv
+9200002	14	solution_repair_segments_9200002_31558.tsv,solution_repair_segments_9200002_31609.tsv
+9200003	1	solution_repair_segments_9200003_31610.tsv

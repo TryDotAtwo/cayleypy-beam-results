@@ -1,0 +1,15 @@
+source_file	solution_job_id	repair_id	puzzle_id	start_step	target_step	old_segment_len	segment_solved	segment_len	segment_delta	segment_path	prefix_path	suffix_path
+solution_repair_resident_31615_0_0.tsv	9200832	9102323	940	0	11	11	1	11	0	-f1.-d1.r0.r0.f0.r1.-f1.-d1.r2.f0.-d0		-r0.d2.-r0.r1.r2.-d0.-r2.-d1.r2.-d1.r0
+solution_repair_resident_31615_0_0.tsv	9200832	9102324	940	11	22	11	1	11	0	-r0.d2.r0.r0.-f0.r1.r0.-d1.r2.-d1.r0	-f1.-d1.-r0.-r0.f0.r1.-f1.-d1.r2.f0.-d0	
+solution_repair_resident_31615_0_0.tsv	9200833	9102325	940	0	11	11	1	11	0	-f1.-d1.r0.r0.f0.r1.-f1.-d1.r2.f0.-d0		-r0.d2.r1.r2.-r0.-d0.-r2.-d1.r2.-d1.r0
+solution_repair_resident_31615_0_0.tsv	9200833	9102326	940	11	22	11	1	11	0	-r0.d2.r0.r0.-f0.r1.r0.-d1.r2.-d1.r0	-f1.-d1.-r0.-r0.f0.r1.-f1.-d1.r2.f0.-d0	
+solution_repair_resident_31615_0_0.tsv	9200834	9102327	940	0	11	11	1	11	0	-f1.-d1.r0.r0.f0.r1.-f1.-d1.r2.f0.-d0		-r0.d2.-r0.r1.r2.-d0.-r2.-d1.r2.-d1.r0
+solution_repair_resident_31615_0_0.tsv	9200834	9102328	940	11	22	11	1	11	0	-r0.d2.r0.r0.-f0.r1.r0.-d1.r2.-d1.r0	-f1.-d1.r0.r0.f0.r1.-f1.-d1.r2.f0.-d0	
+solution_repair_resident_31615_0_0.tsv	9200835	9102329	940	0	11	11	1	11	0	f2.d2.f2.r2.-f2.d1.d1.-r1.-d2.r1.-d0		d2.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1
+solution_repair_resident_31615_0_0.tsv	9200835	9102330	940	11	22	11	1	11	0	d2.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1	f2.d2.f2.r2.-f2.-d1.-d1.-r1.-d2.r1.-d0	
+solution_repair_resident_31615_0_0.tsv	9200836	9102331	940	0	11	11	1	11	0	f2.d2.f2.r2.-f2.d1.d1.-r1.-d2.r1.d2		-d0.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1
+solution_repair_resident_31615_0_0.tsv	9200836	9102332	940	11	22	11	1	11	0	-d0.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1	f2.d2.f2.r2.-f2.-d1.-d1.-r1.-d2.r1.d2	
+solution_repair_resident_31615_0_0.tsv	9200837	9102333	940	0	11	11	1	11	0	f2.d2.f2.r2.-f2.d1.d1.-r1.-d2.r1.d2		-d0.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1
+solution_repair_resident_31615_0_0.tsv	9200837	9102334	940	11	22	11	1	11	0	-d0.r1.-d0.-f1.r2.-f2.-r1.-d0.-f0.-r2.d1	f2.d2.f2.r2.-f2.d1.d1.-r1.-d2.r1.d2	
+solution_repair_resident_31615_0_0.tsv	9200838	9102335	940	0	11	11	1	11	0	r2.f1.r2.-r1.d0.d2.f2.-d0.-r0.-f1.d2		r0.-f1.r0.f1.-r0.f2.-r2.d2.d1.-f0.-r2
+solution_repair_resident_31615_0_0.tsv	9200838	9102336	940	11	22	11	1	11	0	r0.-f1.r0.f1.-r0.f2.-r2.d2.d1.-f0.-r2	r2.f1.-r1.r2.-d1.r2.d1.d2.-r0.-f1.d2	
