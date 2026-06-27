@@ -1,0 +1,45 @@
+puzzle_id	variant	source_index	known_length	found_length	delta	run_puzzle_id	depth_index	found_depth	owner_rank	solution_path	source_solution
+51	original	0	23	23	0	51	17	18	1	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0	
+51	original	0	23	23	0	51	17	18	1	-r1.f1.r0.f0.-r0.d1.d0.-f2.r0.d2.f2.r2.d1.-r2.-f1.f2.-r2.f1.d2.r2.d2.d2.r2	
+51	original	0	23	23	0	51	17	18	2	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.r2.-r1.f2.f0.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.-d0.d1.f1.-r0.d2.-f0.d0.d1.r0.-d1.r0.-d0	
+51	original	0	23	23	0	51	17	18	2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.-d0.d1.f1.-r0.d2.-f0.d1.d0.r0.-d1.r0.-d0	
+51	original	0	23	23	0	51	17	18	2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.-d0.d1.f1.-r0.d2.-f0.-d2.-f2.d2.d0.r0.-d0	
+51	original	0	23	23	0	51	17	18	3	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.-r1.r2.f2.f0.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	3	-f2.f1.r2.-d1.r2.-f2.d0.r0.-f0.r0.-d2.f1.-d1.r1.d1.r2.f1.d0.-f2.-r2.-d2.r2.f1	
+51	original	0	23	23	0	51	17	18	3	-r2.d2.d0.d2.f1.r2.-r1.-f0.d2.-d0.f0.d2.-f1.r2.r2.-r1.f2.-d0.f2.d0.r1.f0.r1	
+51	original	0	23	23	0	51	17	18	4	-r2.d2.-d1.r1.-f0.f1.-r0.d2.-d0.r0.d2.-r1.f0.f1.f0.r2.d2.d1.f2.d0.r1.f0.r1	
+51	original	0	23	23	0	51	17	18	4	-r0.f0.-d0.f0.-d0.r0.f1.r2.d0.-r1.-d2.-f2.f1.d2.f2.-r0.f1.-d0.f0.d2.d2.f1.r1	
+51	original	0	23	23	0	51	17	18	4	-r2.d2.d0.d2.f1.r2.-r1.-f0.d2.-d0.f0.d2.-f1.-r2.r0.d2.f2.d2.-f2.r1.d0.-r2.-r0	
+51	original	0	23	23	0	51	17	18	4	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.f2.f1.-d0.d1.-f1.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	4	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.f2.f1.d1.-d0.-f1.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	4	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.f1.f2.-d0.d1.-f1.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	4	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.f1.f2.d1.-d0.-f1.-r0.-f0.d0	
+51	original	0	23	23	0	51	17	18	5	d2.f1.-r0.f0.-f2.d0.-f2.-r0.-f1.r1.f1.r1.-d2.-r1.r2.d0.r2.-d0.f2.f2.-r0.d0.r2	
+51	original	0	23	23	0	51	17	18	5	-r2.d2.-d1.r1.-f0.f1.-r0.d2.-d0.r0.d2.-r1.f0.f1.f0.r2.d1.d2.f2.d0.r1.f0.r1	
+51	original	0	23	23	0	51	17	18	5	-d0.r2.-f0.r1.-f0.-d2.f0.d1.-d2.-r2.r1.f1.-d0.r1.-r2.f1.d2.f0.d1.-d0.f0.d1.r0	
+51	original	0	23	23	0	51	17	18	5	-d1.r2.f2.f2.-d0.d2.f1.-r1.-f0.-d1.-r2.r1.d2.-r0.-d1.-r1.-f0.-d0.-f1.-r0.d0.-r0.-d0	
+51	original	0	23	23	0	51	17	18	7	-r1.f1.r0.f0.-r0.-d2.-r2.-f2.d2.r2.-f0.d1.f0.-r1.r2.f0.r1.d2.-f0.-d2.d1.d0.r2	
+51	original	0	23	23	0	51	18	19	1	-d0.r2.-f0.r1.-f0.-d2.f0.d1.-d2.-r2.r1.f1.-d0.r1.-r2.f1.d2.f0.-d0.d1.f0.d1.r0	
+51	original	0	23	23	0	51	18	19	3	d2.f1.-r0.f0.-f2.d0.-f2.-r0.-f1.r1.f1.r1.-d2.-r1.r2.d0.r2.-d0.-f2.-f2.-r0.d0.r2	
+51	original	0	23	23	0	51	18	19	7	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.r2.-r1.f0.f2.-r0.-f0.d0	
+51	original	0	23	23	0	51	18	19	7	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.r2.-r1.-f1.-d0.f2.f1.d0	
+51	original	0	23	23	0	51	18	19	7	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.-r1.r2.f0.f2.-r0.-f0.d0	
+51	original	0	23	23	0	51	18	19	7	r1.r1.d1.-r2.-d0.f1.r2.d2.f0.-f1.-d0.f0.d0.r0.d2.-f0.-r1.r2.-f1.-d0.f2.f1.d0	
+51	reflected	1	23	23	0	9551001	17	18	0	-r1.f1.r0.f0.-r0.d0.d1.-f2.r0.d2.f2.r2.d1.-r2.-f1.f2.-r2.f1.d2.r2.d2.d2.r2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	1	-r1.f1.r0.f0.-r0.-d2.-r2.-f2.d2.r2.-f0.d1.f0.r2.-r1.f0.r1.d2.-f0.d1.-d2.d0.r2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	1	-d2.-r0.-r1.-f0.-f2.d0.-f2.d1.-r0.-f2.d2.-f2.d0.r2.d2.-d0.r1.-d0.-f1.-r1.r0.-f1.-d2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	1	r1.f0.-r1.-d0.-f0.-d2.d1.r0.f1.d0.-f1.-r0.f0.-r0.r2.f0.-f1.-f1.d1.-d0.-r1.-f1.r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	3	-d2.r2.-d0.-d2.-f2.-d2.-f1.-r0.-d2.-f0.-d2.-f2.-r0.-r1.d2.-d0.r1.-d0.-f1.-r1.r0.-f1.-d2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	4	-r1.f0.-d2.-f1.-d2.-f2.-d2.-f0.d0.-r1.d2.r0.-d2.f2.-d2.f0.-r1.d2.-d0.f0.-d2.-r2.f0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	4	r1.f0.-r1.-d0.f2.f1.r1.-r2.-d2.f1.r0.-f1.d2.f0.-d0.d2.f1.-f2.d1.-d0.-r1.-f1.r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	4	r1.f0.-r1.-d0.f1.f2.r1.-r2.-d2.f1.r0.-f1.d2.f0.-d0.d2.f1.-f2.d1.-d0.-r1.-f1.r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	4	d1.r1.d2.f1.-r1.-d2.-r0.d2.-d0.f1.r2.-f0.-d1.-r0.f2.-r0.-f0.-r0.f2.d0.-f2.r2.-d0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	5	r1.f0.-r1.-d0.-f0.d1.-d2.r0.f1.d0.-f1.-r0.f0.-r0.r2.f0.-f1.-f1.d1.-d0.-r1.-f1.r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	5	-r1.f1.-r0.f0.-d0.-f2.r2.-f1.-f2.f0.d0.f1.-d0.-r0.d0.f2.r2.d1.f2.-d0.-r2.d1.-r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	7	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.-d1.d2.-d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	17	18	7	-r1.-f0.-f2.-d0.f0.r2.-f2.d2.f0.f0.d0.f1.-d0.-r0.d0.f2.r2.d1.f2.-d0.-r2.d1.-r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	18	19	2	d2.f1.-r0.-f2.f0.d0.-f2.-r0.-f1.r1.f1.r1.-d2.-r1.r2.d0.r2.-d0.-f2.-f2.-r0.d0.r2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	18	19	5	-d2.-r0.-r1.-f2.-f0.d0.-f2.d1.-r0.-f2.d2.-f2.d0.r2.d2.-d0.r1.-d0.-f1.-r1.r0.-f1.-d2	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	18	19	6	-r1.f1.-r0.-f2.-f1.r2.-f2.d2.f0.f0.d0.f1.-d0.-r0.d0.f2.r2.d1.f2.-d0.-r2.d1.-r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
+51	reflected	1	23	23	0	9551001	18	19	6	-r1.f1.-r0.-f1.-f2.r2.-f2.d2.f0.f0.d0.f1.-d0.-r0.d0.f2.r2.d1.f2.-d0.-r2.d1.-r0	-f1.r2.-f1.d1.-f0.d0.f2.-d1.r0.d1.f1.d2.d1.d1.-r1.-f0.d2.r2.-d2.r0.-d1.r0.-d0
