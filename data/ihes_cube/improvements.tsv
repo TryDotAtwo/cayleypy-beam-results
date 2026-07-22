@@ -1,1 +1,2 @@
-puzzle_id	known_length	best_length	delta	records	unique_solutions	variants	source_files
+puzzle_id	known_length	best_length	delta	records	unique_solutions	variants	source_files	fresh_run_tag	slurm_job_id	slurm_array_task_id	beam_width	k1_radius
+49	23	21	-2	6	4			len23 24_offset8_limit1	31667	6	900000000	5
