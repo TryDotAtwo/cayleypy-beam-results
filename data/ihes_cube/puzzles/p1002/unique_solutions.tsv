@@ -1,0 +1,7 @@
+puzzle_id	variant	source_index	known_length	found_length	delta	run_puzzle_id	depth_index	found_depth	owner_rank	solution_path	source_solution
+1002	original	0	22	22	0	1002	16	17	7	r2.d0.f2.-r0.f2.-d1.f2.r2.f0.f1.r2.f2.d2.-r0.-d1.d0.-r2.d1.-f2.-d1.d0.-r1	
+1002	original	0	22	22	0	1002	16	17	7	r2.d0.f2.-r0.f2.-d1.f2.r2.f0.f1.r2.f2.d2.-r0.d0.-d1.-r2.d1.-f2.-d1.d0.-r1	
+1002	original	0	22	22	0	1002	16	17	7	r2.d0.f2.-r0.f2.-d1.f2.r2.-f2.d2.f2.-r0.-d0.r1.-r2.-d2.-r1.f1.f0.-d1.d0.-r1	
+1002	original	0	22	22	0	1002	17	18	1	r2.d0.f2.-r0.f2.-d1.f2.r2.-f2.d2.f2.-r0.-d0.r1.-r2.-d2.-r1.f0.f1.-d1.d0.-r1	
+1002	reflected	1	22	22	0	10502001	16	17	3	-d2.f2.-r2.d2.r1.-f2.d0.-d2.f2.-d0.r0.-f2.d2.f0.-r0.d2.r1.-f1.d0.-r2.-d2.-f1	r2.d0.f2.-r0.f2.-d1.f2.r2.f0.f1.r2.f2.d2.-r0.-d1.d0.-r2.d1.-f2.-d1.d0.-r1
+1002	reflected	1	22	22	0	10502001	16	17	3	-d2.f2.-r2.d2.r1.-f2.-d2.d0.f2.-d0.r0.-f2.d2.f0.-r0.d2.r1.-f1.d0.-r2.-d2.-f1	r2.d0.f2.-r0.f2.-d1.f2.r2.f0.f1.r2.f2.d2.-r0.-d1.d0.-r2.d1.-f2.-d1.d0.-r1
