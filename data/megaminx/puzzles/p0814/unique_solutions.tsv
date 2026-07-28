@@ -1,0 +1,2 @@
+delta	depth_index	found_depth	found_length	known_length	owner_rank	puzzle_id	run_puzzle_id	solution_path	source_file	source_index	source_solution	variant
+5	74	75	80	75	3	814	814	-DR.-B.-BR.U.-BL.F.-U.-BL.-DL.-R.B.-R.-DR.-FR.-DL.-FR.FL.R.-F.B.R.BR.-DL.-FR.FL.-BL.-BR.DR.-F.L.-U.-BL.-FL.L.-BL.-L.FR.-R.FR.D.-B.D.D.B.BL.U.R.L.D.-FL.FR.DR.-FR.-F.FL.D.-DR.FL.FL.-F.-L.-DL.-R.FR.FL.-F.D.-FL.-D.FL.DL.F.FL.L.-FL.F.FR.-F.L.-U	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv	0		original
