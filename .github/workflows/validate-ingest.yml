@@ -1,0 +1,79 @@
+name: validate-ingest
+
+on:
+  push:
+    branches: [ingest/staging]
+
+permissions: {}
+
+jobs:
+  validate:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      # actions/checkout v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          ref: main
+      # actions/setup-python v5.4.0
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - env:
+          EXPECTED_APP_LOGIN: ${{ vars.RESULTS_INGEST_APP_LOGIN }}
+          EXPECTED_BOT_ID: ${{ vars.RESULTS_INGEST_BOT_ID }}
+          EXPECTED_REPOSITORY: TryDotAtwo/cayleypy-beam-results
+          GITHUB_BASE_SHA: ${{ github.event.before }}
+          GITHUB_HEAD_SHA: ${{ github.sha }}
+          SENDER_ID: ${{ github.event.sender.id }}
+          SENDER_TYPE: ${{ github.event.sender.type }}
+          ZERO_SHA: "0000000000000000000000000000000000000000"
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$EXPECTED_APP_LOGIN"
+          test -n "$EXPECTED_BOT_ID"
+          case "$EXPECTED_BOT_ID" in
+            *[!0-9]*) exit 1 ;;
+          esac
+          test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
+          test "$GITHUB_REF" = "refs/heads/ingest/staging"
+          test "$GITHUB_ACTOR" = "$EXPECTED_APP_LOGIN"
+          test "$SENDER_TYPE" = "Bot"
+          test "$SENDER_ID" = "$EXPECTED_BOT_ID"
+
+          git fetch --no-tags origin \
+            "+refs/heads/ingest/staging:refs/remotes/origin/ingest/staging"
+          remote_head="$(git rev-parse origin/ingest/staging)"
+          git merge-base --is-ancestor "$GITHUB_HEAD_SHA" "$remote_head"
+
+          base="$GITHUB_BASE_SHA"
+          if [ "$base" = "$ZERO_SHA" ]; then
+            git rev-parse --verify --quiet origin/main^{commit} >/dev/null
+            base="$(git merge-base "$GITHUB_HEAD_SHA" origin/main)"
+          fi
+          git rev-parse --verify --quiet "$base^{commit}" >/dev/null
+          git rev-parse --verify --quiet "$GITHUB_HEAD_SHA^{commit}" >/dev/null
+          git merge-base --is-ancestor "$base" "$GITHUB_HEAD_SHA"
+          python tools/validate_result.py \
+            --base "$base" \
+            --head "$GITHUB_HEAD_SHA"
+
+  promote:
+    needs: validate
+    if: >-
+      github.repository == 'TryDotAtwo/cayleypy-beam-results' &&
+      vars.ENABLE_CAYLEYPY_AUTO_MERGE == 'true'
+    permissions:
+      checks: write
+      contents: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/merge-ingest.yml
+    with:
+      trigger_head: ${{ github.sha }}
