@@ -1,0 +1,307 @@
+name: promote-ingest
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_call:
+    inputs:
+      trigger_head:
+        required: true
+        type: string
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  promote:
+    if: >-
+      github.repository == 'TryDotAtwo/cayleypy-beam-results' &&
+      vars.ENABLE_CAYLEYPY_AUTO_MERGE == 'true'
+    permissions:
+      checks: write
+      contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      # actions/checkout v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          ref: main
+      # actions/setup-python v5.4.0
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - env:
+          BASE_BRANCH: main
+          EXPECTED_APP_LOGIN: ${{ vars.RESULTS_INGEST_APP_LOGIN }}
+          EXPECTED_BOT_ID: ${{ vars.RESULTS_INGEST_BOT_ID }}
+          EXPECTED_REPOSITORY: TryDotAtwo/cayleypy-beam-results
+          GH_TOKEN: ${{ github.token }}
+          SENDER_ID: ${{ github.event.sender.id }}
+          SENDER_TYPE: ${{ github.event.sender.type }}
+          STAGING_BRANCH: ingest/staging
+          TRIGGER_HEAD: ${{ inputs.trigger_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
+          test -n "$EXPECTED_APP_LOGIN"
+          test -n "$EXPECTED_BOT_ID"
+          case "$EXPECTED_BOT_ID" in
+            *[!0-9]*) exit 1 ;;
+          esac
+
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            test "$GITHUB_ACTOR" = "$EXPECTED_APP_LOGIN"
+            test "$SENDER_TYPE" = "Bot"
+            test "$SENDER_ID" = "$EXPECTED_BOT_ID"
+            test -n "$TRIGGER_HEAD"
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] || \
+               [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            TRIGGER_HEAD=""
+          else
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          retry_delay() {
+            sleep "$((attempt < 5 ? attempt : 5))"
+          }
+
+          for attempt in $(seq 1 40); do
+            git fetch --no-tags origin \
+              "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
+              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+            base="$(git rev-parse "origin/$BASE_BRANCH")"
+            latest="$(git rev-parse "origin/$STAGING_BRANCH")"
+            if [ -n "$TRIGGER_HEAD" ]; then
+              git rev-parse --verify --quiet "$TRIGGER_HEAD^{commit}" >/dev/null
+              git merge-base --is-ancestor "$TRIGGER_HEAD" "$latest"
+            fi
+
+            if git merge-base --is-ancestor "$latest" "$base"; then
+              if [ "$latest" != "$base" ]; then
+                git push \
+                  --force-with-lease="refs/heads/$STAGING_BRANCH:$latest" \
+                  origin "$base:refs/heads/$STAGING_BRANCH"
+              fi
+              exit 0
+            fi
+
+            common="$(git merge-base "$base" "$latest")"
+            python tools/validate_result.py \
+              --base "$common" \
+              --head "$latest" \
+              --allow-generated-indexes
+
+            git checkout --detach "$latest"
+            if ! git merge-base --is-ancestor "$base" "$latest"; then
+              git merge --no-edit "$base"
+            fi
+            python tools/validate_result.py \
+              --base "$base" \
+              --head HEAD \
+              --allow-generated-indexes
+            python tools/build_indexes.py --results results --out data
+            git add -- \
+              data/index.tsv \
+              data/by_author.tsv \
+              data/best_solutions.tsv \
+              data/runs.json
+
+            while IFS= read -r changed; do
+              case "$changed" in
+                data/index.tsv|data/by_author.tsv|\
+                data/best_solutions.tsv|data/runs.json) ;;
+                *) exit 1 ;;
+              esac
+            done < <(git diff --cached --name-only)
+
+            if ! git diff --cached --quiet; then
+              git commit -m "chore: rebuild CayleyPy result indexes"
+            fi
+            candidate="$(git rev-parse HEAD)"
+
+            if [ "$candidate" != "$latest" ]; then
+              if ! git push --force-with-lease="refs/heads/$STAGING_BRANCH:$latest" \
+                origin "HEAD:refs/heads/$STAGING_BRANCH"; then
+                retry_delay
+                continue
+              fi
+            fi
+
+            git fetch --no-tags origin \
+              "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
+              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+            base="$(git rev-parse "origin/$BASE_BRANCH")"
+            remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
+            if [ "$remote_head" != "$candidate" ] || \
+               ! git merge-base --is-ancestor "$base" "$candidate"; then
+              retry_delay
+              continue
+            fi
+
+            git checkout --detach "$candidate"
+            python tools/validate_result.py \
+              --base "$base" \
+              --head "$candidate" \
+              --allow-generated-indexes
+
+            generated="$(mktemp -d)"
+            trap 'rm -rf -- "$generated"' EXIT
+            python tools/build_indexes.py --results results --out "$generated"
+            cmp --silent data/index.tsv "$generated/index.tsv"
+            cmp --silent data/by_author.tsv "$generated/by_author.tsv"
+            cmp --silent \
+              data/best_solutions.tsv "$generated/best_solutions.tsv"
+            cmp --silent data/runs.json "$generated/runs.json"
+            rm -rf -- "$generated"
+            trap - EXIT
+
+            check_id="$(
+              gh api \
+                --method POST \
+                "repos/$GITHUB_REPOSITORY/check-runs" \
+                --input - \
+                --jq '.id' <<JSON
+          {"name":"cayleypy-results/exact-candidate","head_sha":"$candidate","status":"completed","conclusion":"success","output":{"title":"Exact indexed candidate validated","summary":"Schema, canonical hashes, replay, append-only paths, and deterministic indexes passed."}}
+          JSON
+            )"
+            case "$check_id" in
+              ""|*[!0-9]*) exit 1 ;;
+            esac
+
+            git fetch --no-tags origin \
+              "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
+              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+            base="$(git rev-parse "origin/$BASE_BRANCH")"
+            remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
+            if [ "$remote_head" != "$candidate" ] || \
+               ! git merge-base --is-ancestor "$base" "$candidate"; then
+              retry_delay
+              continue
+            fi
+            if git diff --quiet "$base" "$candidate" --; then
+              exit 0
+            fi
+
+            mapfile -t pull_numbers < <(
+              gh pr list \
+                --repo "$GITHUB_REPOSITORY" \
+                --state open \
+                --base "$BASE_BRANCH" \
+                --head "$STAGING_BRANCH" \
+                --limit 2 \
+                --json number \
+                --jq '.[].number'
+            )
+            if [ "${#pull_numbers[@]}" -gt 1 ]; then
+              exit 1
+            fi
+            if [ "${#pull_numbers[@]}" -eq 0 ]; then
+              if ! gh pr create \
+                --repo "$GITHUB_REPOSITORY" \
+                --base "$BASE_BRANCH" \
+                --head "$STAGING_BRANCH" \
+                --title "ingest: publish validated CayleyPy results" \
+                --body "Automated append-only promotion of replay-validated results."; then
+                retry_delay
+                continue
+              fi
+              mapfile -t pull_numbers < <(
+                gh pr list \
+                  --repo "$GITHUB_REPOSITORY" \
+                  --state open \
+                  --base "$BASE_BRANCH" \
+                  --head "$STAGING_BRANCH" \
+                  --limit 2 \
+                  --json number \
+                  --jq '.[].number'
+              )
+              if [ "${#pull_numbers[@]}" -ne 1 ]; then
+                retry_delay
+                continue
+              fi
+            fi
+            pull_number="${pull_numbers[0]}"
+
+            gh label create "cayleypy-ingest-approved" \
+              --repo "$GITHUB_REPOSITORY" \
+              --color "0E8A16" \
+              --description "Exact indexed staging SHA passed replay validation" \
+              --force
+            gh pr edit "$pull_number" \
+              --repo "$GITHUB_REPOSITORY" \
+              --add-label "cayleypy-ingest-approved"
+
+            identity="$(
+              gh pr view "$pull_number" \
+                --repo "$GITHUB_REPOSITORY" \
+                --json state,isCrossRepository,headRefName,baseRefName,headRefOid \
+                --jq '[.state,.isCrossRepository,.headRefName,.baseRefName,.headRefOid] | @tsv'
+            )"
+            IFS=$'\t' read -r \
+              pr_state cross_repo pr_head pr_base pr_sha <<<"$identity"
+            test "$pr_state" = "OPEN"
+            test "$cross_repo" = "false"
+            test "$pr_head" = "$STAGING_BRANCH"
+            test "$pr_base" = "$BASE_BRANCH"
+            if [ "$pr_sha" != "$candidate" ]; then
+              retry_delay
+              continue
+            fi
+
+            git fetch --no-tags origin \
+              "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
+              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+            base="$(git rev-parse "origin/$BASE_BRANCH")"
+            remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
+            if [ "$remote_head" != "$candidate" ] || \
+               ! git merge-base --is-ancestor "$base" "$candidate"; then
+              retry_delay
+              continue
+            fi
+            python tools/validate_result.py \
+              --base "$base" \
+              --head "$candidate" \
+              --allow-generated-indexes
+
+            if gh pr merge "$pull_number" \
+              --repo "$GITHUB_REPOSITORY" \
+              --merge \
+              --match-head-commit "$candidate"; then
+              merged="$(
+                gh pr view "$pull_number" \
+                  --repo "$GITHUB_REPOSITORY" \
+                  --json mergedAt,headRefOid,mergeCommit \
+                  --jq '[.mergedAt,.headRefOid,.mergeCommit.oid] | @tsv'
+              )"
+              IFS=$'\t' read -r \
+                merged_at merged_head merge_commit <<<"$merged"
+              test -n "$merged_at"
+              test "$merged_head" = "$candidate"
+              test -n "$merge_commit"
+
+              git fetch --no-tags origin \
+                "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH"
+              published="$(git rev-parse "origin/$BASE_BRANCH")"
+              test "$published" = "$merge_commit"
+              git merge-base --is-ancestor "$candidate" "$published"
+              git push \
+                --force-with-lease="refs/heads/$STAGING_BRANCH:$candidate" \
+                origin "$published:refs/heads/$STAGING_BRANCH" || true
+              exit 0
+            fi
+
+            retry_delay
+          done
+
+          exit 1
