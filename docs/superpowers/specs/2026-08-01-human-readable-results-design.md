@@ -63,15 +63,7 @@ A compact GitHub-readable page containing competition slug, puzzle ID, number of
 
 ## Competition index
 
-data/<competition-slug>/index.tsv contains one row per puzzle:
-
-- puzzle_id
-- best_solution
-- best_length
-- solution_count
-- puzzle_directory
-
-Rows are ordered numerically by puzzle ID.
+data/<competition-slug>/index.tsv contains every solution for every puzzle in that competition. It uses the same human-first columns as puzzle-level solutions.tsv and adds puzzle_directory. Rows are ordered by numeric puzzle ID, solution length, solved depth, submission ID, and canonical record path. No result is omitted or collapsed to a winner in this file.
 
 ## Global indexes
 
