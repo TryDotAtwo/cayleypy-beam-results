@@ -1,128 +1,23 @@
-puzzle_id	records	unique_solutions	known_length	best_length	improved	variants
-95	92	92	75	72	1	original
-103	432	432	75	78	0	original,reflected
-108	1222	1222	75	76	0	original,reflected
-109	256	256	75	74	1	original,reflected
-114	107	107	75	78	0	original
-117	231	231	75	78	0	original,reflected
-124	549	549	75	75	0	original,reflected
-134	91	91	75	72	1	original
-136	719	719	75	74	1	original
-137	93	93	75	74	1	original
-140	214	214	75	75	0	original,reflected
-141	120	120	75	78	0	original,reflected
-144	144	144	75	73	1	original,reflected
-147	250	250	75	75	0	original,reflected
-160	129	129	75	73	1	original
-161	606	606	75	77	0	original,reflected
-164	322	322	75	75	0	original,reflected
-170	534	534	75	77	0	original,reflected
-173	810	810	75	74	1	original,reflected
-179	91	91	75	75	0	original,reflected
-180	719	719	75	73	1	original,reflected
-195	922	922	75	78	0	original
-203	1205	1205	75	74	1	original
-204	143	143	75	75	0	original,reflected
-212	1284	1284	75	71	1	original,reflected
-215	220	220	75	76	0	original,reflected
-219	761	761	75	75	0	original,reflected
-220	301	301	75	78	0	original
-227	95	95	75	77	0	original
-245	443	443	75	69	1	original
-248	574	574	75	75	0	original,reflected
-249	1066	1066	75	75	0	original,reflected
-253	133	133	75	74	1	original,reflected
-254	72	72	75	79	0	original,reflected
-257	370	370	75	75	0	original,reflected
-292	1384	1384	75	76	0	original,reflected
-300	127	127	75	77	0	original
-301	250	250	75	78	0	original,reflected
-318	20	20	75	79	0	original,reflected
-322	81	81	75	73	1	original
-344	453	453	75	78	0	original,reflected
-347	594	594	75	77	0	original,reflected
-369	556	556	75	76	0	original,reflected
-375	149	149	75	72	1	original
-378	226	226	75	76	0	original,reflected
-388	1096	1096	75	77	0	original,reflected
-392	27	27	75	80	0	original
-396	702	702	75	76	0	original,reflected
-402	3	3	75	80	0	original
-403	88	88	75	78	0	original
-427	194	194	75	78	0	original
-429	87	87	75	75	0	original
-430	1370	1370	75	76	0	original,reflected
-433	545	545	75	70	1	original,reflected
-445	365	365	75	78	0	original,reflected
-452	772	772	75	71	1	original,reflected
-454	481	481	75	76	0	original,reflected
-457	565	565	75	76	0	original,reflected
-470	125	125	75	77	0	original,reflected
-474	39	39	75	79	0	original,reflected
-476	137	137	75	75	0	original,reflected
-489	479	479	75	76	0	original,reflected
-491	516	516	75	78	0	original,reflected
-496	878	878	75	72	1	original,reflected
-500	86	86	75	73	1	original
-504	390	390	75	74	1	original
-509	1371	1371	75	74	1	original,reflected
-511	278	278	75	77	0	original,reflected
-513	48	48	75	79	0	original,reflected
-517	175	175	75	75	0	original,reflected
-519	495	495	75	78	0	original,reflected
-520	1296	1296	75	75	0	original,reflected
-528	133	133	75	75	0	original,reflected
-541	168	168	75	77	0	original,reflected
-544	582	582	75	73	1	original,reflected
-555	2729	2729	75	75	0	original,reflected
-568	709	709	75	76	0	original,reflected
-578	336	336	75	74	1	original,reflected
-582	2107	2107	75	76	0	original,reflected
-588	203	203	75	74	1	original
-594	503	503	75	75	0	original,reflected
-602	489	489	75	77	0	original,reflected
-605	300	300	75	77	0	original,reflected
-628	109	109	75	75	0	original
-630	290	290	75	75	0	original,reflected
-631	550	550	75	76	0	original
-633	71	71	75	79	0	original,reflected
-640	873	873	75	75	0	original,reflected
-643	307	307	75	74	1	original
-651	397	397	75	75	0	original,reflected
-661	556	556	75	76	0	original,reflected
-664	221	221	75	76	0	original,reflected
-682	780	780	75	73	1	original,reflected
-691	93	93	75	77	0	original
-694	885	885	75	76	0	original,reflected
-695	535	535	75	70	1	original,reflected
-699	448	448	75	78	0	original,reflected
-702	78	78	75	72	1	original
-703	242	242	75	74	1	original
-704	800	800	75	76	0	original,reflected
-723	2	2	75	79	0	original
-740	19	19	75	79	0	original,reflected
-749	115	115	75	76	0	original,reflected
-750	1691	1691	75	78	0	original,reflected
-752	1858	1858	75	74	1	original,reflected
-759	403	403	75	74	1	original,reflected
-763	135	135	75	76	0	original,reflected
-772	683	683	75	76	0	original,reflected
-800	208	208	75	74	1	original
-802	663	663	75	71	1	original
-803	177	177	75	78	0	original,reflected
-814	1	1	75	80	0	original
-823	498	498	75	75	0	original,reflected
-824	253	253	75	77	0	original,reflected
-852	147	147	75	77	0	original,reflected
-853	490	490	75	72	1	original
-862	119	119	75	78	0	original,reflected
-885	112	112	75	73	1	original,reflected
-886	115	115	75	75	0	original,reflected
-890	491	491	75	69	1	original,reflected
-893	638	638	75	75	0	original,reflected
-896	190	190	75	76	0	original,reflected
-897	529	529	75	77	0	original,reflected
-909	853	853	75	74	1	original,reflected
-915	169	169	75	75	0	original,reflected
-936	1301	1301	75	68	1	original
-988	580	580	75	76	0	original,reflected
+puzzle_id	known_length	best_length	delta	records	unique_solutions	variants	source_files	fresh_run_tag	slurm_job_id	slurm_array_task_id	beam_width	k1_radius
+103	75	74	-1	666	666	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+108	75	74	-1	1298	1298	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+114	75	73	-2	395	395	original	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+115	75	75	0	504	504	original,reflected	solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+117	75	74	-1	1119	1119	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+124	75	74	-1	771	771	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+140	75	74	-1	940	940	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+141	75	75	0	429	429	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+147	75	71	-4	873	873	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+161	75	73	-2	714	714	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+164	75	74	-1	534	534	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+170	75	73	-2	1368	1368	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+179	75	75	0	707	707	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+195	75	74	-1	1161	1161	original	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+204	75	74	-1	345	345	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+215	75	71	-4	815	815	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+219	75	73	-2	1348	1348	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+220	75	77	2	480	480	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+227	75	75	0	423	423	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+246	75	76	1	2193	2193	original,reflected	solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+248	75	74	-1	935	935	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5
+249	75	72	-3	1951	1951	original,reflected	solve_bucket_fresh_len75_all_k1_5_bw30m_prebuilt.tsv,solve_bucket_fresh_len75_remaining_k1_5_bw100m_prebuilt.tsv	len75_remaining_k1_5_bw100m_prebuilt	33166	completed_0_21	100000000	5

@@ -1,8 +1,24 @@
-# Megaminx puzzle 170
+# Megaminx Puzzle 170
 
-- records: 534
-- unique_solutions: 534
-- known_length: 75
-- best_length: 77
-- improved: 0
-- variants: original, reflected
+known_length: 75
+best_length: 73
+delta: -2
+records: 1368
+unique_solutions: 1368
+beam_width: 100000000
+
+## Unique Solutions by Length
+
+- 73: 2
+- 74: 5
+- 75: 210
+- 76: 19
+- 77: 604
+- 78: 52
+- 79: 376
+- 80: 100
+
+## Unique Solutions by Variant
+
+- original: 743
+- reflected: 625
