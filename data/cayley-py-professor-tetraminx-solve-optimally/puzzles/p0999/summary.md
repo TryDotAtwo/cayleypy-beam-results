@@ -1,6 +1,6 @@
 # cayley-py-professor-tetraminx-solve-optimally - Puzzle 999
 
-Solutions: 3  
+Solutions: 3
 Best length: 33
 
 ## Best solution

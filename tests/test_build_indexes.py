@@ -343,6 +343,7 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
     assert competition in summary
     assert "Puzzle 1" in summary
     assert "clockwise" in summary
+    assert all(line == line.rstrip() for line in summary.splitlines())
     assert (competition_root / "puzzles" / "p0010" / "solutions.tsv").is_file()
 
 

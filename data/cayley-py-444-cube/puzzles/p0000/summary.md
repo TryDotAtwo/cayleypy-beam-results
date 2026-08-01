@@ -1,6 +1,6 @@
 # cayley-py-444-cube - Puzzle 0
 
-Solutions: 5  
+Solutions: 5
 Best length: 1
 
 ## Best solution

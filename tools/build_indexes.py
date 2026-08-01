@@ -501,7 +501,7 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             ).encode("utf-8")
             summary = (
                 f"# {competition} - Puzzle {puzzle_id}\n\n"
-                f"Solutions: {len(puzzle_rows)}  \n"
+                f"Solutions: {len(puzzle_rows)}\n"
                 f"Best length: {winner.solution_length}\n\n"
                 "## Best solution\n\n"
                 "~~~text\n"

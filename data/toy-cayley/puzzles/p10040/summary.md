@@ -1,6 +1,6 @@
 # toy-cayley - Puzzle 10040
 
-Solutions: 1  
+Solutions: 1
 Best length: 1
 
 ## Best solution
