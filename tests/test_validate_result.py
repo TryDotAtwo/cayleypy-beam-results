@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import copy, importlib.util, json, shutil, subprocess
 from pathlib import Path
 import pytest
@@ -26,6 +26,43 @@ def make_repo(tmp_path, items):
 @pytest.mark.parametrize("name",["original_unicode_author","reflected","empty_path_source"])
 def test_valid_original_reflected_source(tmp_path,name):
     repo,base,head=make_repo(tmp_path,[record(name)]); validator.validate_range(repo,base,head)
+
+def test_labeled_states_are_bounded_by_num_classes():
+    assert validator.valid_labeled_state([0, 1, 0, 1], 4, 2)
+    assert not validator.valid_labeled_state([0, 2, 0, 1], 4, 2)
+
+def test_schema_accepts_piece_transformer_manifest():
+    item = env()
+    item["model"] = {
+        "filename": "model.pth",
+        "format": "piece-transformer",
+        "sha256": "d" * 64,
+        "manifest": {
+            "state_len": 96,
+            "num_classes": 6,
+            "output_dim": 24,
+            "dtype": "fp16",
+            "backend": "piece_transformer",
+            "model_arch": "piece_transformer",
+            "move_count": 24,
+            "num_pieces": 56,
+            "max_piece_size": 3,
+            "num_piece_types": 3,
+            "seq_len": 57,
+            "d_model": 256,
+            "nhead": 8,
+            "head_dim": 32,
+            "num_layers": 4,
+            "ff_dim": 1024,
+            "activation": "relu",
+            "pooling": "cls",
+            "piece_layout": "cube4",
+            "piece_embed_mode": "piece_local",
+            "input_embedding": "fast_slot_projected",
+        },
+    }
+    validator.load_schema(ROOT).validate({"schema_version": 1, "results": [item]})
+
 @pytest.mark.parametrize("mutate,code",[
     (lambda r:r["envelope"]["solution"].update(length=99),"SOLUTION_LENGTH"),
     (lambda r:r["envelope"]["proof"]["generators"].update(clockwise=[0,0,1]),"PERMUTATION"),

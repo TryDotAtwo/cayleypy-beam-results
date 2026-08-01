@@ -100,6 +100,16 @@ def valid_state(values: Any, n: int) -> bool:
     )
 
 
+def valid_labeled_state(values: Any, n: int, num_classes: int) -> bool:
+    return (
+        isinstance(values, list)
+        and len(values) == n
+        and all(
+            type(value) is int and 0 <= value < num_classes
+            for value in values
+        )
+    )
+
 def valid_permutation(values: Any, n: int) -> bool:
     return (
         valid_state(values, n)
@@ -165,7 +175,7 @@ def validate_integrity(envelope: dict[str, Any]) -> None:
     proof = envelope["proof"]
     manifest = envelope["model"]["manifest"]
     n = manifest["state_len"]
-    if n < 1 or n > MAX_STATE_LENGTH or manifest["num_classes"] != n:
+    if n < 1 or n > MAX_STATE_LENGTH or manifest["num_classes"] > n:
         error("STATE_LENGTH")
     generators = proof["generators"]
     if len(generators) > MAX_MOVE_COUNT:
@@ -176,8 +186,8 @@ def validate_integrity(envelope: dict[str, Any]) -> None:
     ):
         error("PERMUTATION")
     if (
-        not valid_state(proof["initial_state"], n)
-        or not valid_state(proof["central_state"], n)
+        not valid_labeled_state(proof["initial_state"], n, manifest["num_classes"])
+        or not valid_labeled_state(proof["central_state"], n, manifest["num_classes"])
     ):
         error("STATE_PERMUTATION")
     if len(envelope["solution"]["path"]) > MAX_PATH_LENGTH:
