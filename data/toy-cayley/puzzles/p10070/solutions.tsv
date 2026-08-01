@@ -1,0 +1,2 @@
+solution_path	solution_length	puzzle_id	final_orientation	author_name	submitted_at	submission_id	run_id	solver_commit	record_path
+clockwise	1	10070	original	load-author-10	2026-07-29T12:01:10.000Z	019fb3a6-8a26-7256-b766-cf23b76fdfb3	load-baseline-070	eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee	results/v1/toy-cayley/cube_3-3-3/10070/2026-07-29/019fb3a6-8a26-7256-b766-cf23b76fdfb3.json

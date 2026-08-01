@@ -30,7 +30,18 @@ GENERATED_INDEX_PATHS = {
     "data/by_author.tsv",
     "data/best_solutions.tsv",
     "data/runs.json",
-}
+}GENERATED_HUMAN_PATH = re.compile(
+    r"^data/[a-z0-9._-]{1,128}/(?:index\.tsv|puzzles/p[0-9]{4,}/"
+    r"(?:solutions\.tsv|best_solution\.tsv|metadata\.json|summary\.md))$"
+)
+
+
+def is_generated_path(relative: str) -> bool:
+    return (
+        relative in GENERATED_INDEX_PATHS
+        or relative == "data/.human-results-manifest.json"
+        or GENERATED_HUMAN_PATH.fullmatch(relative) is not None
+    )
 
 
 class ValidationError(Exception):
@@ -400,9 +411,11 @@ def validate_range(
     validator = load_schema(root)
     changes = diff_changes(root, base, head)
     for status, relative in changes:
-        if allow_generated_indexes and relative in GENERATED_INDEX_PATHS:
-            if status not in {"A", "M"}:
+        if allow_generated_indexes and is_generated_path(relative):
+            if status not in {"A", "M", "D"}:
                 error("DIFF_APPEND_ONLY", f"{status}:{relative}")
+            if status == "D":
+                continue
             mode_tokens = git(
                 root, "ls-tree", head, "--", relative
             ).split()

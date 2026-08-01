@@ -27,6 +27,7 @@ RESULT_PATH = re.compile(
     r"^results/v1/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
     r"(0|[1-9][0-9]*)/(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
 )
+HUMAN_MANIFEST = ".human-results-manifest.json"
 OUTPUT_NAMES = (
     "index.tsv",
     "by_author.tsv",
@@ -39,6 +40,7 @@ INDEX_HEADER = (
     "puzzle_id",
     "solution_length",
     "solved_depth",
+    "solution_path",
     "submission_id",
     "idempotency_key",
     "submitted_at",
@@ -149,6 +151,13 @@ class ResultRow:
         return _required_dict(self.envelope.get("solution"), "PROVENANCE")
 
     @property
+    def solution_path(self) -> str:
+        path = self.solution.get("path")
+        if not isinstance(path, list) or not all(isinstance(move, str) for move in path):
+            raise IndexBuildError("PROVENANCE")
+        return ".".join(path)
+
+    @property
     def solution_length(self) -> int:
         return _required_integer(self.solution.get("length"), "PROVENANCE")
 
@@ -225,6 +234,7 @@ class ResultRow:
             self.puzzle_id,
             self.solution_length,
             self.solved_depth,
+            self.solution_path,
             self.submission_id,
             self.idempotency_key,
             self.submitted_at,
@@ -384,6 +394,126 @@ def _run_record(row: ResultRow) -> dict[str, Any]:
     }
 
 
+HUMAN_HEADER = (
+    "solution_path",
+    "solution_length",
+    "puzzle_id",
+    "final_orientation",
+    "author_name",
+    "submitted_at",
+    "submission_id",
+    "run_id",
+    "solver_commit",
+    "record_path",
+)
+
+
+def _human_tuple(row: ResultRow) -> tuple[Any, ...]:
+    return (
+        row.solution_path,
+        row.solution_length,
+        row.puzzle_id,
+        row.final_orientation,
+        row.author_name,
+        row.submitted_at,
+        row.submission_id,
+        row.run_id,
+        row.solver_commit,
+        row.relative,
+    )
+
+
+def _human_sort_key(row: ResultRow) -> tuple[Any, ...]:
+    return (
+        row.puzzle_id,
+        row.solution_length,
+        row.solved_depth,
+        row.submission_id,
+        row.relative,
+    )
+
+
+def _human_metadata(row: ResultRow) -> dict[str, Any]:
+    return {
+        "author": row.envelope.get("author"),
+        "hardware": row.envelope.get("hardware"),
+        "idempotency_key": row.idempotency_key,
+        "kaggle": row.envelope.get("kaggle"),
+        "model": row.envelope.get("model"),
+        "orientation": row.envelope.get("orientation"),
+        "profile": row.envelope.get("profile"),
+        "proof_hashes": row.envelope.get("proof_hashes"),
+        "record_path": row.relative,
+        "run_id": row.run_id,
+        "runtime": row.envelope.get("runtime"),
+        "solution": row.solution,
+        "solver_commit": row.solver_commit,
+        "submission_id": row.submission_id,
+        "submitted_at": row.submitted_at,
+        "timings": row.envelope.get("timings"),
+    }
+
+
+def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
+    payloads: dict[str, bytes] = {}
+    competitions: dict[str, list[ResultRow]] = {}
+    for row in rows:
+        competitions.setdefault(row.competition, []).append(row)
+    for competition in sorted(competitions):
+        competition_rows = sorted(competitions[competition], key=_human_sort_key)
+        competition_header = (*HUMAN_HEADER, "puzzle_directory")
+        competition_values = [
+            (*_human_tuple(row), f"puzzles/p{row.puzzle_id:04d}")
+            for row in competition_rows
+        ]
+        payloads[f"{competition}/index.tsv"] = tsv_payload(
+            competition_header, competition_values
+        )
+        puzzles: dict[int, list[ResultRow]] = {}
+        for row in competition_rows:
+            puzzles.setdefault(row.puzzle_id, []).append(row)
+        for puzzle_id in sorted(puzzles):
+            puzzle_rows = sorted(puzzles[puzzle_id], key=_human_sort_key)
+            winner = min(
+                puzzle_rows,
+                key=lambda row: (
+                    row.solution_length,
+                    row.solved_depth,
+                    row.submission_id,
+                    row.relative,
+                ),
+            )
+            base = f"{competition}/puzzles/p{puzzle_id:04d}"
+            payloads[f"{base}/solutions.tsv"] = tsv_payload(
+                HUMAN_HEADER, (_human_tuple(row) for row in puzzle_rows)
+            )
+            payloads[f"{base}/best_solution.tsv"] = tsv_payload(
+                HUMAN_HEADER, (_human_tuple(winner),)
+            )
+            metadata = {
+                "competition": competition,
+                "puzzle_id": puzzle_id,
+                "schema_version": 1,
+                "solutions": [_human_metadata(row) for row in puzzle_rows],
+            }
+            payloads[f"{base}/metadata.json"] = (
+                canonical(metadata) + "\n"
+            ).encode("utf-8")
+            summary = (
+                f"# {competition} - Puzzle {puzzle_id}\n\n"
+                f"Solutions: {len(puzzle_rows)}\n"
+                f"Best length: {winner.solution_length}\n\n"
+                "## Best solution\n\n"
+                "~~~text\n"
+                f"{winner.solution_path}\n"
+                "~~~\n\n"
+                "[All solutions](solutions.tsv) | "
+                "[Best solution](best_solution.tsv) | "
+                "[Metadata](metadata.json)\n"
+            )
+            payloads[f"{base}/summary.md"] = summary.encode("utf-8")
+    return payloads
+
 def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
     index_rows = [row.index_tuple() for row in rows]
     by_author_rows = [
@@ -456,7 +586,7 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             )
         )
 
-    return {
+    payloads = {
         "index.tsv": tsv_payload(INDEX_HEADER, index_rows),
         "by_author.tsv": tsv_payload(
             (
@@ -481,24 +611,89 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             canonical({"schema_version": 1, "runs": runs}) + "\n"
         ).encode("utf-8"),
     }
+    human = human_payloads(rows)
+    payloads.update(human)
+    payloads[HUMAN_MANIFEST] = (
+        canonical({"schema_version": 1, "paths": sorted(human)}) + "\n"
+    ).encode("utf-8")
+    return payloads
 
+
+def _old_human_paths(out: Path) -> set[str]:
+    path = out / HUMAN_MANIFEST
+    if not path.is_file():
+        return set()
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        paths = value["paths"]
+    except (KeyError, TypeError, ValueError, OSError):
+        raise IndexBuildError("HUMAN_MANIFEST") from None
+    if not isinstance(paths, list) or not all(isinstance(item, str) for item in paths):
+        raise IndexBuildError("HUMAN_MANIFEST")
+    for item in paths:
+        candidate = Path(item)
+        if candidate.is_absolute() or ".." in candidate.parts or candidate.as_posix() != item:
+            raise IndexBuildError("HUMAN_MANIFEST")
+    return set(paths)
+
+
+def _discovered_human_paths(out: Path, expected: set[str]) -> set[str]:
+    competitions = {Path(name).parts[0] for name in expected}
+    discovered: set[str] = set()
+    puzzle_names = {
+        "solutions.tsv",
+        "best_solution.tsv",
+        "metadata.json",
+        "summary.md",
+    }
+    for competition in competitions:
+        competition_root = out / competition
+        index = competition_root / "index.tsv"
+        if index.is_file():
+            discovered.add(index.relative_to(out).as_posix())
+        puzzles = competition_root / "puzzles"
+        if not puzzles.is_dir():
+            continue
+        for puzzle in puzzles.iterdir():
+            if not puzzle.is_dir() or not re.fullmatch(r"p[0-9]{4,}", puzzle.name):
+                continue
+            for name in puzzle_names:
+                candidate = puzzle / name
+                if candidate.is_file():
+                    discovered.add(candidate.relative_to(out).as_posix())
+    return discovered
 
 def build(results: Path, out: Path) -> None:
     payloads = build_payloads(load_rows(results))
+    old_human_paths = _old_human_paths(out)
+    new_human_paths = set(
+        json.loads(payloads[HUMAN_MANIFEST])["paths"]
+    )
+    old_human_paths.update(_discovered_human_paths(out, new_human_paths))
     out.mkdir(parents=True, exist_ok=True)
     temporary: list[tuple[Path, Path]] = []
     try:
-        for name in OUTPUT_NAMES:
+        for name, payload in sorted(payloads.items()):
             destination = out / name
-            temp = out / f".{name}.tmp"
-            temp.write_bytes(payloads[name])
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            temp = destination.with_name(f".{destination.name}.tmp")
+            temp.write_bytes(payload)
             temporary.append((temp, destination))
         for temp, destination in temporary:
             temp.replace(destination)
+        for name in sorted(old_human_paths - new_human_paths, reverse=True):
+            stale = out / name
+            stale.unlink(missing_ok=True)
+            parent = stale.parent
+            while parent != out:
+                try:
+                    parent.rmdir()
+                except OSError:
+                    break
+                parent = parent.parent
     finally:
         for temp, _destination in temporary:
             temp.unlink(missing_ok=True)
-
 
 def main() -> None:
     parser = argparse.ArgumentParser()
