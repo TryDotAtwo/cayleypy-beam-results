@@ -637,12 +637,39 @@ def _old_human_paths(out: Path) -> set[str]:
     return set(paths)
 
 
+def _discovered_human_paths(out: Path, expected: set[str]) -> set[str]:
+    competitions = {Path(name).parts[0] for name in expected}
+    discovered: set[str] = set()
+    puzzle_names = {
+        "solutions.tsv",
+        "best_solution.tsv",
+        "metadata.json",
+        "summary.md",
+    }
+    for competition in competitions:
+        competition_root = out / competition
+        index = competition_root / "index.tsv"
+        if index.is_file():
+            discovered.add(index.relative_to(out).as_posix())
+        puzzles = competition_root / "puzzles"
+        if not puzzles.is_dir():
+            continue
+        for puzzle in puzzles.iterdir():
+            if not puzzle.is_dir() or not re.fullmatch(r"p[0-9]{4,}", puzzle.name):
+                continue
+            for name in puzzle_names:
+                candidate = puzzle / name
+                if candidate.is_file():
+                    discovered.add(candidate.relative_to(out).as_posix())
+    return discovered
+
 def build(results: Path, out: Path) -> None:
     payloads = build_payloads(load_rows(results))
     old_human_paths = _old_human_paths(out)
     new_human_paths = set(
         json.loads(payloads[HUMAN_MANIFEST])["paths"]
     )
+    old_human_paths.update(_discovered_human_paths(out, new_human_paths))
     out.mkdir(parents=True, exist_ok=True)
     temporary: list[tuple[Path, Path]] = []
     try:

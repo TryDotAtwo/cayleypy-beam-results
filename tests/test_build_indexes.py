@@ -355,10 +355,6 @@ def test_human_view_manifest_removes_stale_generated_files(tmp_path: Path) -> No
     stale.parent.mkdir(parents=True)
     stale.write_text("stale\n", encoding="utf-8")
     manifest_path = tmp_path / "data" / builder.HUMAN_MANIFEST
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["paths"].append(stale.relative_to(tmp_path / "data").as_posix())
-    manifest_path.write_text(builder.canonical(manifest) + "\n", encoding="utf-8")
-
     builder.build(tmp_path / "results", tmp_path / "data")
 
     assert not stale.exists()
