@@ -127,6 +127,14 @@ def test_deterministic_rebuild_best_tie_and_raw_immutability(
     )
     assert winner in best
     assert best.endswith("\t2\n")
+    index_lines = (roots[0] / "data" / "index.tsv").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    header = index_lines[0].split("\t")
+    assert header[header.index("solved_depth") + 1] == "solution_path"
+    assert ".".join(first["envelope"]["solution"]["path"]) in index_lines[1]
+    best_header = best.splitlines()[0].split("\t")
+    assert best_header[best_header.index("solved_depth") + 1] == "solution_path"
     for payload in output_bytes(roots[0] / "data").values():
         assert b"\r" not in payload
 

@@ -39,6 +39,7 @@ INDEX_HEADER = (
     "puzzle_id",
     "solution_length",
     "solved_depth",
+    "solution_path",
     "submission_id",
     "idempotency_key",
     "submitted_at",
@@ -149,6 +150,13 @@ class ResultRow:
         return _required_dict(self.envelope.get("solution"), "PROVENANCE")
 
     @property
+    def solution_path(self) -> str:
+        path = self.solution.get("path")
+        if not isinstance(path, list) or not all(isinstance(move, str) for move in path):
+            raise IndexBuildError("PROVENANCE")
+        return ".".join(path)
+
+    @property
     def solution_length(self) -> int:
         return _required_integer(self.solution.get("length"), "PROVENANCE")
 
@@ -225,6 +233,7 @@ class ResultRow:
             self.puzzle_id,
             self.solution_length,
             self.solved_depth,
+            self.solution_path,
             self.submission_id,
             self.idempotency_key,
             self.submitted_at,
