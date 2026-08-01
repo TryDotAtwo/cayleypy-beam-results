@@ -280,3 +280,88 @@ def test_unexpected_or_malformed_result_file_fails_closed(
     path.write_text("{}", encoding="utf-8")
     with pytest.raises(builder.IndexBuildError, match="RESULT_PATH"):
         builder.build(tmp_path / "results", tmp_path / "data")
+
+
+def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) -> None:
+    first = record()
+    second = copy.deepcopy(first)
+    reidentify(
+        second,
+        "018f7a24-8f6b-7c8e-9d1b-2a3b4c5d6e80",
+        "run-second",
+        "2026-07-29T10:31:00.000Z",
+    )
+    second["envelope"]["author"]["name"] = "second-author"
+    rehash(second)
+    third = copy.deepcopy(first)
+    reidentify(
+        third,
+        "018f7a24-8f6b-7c8e-9d1b-2a3b4c5d6e81",
+        "run-third",
+        "2026-07-29T10:32:00.000Z",
+    )
+    third["envelope"]["puzzle_id"] = 10
+    rehash(third)
+    for item in (first, second, third):
+        put(tmp_path, item)
+
+    builder.build(tmp_path / "results", tmp_path / "data")
+    competition = first["envelope"]["competition"]
+    competition_root = tmp_path / "data" / competition
+    competition_lines = (competition_root / "index.tsv").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    assert len(competition_lines) == 4
+    assert competition_lines[0].split("\t")[:4] == [
+        "solution_path",
+        "solution_length",
+        "puzzle_id",
+        "final_orientation",
+    ]
+    assert [line.split("\t")[2] for line in competition_lines[1:]] == [
+        "1",
+        "1",
+        "10",
+    ]
+
+    puzzle_root = competition_root / "puzzles" / "p0001"
+    solutions = (puzzle_root / "solutions.tsv").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    best = (puzzle_root / "best_solution.tsv").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    assert len(solutions) == 3
+    assert len(best) == 2
+    assert best[1].split("\t")[0] == "clockwise"
+    metadata = json.loads(
+        (puzzle_root / "metadata.json").read_text(encoding="utf-8")
+    )
+    assert len(metadata["solutions"]) == 2
+    assert metadata["solutions"][0]["record_path"].startswith("results/v1/")
+    summary = (puzzle_root / "summary.md").read_text(encoding="utf-8")
+    assert competition in summary
+    assert "Puzzle 1" in summary
+    assert "clockwise" in summary
+    assert (competition_root / "puzzles" / "p0010" / "solutions.tsv").is_file()
+
+
+def test_human_view_manifest_removes_stale_generated_files(tmp_path: Path) -> None:
+    item = record()
+    put(tmp_path, item)
+    builder.build(tmp_path / "results", tmp_path / "data")
+    competition = item["envelope"]["competition"]
+    stale = tmp_path / "data" / competition / "puzzles" / "p9999" / "summary.md"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("stale\n", encoding="utf-8")
+    manifest_path = tmp_path / "data" / builder.HUMAN_MANIFEST
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["paths"].append(stale.relative_to(tmp_path / "data").as_posix())
+    manifest_path.write_text(builder.canonical(manifest) + "\n", encoding="utf-8")
+
+    builder.build(tmp_path / "results", tmp_path / "data")
+
+    assert not stale.exists()
+    rebuilt = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert rebuilt["paths"] == sorted(rebuilt["paths"])
+    assert all((tmp_path / "data" / path).is_file() for path in rebuilt["paths"])
