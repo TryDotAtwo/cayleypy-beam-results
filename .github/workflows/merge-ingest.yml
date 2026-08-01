@@ -111,20 +111,20 @@ jobs:
               --head HEAD \
               --allow-generated-indexes
             python tools/build_indexes.py --results results --out data
-            git add -- \
-              data/index.tsv \
-              data/by_author.tsv \
-              data/best_solutions.tsv \
-              data/runs.json
+            git add -- data
 
             while IFS= read -r changed; do
               case "$changed" in
                 data/index.tsv|data/by_author.tsv|\
-                data/best_solutions.tsv|data/runs.json) ;;
+                data/best_solutions.tsv|data/runs.json|\
+                data/.human-results-manifest.json|\
+                data/*/index.tsv|data/*/puzzles/p*/solutions.tsv|\
+                data/*/puzzles/p*/best_solution.tsv|\
+                data/*/puzzles/p*/metadata.json|\
+                data/*/puzzles/p*/summary.md) ;;
                 *) exit 1 ;;
               esac
             done < <(git diff --cached --name-only)
-
             if ! git diff --cached --quiet; then
               git commit -m "chore: rebuild CayleyPy result indexes"
             fi
@@ -163,6 +163,25 @@ jobs:
             cmp --silent \
               data/best_solutions.tsv "$generated/best_solutions.tsv"
             cmp --silent data/runs.json "$generated/runs.json"
+            cmp --silent data/.human-results-manifest.json \
+              "$generated/.human-results-manifest.json"
+            python - "$generated" <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+
+          generated = Path(sys.argv[1])
+          payload = json.loads(
+              (generated / ".human-results-manifest.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          for relative in payload["paths"]:
+              if (Path("data") / relative).read_bytes() != (
+                  generated / relative
+              ).read_bytes():
+                  raise SystemExit(f"generated payload mismatch: {relative}")
+          PY
             rm -rf -- "$generated"
             trap - EXIT
 

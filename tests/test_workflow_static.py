@@ -54,6 +54,8 @@ def test_promotion_rebuilds_and_matches_the_exact_remote_head():
     assert "git push" in promote
     assert "--force-with-lease=" in promote
     assert "cmp --silent data/index.tsv" in promote
+    assert "data/.human-results-manifest.json" in promote
+    assert 'payload["paths"]' in promote
     assert "--match-head-commit" in promote
     assert "gh pr checks" not in promote
     assert "pull_request:" not in promote

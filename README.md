@@ -19,9 +19,15 @@ data/index.tsv
 data/by_author.tsv
 data/best_solutions.tsv
 data/runs.json
+data/.human-results-manifest.json
+data/<competition-slug>/index.tsv
+data/<competition-slug>/puzzles/pNNNN/solutions.tsv
+data/<competition-slug>/puzzles/pNNNN/best_solution.tsv
+data/<competition-slug>/puzzles/pNNNN/metadata.json
+data/<competition-slug>/puzzles/pNNNN/summary.md
 ```
 
-They are rebuilt from the complete `results/` tree. Promotion mode permits only this allowlist and byte-compares every checked-in derivative with a fresh rebuild. Legacy `data/` subdirectories and every `results/v1` record remain untouched.
+They are rebuilt from the complete `results/` tree. Each competition `index.tsv` contains every solution for every puzzle; `best_solution.tsv` contains the deterministic shortest winner for its puzzle. Long Kaggle competition slugs are preserved as directory names, while detailed provenance remains in `metadata.json`. Promotion mode permits only this allowlist and byte-compares every checked-in derivative with a fresh rebuild. Legacy `data/` subdirectories and every `results/v1` record remain untouched.
 
 ## Trusted publisher and authorship
 
@@ -36,9 +42,9 @@ The producer service routes every validated submission through one Durable Objec
 For each trusted App push, `validate-ingest` validates the append-only range. When enabled, the reusable `promote-ingest` workflow then:
 
 1. Fetches the latest staging and main heads and retries when the triggering commit is no longer an ancestor of staging.
-2. Reconciles staging with `main` using a regular merge when necessary, validates the merged range, and rebuilds the four indexes deterministically.
+2. Reconciles staging with `main` using a regular merge when necessary, validates the merged range, and rebuilds all indexes and human-readable puzzle views deterministically.
 3. Publishes only with a lease, then re-fetches and re-validates the exact candidate SHA.
-4. Byte-compares all indexes with a clean rebuild and creates the completed Check Run `cayleypy-results/exact-candidate` on that SHA.
+4. Byte-compares all generated files with a clean rebuild and creates the completed Check Run `cayleypy-results/exact-candidate` on that SHA.
 5. Creates or updates the same-repository `ingest/staging` to `main` PR, applies `cayleypy-ingest-approved`, and performs a regular merge guarded by `--match-head-commit`.
 
 A concurrent publication changes the head lease or PR head and causes a retry; it cannot merge a stale candidate. After a successful regular merge, staging is fast-forwarded to the published main commit when its lease still matches. Scheduled reconciliation runs every ten minutes, and `workflow_dispatch` is available for manual recovery.
@@ -62,7 +68,7 @@ python -m pip install -r requirements.txt
 python tools/validate_result.py --base <trusted-base-sha> --head <candidate-head-sha>
 ```
 
-Promotion-mode validation permits only the four derived index paths in addition to append-only records:
+Promotion-mode validation permits only the generated global indexes and manifest-owned competition/puzzle views in addition to append-only records:
 
 ```bash
 python tools/validate_result.py --base <main-sha> --head <candidate-sha> --allow-generated-indexes

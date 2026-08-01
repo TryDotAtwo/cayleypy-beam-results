@@ -87,6 +87,13 @@ def test_generated_indexes_need_explicit_promotion_mode(tmp_path: Path):
     validator.validate_range(
         repo, base, indexed_head, allow_generated_indexes=True
     )
+    human = repo / "data/toy-cayley/puzzles/p0001/solutions.tsv"
+    human.parent.mkdir(parents=True)
+    human.write_text("solution_path\nclockwise\n", encoding="utf-8")
+    human_head = commit(repo, "human view")
+    validator.validate_range(
+        repo, indexed_head, human_head, allow_generated_indexes=True
+    )
 
     (repo / "data/unexpected.tsv").write_text(
         "not allowlisted\n", encoding="utf-8"
