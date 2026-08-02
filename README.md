@@ -1,6 +1,6 @@
 # CayleyPy Beam Results
 
-This repository is the public, append-only record store for canonical CayleyPy v1 results. `ingest/staging` is the trusted publication branch; `main` contains only fully validated, exactly indexed publications.
+This repository is the public, append-only record store for canonical CayleyPy results from Kaggle and native SLURM runs. `ingest/staging` is the trusted publication branch; `main` contains only fully validated, exactly indexed publications.
 
 ## Record contract
 
@@ -8,9 +8,10 @@ Normal producer commits may add only regular files at:
 
 ```
 results/v1/<safe-competition>/<safe-puzzle-type>/<puzzle-id>/<UTC-date>/<uuidv7>.json
+data/v2/slurm/<safe-competition>/<safe-puzzle-type>/<UTC-date>/<uuidv7>.json
 ```
 
-Existing records are immutable: edits, deletions, renames, symlinks, executable files, malformed wrappers, non-canonical JSON, duplicate submission/idempotency keys, and oversized envelopes are rejected. The validator applies the v1 JSON Schema, canonical SHA-256/idempotency checks, bounded permutation replay, reflection provenance/inverse checks, model-head parity, and a complete `HEAD` duplicate scan.
+Existing records are immutable: edits, deletions, renames, symlinks, executable files, malformed wrappers, non-canonical JSON, duplicate submission/idempotency keys, and oversized envelopes are rejected. The validator applies the matching v1 Kaggle or v2 SLURM JSON Schema, canonical SHA-256/idempotency checks, bounded permutation replay, reflection provenance/inverse checks, model-head parity, profile/hardware consistency, and a complete `HEAD` duplicate scan.
 
 Only the promotion system may modify these deterministic derivatives:
 
@@ -27,7 +28,7 @@ data/<competition-slug>/puzzles/pNNNN/metadata.json
 data/<competition-slug>/puzzles/pNNNN/summary.md
 ```
 
-They are rebuilt from the complete `results/` tree. Each competition `index.tsv` contains every solution for every puzzle; `best_solution.tsv` contains the deterministic shortest winner for its puzzle. Long Kaggle competition slugs are preserved as directory names, while detailed provenance remains in `metadata.json`. Promotion mode permits only this allowlist and byte-compares every checked-in derivative with a fresh rebuild. Legacy `data/` subdirectories and every `results/v1` record remain untouched.
+They are rebuilt from both canonical source trees. Every generated TSV uses one identical wide schema. Its first columns are `puzzle_id`, `solution_length`, `solution`, `beam_effective`, `final_orientation`, `touch_radius`, `model_class`, `author_name`, and `submitted_at`; the remaining columns preserve runtime, model, hardware, profile, and provenance identifiers. Each competition `index.tsv` contains every solution for every puzzle; `best_solution.tsv` contains the deterministic shortest winner for its puzzle. Long competition slugs are preserved as directory names, while complete nested metadata and proof fields remain in `metadata.json` and `runs.json`. Promotion mode permits only this allowlist and byte-compares every checked-in derivative with a fresh rebuild. Legacy `data/` subdirectories and all canonical source records remain untouched.
 
 ## Trusted publisher and authorship
 

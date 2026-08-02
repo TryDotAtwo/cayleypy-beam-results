@@ -25,6 +25,10 @@ RESULT_PATH = re.compile(
     r"^results/v1/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
     r"(0|[1-9][0-9]*)/(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
 )
+RESULT_PATH_V2 = re.compile(
+    r"^data/v2/slurm/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
+    r"(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
+)
 GENERATED_INDEX_PATHS = {
     "data/index.tsv",
     "data/by_author.tsv",
@@ -79,9 +83,11 @@ def error(code: str, detail: str = "") -> None:
     raise ValidationError(code, detail)
 
 
-def load_schema(root: Path) -> Draft202012Validator:
+def load_schema(root: Path, version: int = 1) -> Draft202012Validator:
+    if version not in {1, 2}:
+        error("SCHEMA_VERSION")
     schema = json.loads(
-        (root / "schemas/result-v1.schema.json").read_text(encoding="utf-8")
+        (root / f"schemas/result-v{version}.schema.json").read_text(encoding="utf-8")
     )
     return Draft202012Validator(schema, format_checker=FormatChecker())
 
@@ -91,7 +97,7 @@ def validate_schema(
 ) -> None:
     issues = sorted(
         validator.iter_errors(
-            {"schema_version": 1, "results": [envelope]}
+            {"schema_version": envelope.get("schema_version"), "results": [envelope]}
         ),
         key=lambda issue: list(issue.absolute_path),
     )
@@ -271,6 +277,39 @@ def validate_integrity(envelope: dict[str, Any]) -> None:
         and output_dim != move_count
     ):
         error("MODEL_HEAD")
+    if envelope.get("schema_version") == 2:
+        hardware = envelope["hardware"]
+        profile = envelope["profile"]
+        provenance = envelope["provenance"]
+        if (
+            len(hardware["gpu_names"]) != hardware["accelerator_count"]
+            or hardware["world_size"] != hardware["accelerator_count"]
+            or len(set(hardware["gpu_names"])) != 1
+        ):
+            error("HARDWARE_CARDINALITY")
+        if (
+            profile["native_sm"] != hardware["native_sm"]
+            or profile["world_size"] != hardware["world_size"]
+            or profile["vram_mib"] != hardware["vram_mib_per_gpu"]
+        ):
+            error("PROFILE_HARDWARE")
+        if (
+            profile["effective_beam"] < profile["requested_beam"]
+            or profile["alignment_delta"]
+            != profile["effective_beam"] - profile["requested_beam"]
+        ):
+            error("PROFILE_BEAM")
+        if profile["profile_anchor_beam"] != 2 ** profile["profile_power"]:
+            error("PROFILE_ANCHOR")
+        expected_backend = (
+            "piece_transformer"
+            if envelope["model"]["format"] == "piece-transformer"
+            else "mlp"
+        )
+        if profile["backend"] != expected_backend:
+            error("PROFILE_BACKEND")
+        if provenance["run_id"] != envelope["run_id"]:
+            error("RUN_PROVENANCE")
     if digest(semantic(envelope)) != envelope["idempotency_key"]:
         error("IDEMPOTENCY")
 
@@ -280,25 +319,36 @@ def validate_path(
     submission_id: str,
     envelope: dict[str, Any],
 ) -> None:
-    match = RESULT_PATH.fullmatch(relative)
+    version = envelope.get("schema_version")
+    match = (RESULT_PATH if version == 1 else RESULT_PATH_V2 if version == 2 else re.compile(r"a^")).fullmatch(relative)
     if not match or not UUID7.fullmatch(submission_id):
         error("PATH")
-    competition, puzzle_type, puzzle_id, day, path_id = match.groups()
+    groups = match.groups()
+    if version == 1:
+        competition, puzzle_type, puzzle_id, day, path_id = groups
+        derived = (
+            safe_segment(envelope["competition"]),
+            safe_segment(envelope["puzzle_type"]),
+            str(envelope["puzzle_id"]),
+            envelope["submitted_at"][:10],
+        )
+        claimed = (competition, puzzle_type, puzzle_id, day)
+    else:
+        competition, puzzle_type, day, path_id = groups
+        derived = (
+            safe_segment(envelope["competition"]),
+            safe_segment(envelope["puzzle_type"]),
+            envelope["submitted_at"][:10],
+        )
+        claimed = (competition, puzzle_type, day)
     if path_id != submission_id:
         error("PATH_UUID")
     try:
         datetime.strptime(day, "%Y-%m-%d")
     except ValueError:
         error("PATH_DAY")
-    derived = (
-        safe_segment(envelope["competition"]),
-        safe_segment(envelope["puzzle_type"]),
-        str(envelope["puzzle_id"]),
-        envelope["submitted_at"][:10],
-    )
-    if derived != (competition, puzzle_type, puzzle_id, day):
+    if derived != claimed:
         error("PATH_DERIVATION")
-
 
 def validate_record(
     root: Path,
@@ -328,7 +378,8 @@ def validate_record(
         error("WRAPPER")
     submission_id = record["submission_id"]
     envelope = record["envelope"]
-    validate_schema(envelope, validator)
+    version = envelope.get("schema_version")
+    validate_schema(envelope, load_schema(root, version))
     validate_path(relative, submission_id, envelope)
     validate_integrity(envelope)
     return submission_id, envelope["idempotency_key"]
@@ -391,10 +442,9 @@ def head_result_paths(root: Path, head: str) -> Iterable[str]:
             )
         except (UnicodeDecodeError, ValueError):
             error("HEAD_TREE")
-        if relative.startswith("results/v1/"):
-            if has_surrogate(relative) or not RESULT_PATH.fullmatch(
-                relative
-            ):
+        if relative.startswith("results/v1/") or relative.startswith("data/v2/slurm/"):
+            path_pattern = RESULT_PATH if relative.startswith("results/v1/") else RESULT_PATH_V2
+            if has_surrogate(relative) or not path_pattern.fullmatch(relative):
                 error("HEAD_PATH")
             if mode != b"100644" or kind != b"blob":
                 error("HEAD_MODE", relative)
@@ -422,7 +472,7 @@ def validate_range(
             if not mode_tokens or mode_tokens[0] != "100644":
                 error("DIFF_MODE", relative)
             continue
-        if status != "A" or not RESULT_PATH.fullmatch(relative):
+        if status != "A" or not (RESULT_PATH.fullmatch(relative) or RESULT_PATH_V2.fullmatch(relative)):
             error("DIFF_APPEND_ONLY", f"{status}:{relative}")
         mode_tokens = git(
             root, "ls-tree", head, "--", relative

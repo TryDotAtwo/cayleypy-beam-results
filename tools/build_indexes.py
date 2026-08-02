@@ -27,6 +27,10 @@ RESULT_PATH = re.compile(
     r"^results/v1/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
     r"(0|[1-9][0-9]*)/(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
 )
+RESULT_PATH_V2 = re.compile(
+    r"^data/v2/slurm/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
+    r"(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
+)
 HUMAN_MANIFEST = ".human-results-manifest.json"
 OUTPUT_NAMES = (
     "index.tsv",
@@ -34,24 +38,49 @@ OUTPUT_NAMES = (
     "best_solutions.tsv",
     "runs.json",
 )
-INDEX_HEADER = (
-    "competition",
-    "puzzle_type",
+WIDE_HEADER = (
     "puzzle_id",
     "solution_length",
+    "solution",
+    "beam_effective",
+    "final_orientation",
+    "touch_radius",
+    "model_class",
+    "author_name",
+    "submitted_at",
+    "competition",
+    "puzzle_type",
+    "beam_requested",
+    "beam_alignment_delta",
+    "solution_mode",
+    "collection_status",
+    "collection_index",
     "solved_depth",
-    "solution_path",
+    "touch_depth",
+    "max_depth",
+    "max_collected_solutions",
+    "model_id",
+    "model_filename",
+    "model_sha256",
+    "model_format",
+    "model_dtype",
+    "model_output_dim",
+    "platform",
+    "gpu_names",
+    "gpu_count",
+    "world_size",
+    "native_sm",
+    "vram_mib_per_gpu",
+    "solve_us",
+    "wall_us",
+    "profile_id",
+    "profile_power",
+    "profile_status",
+    "run_id",
     "submission_id",
     "idempotency_key",
-    "submitted_at",
-    "author_name",
-    "kaggle_username",
-    "run_id",
-    "final_orientation",
-    "model_class",
-    "output_dim",
-    "model_sha256",
     "solver_commit",
+    "producer_url",
     "record_path",
 )
 
@@ -93,6 +122,20 @@ def _required_integer(value: Any, code: str) -> int:
     if type(value) is not int:
         raise IndexBuildError(code)
     return value
+def _optional_string(value: Any, code: str) -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise IndexBuildError(code)
+    return value
+
+
+def _optional_integer(value: Any, code: str) -> int | str:
+    if value is None:
+        return ""
+    if type(value) is not int:
+        raise IndexBuildError(code)
+    return value
 
 
 def _formula_after_ignored_prefix(value: str) -> bool:
@@ -102,7 +145,8 @@ def _formula_after_ignored_prefix(value: str) -> bool:
         if not (character.isspace() or ord(character) < 32 or ord(character) == 127):
             break
         index += 1
-    return value[index:index + 1] in "=+-@"
+    prefix = value[index:index + 1]
+    return bool(prefix) and prefix in "=+-@"
 
 
 def tsv_cell(value: Any) -> str:
@@ -225,29 +269,104 @@ class ResultRow:
 
     @property
     def solver_commit(self) -> str:
+        if self.envelope.get("schema_version") == 2:
+            provenance = _required_dict(self.envelope.get("provenance"), "PROVENANCE")
+            return _required_string(provenance.get("solver_commit"), "PROVENANCE")
         return _required_string(self.envelope.get("solver_commit"), "PROVENANCE")
 
-    def index_tuple(self) -> tuple[Any, ...]:
+    @property
+    def runtime(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("runtime"), "PROVENANCE")
+
+    @property
+    def hardware(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("hardware"), "PROVENANCE")
+
+    @property
+    def timings(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("timings"), "PROVENANCE")
+
+    @property
+    def manifest(self) -> dict[str, Any]:
+        return _required_dict(self.model.get("manifest"), "PROVENANCE")
+
+    @property
+    def model_filename(self) -> str:
+        return _required_string(self.model.get("filename"), "PROVENANCE")
+
+    @property
+    def model_id(self) -> str:
+        return f"{self.model_filename}@{self.model_sha256[:12]}"
+
+    @property
+    def gpu_names(self) -> str:
+        names = self.hardware.get("gpu_names")
+        if not isinstance(names, list) or not names or not all(isinstance(name, str) and name for name in names):
+            raise IndexBuildError("PROVENANCE")
+        return "|".join(names)
+
+    @property
+    def producer_url(self) -> str:
+        kaggle = self.envelope.get("kaggle")
+        if kaggle is None:
+            return ""
+        return _required_string(_required_dict(kaggle, "PROVENANCE").get("run_url"), "PROVENANCE")
+
+    def wide_tuple(self) -> tuple[Any, ...]:
+        profile = self.profile
+        runtime = self.runtime
+        hardware = self.hardware
+        timings = self.timings
+        solution = self.solution
+        manifest = self.manifest
         return (
-            self.competition,
-            self.puzzle_type,
             self.puzzle_id,
             self.solution_length,
-            self.solved_depth,
             self.solution_path,
+            _required_integer(profile.get("effective_beam"), "PROVENANCE"),
+            self.final_orientation,
+            _required_integer(runtime.get("touch_bfs_radius"), "PROVENANCE"),
+            self.model_class,
+            self.author_name,
+            self.submitted_at,
+            self.competition,
+            self.puzzle_type,
+            _required_integer(profile.get("requested_beam"), "PROVENANCE"),
+            _required_integer(profile.get("alignment_delta"), "PROVENANCE"),
+            _required_string(runtime.get("solution_mode"), "PROVENANCE"),
+            _required_string(solution.get("collection_status"), "PROVENANCE"),
+            _optional_integer(solution.get("collection_index"), "PROVENANCE"),
+            self.solved_depth,
+            _optional_integer(solution.get("touch_depth"), "PROVENANCE"),
+            _required_integer(runtime.get("max_depth"), "PROVENANCE"),
+            _required_integer(runtime.get("max_collected_solutions"), "PROVENANCE"),
+            self.model_id,
+            self.model_filename,
+            self.model_sha256,
+            _required_string(self.model.get("format"), "PROVENANCE"),
+            _required_string(manifest.get("dtype"), "PROVENANCE"),
+            self.output_dim,
+            _required_string(hardware.get("platform"), "PROVENANCE"),
+            self.gpu_names,
+            _required_integer(hardware.get("accelerator_count"), "PROVENANCE"),
+            _required_integer(hardware.get("world_size"), "PROVENANCE"),
+            _optional_integer(hardware.get("native_sm"), "PROVENANCE"),
+            _optional_integer(hardware.get("vram_mib_per_gpu"), "PROVENANCE"),
+            _required_integer(timings.get("solve_us"), "PROVENANCE"),
+            _required_integer(timings.get("wall_us"), "PROVENANCE"),
+            _required_string(profile.get("selected_profile") if self.envelope.get("schema_version") == 1 else profile.get("profile_evidence_id"), "PROVENANCE"),
+            _required_integer(profile.get("profile_power"), "PROVENANCE"),
+            _required_string(profile.get("evidence") if self.envelope.get("schema_version") == 1 else profile.get("profile_status"), "PROVENANCE"),
+            self.run_id,
             self.submission_id,
             self.idempotency_key,
-            self.submitted_at,
-            self.author_name,
-            self.kaggle_username,
-            self.run_id,
-            self.final_orientation,
-            self.model_class,
-            self.output_dim,
-            self.model_sha256,
             self.solver_commit,
+            self.producer_url,
             self.relative,
         )
+
+    def index_tuple(self) -> tuple[Any, ...]:
+        return self.wide_tuple()
 
     def primary_key(self) -> tuple[Any, ...]:
         return (
@@ -277,27 +396,43 @@ def _decode_json(path: Path) -> Any:
 
 
 def _validate_path(relative: str, submission_id: str, envelope: dict[str, Any]) -> None:
-    match = RESULT_PATH.fullmatch(relative)
+    version = envelope.get("schema_version")
+    pattern = RESULT_PATH if version == 1 else RESULT_PATH_V2 if version == 2 else re.compile(r"a^")
+    match = pattern.fullmatch(relative)
     if not match or not UUID7.fullmatch(submission_id):
         raise IndexBuildError("PATH")
-    competition, puzzle_type, puzzle_id, day, path_id = match.groups()
-    if path_id != submission_id:
-        raise IndexBuildError("PATH_UUID")
-    try:
-        datetime.strptime(day, "%Y-%m-%d")
+    groups = match.groups()
+    if version == 1:
+        competition, puzzle_type, puzzle_id, day, path_id = groups
         derived = (
             safe_segment(_required_string(envelope.get("competition"), "PROVENANCE")),
             safe_segment(_required_string(envelope.get("puzzle_type"), "PROVENANCE")),
             str(_required_integer(envelope.get("puzzle_id"), "PROVENANCE")),
             _required_string(envelope.get("submitted_at"), "PROVENANCE")[:10],
         )
+        claimed = (competition, puzzle_type, puzzle_id, day)
+    else:
+        competition, puzzle_type, day, path_id = groups
+        derived = (
+            safe_segment(_required_string(envelope.get("competition"), "PROVENANCE")),
+            safe_segment(_required_string(envelope.get("puzzle_type"), "PROVENANCE")),
+            _required_string(envelope.get("submitted_at"), "PROVENANCE")[:10],
+        )
+        claimed = (competition, puzzle_type, day)
+    if path_id != submission_id:
+        raise IndexBuildError("PATH_UUID")
+    try:
+        datetime.strptime(day, "%Y-%m-%d")
     except ValueError:
         raise IndexBuildError("PATH_DAY") from None
-    if derived != (competition, puzzle_type, puzzle_id, day):
+    if derived != claimed:
         raise IndexBuildError("PATH_DERIVATION")
 
-
-def _record_paths(results: Path) -> list[Path]:
+def _record_paths(
+    results: Path,
+    pattern: re.Pattern[str] = RESULT_PATH,
+    relative_root: Path | None = None,
+) -> list[Path]:
     if not results.exists():
         return []
     if not results.is_dir() or results.is_symlink():
@@ -310,19 +445,22 @@ def _record_paths(results: Path) -> list[Path]:
             continue
         if not path.is_file():
             raise IndexBuildError("RESULT_FILE")
-        relative = path.relative_to(results.parent).as_posix()
-        if not RESULT_PATH.fullmatch(relative):
+        relative = path.relative_to(relative_root or results.parent).as_posix()
+        if not pattern.fullmatch(relative):
             raise IndexBuildError("RESULT_PATH")
         output.append(path)
     return sorted(output, key=lambda path: path.relative_to(results.parent).as_posix())
 
 
-def load_rows(results: Path) -> list[ResultRow]:
+def load_rows(results: Path, native_results: Path | None = None) -> list[ResultRow]:
     rows: list[ResultRow] = []
-    schema_validator = load_schema(Path(__file__).resolve().parents[1])
+    schema_root = Path(__file__).resolve().parents[1]
     seen_submission: set[str] = set()
     seen_idempotency: set[str] = set()
-    for path in _record_paths(results):
+    paths = _record_paths(results)
+    if native_results is not None:
+        paths.extend(_record_paths(native_results, RESULT_PATH_V2, results.parent))
+    for path in sorted(paths, key=lambda item: item.relative_to(results.parent).as_posix()):
         relative = path.relative_to(results.parent).as_posix()
         record = _decode_json(path)
         if (
@@ -339,7 +477,7 @@ def load_rows(results: Path) -> list[ResultRow]:
         # Force all indexed fields through their fail-closed type checks.
         row.index_tuple()
         try:
-            validate_schema(envelope, schema_validator)
+            validate_schema(envelope, load_schema(schema_root, envelope.get("schema_version")))
             validate_integrity(envelope)
         except RecordValidationError as exc:
             raise IndexBuildError(f"RECORD_{exc.code}") from None
@@ -354,13 +492,23 @@ def load_rows(results: Path) -> list[ResultRow]:
 
 
 def _run_provenance(row: ResultRow) -> dict[str, Any]:
-    return {
+    common = {
         "author": row.author,
-        "kaggle": _required_dict(row.envelope.get("kaggle"), "PROVENANCE"),
         "model": row.model,
-        "hardware": _required_dict(row.envelope.get("hardware"), "PROVENANCE"),
+        "hardware": row.hardware,
         "profile": row.profile,
         "solver_commit": row.solver_commit,
+    }
+    if row.envelope.get("schema_version") == 2:
+        return {
+            **common,
+            "provenance": _required_dict(
+                row.envelope.get("provenance"), "PROVENANCE"
+            ),
+        }
+    return {
+        **common,
+        "kaggle": _required_dict(row.envelope.get("kaggle"), "PROVENANCE"),
     }
 
 
@@ -394,35 +542,6 @@ def _run_record(row: ResultRow) -> dict[str, Any]:
     }
 
 
-HUMAN_HEADER = (
-    "solution_path",
-    "solution_length",
-    "puzzle_id",
-    "final_orientation",
-    "author_name",
-    "submitted_at",
-    "submission_id",
-    "run_id",
-    "solver_commit",
-    "record_path",
-)
-
-
-def _human_tuple(row: ResultRow) -> tuple[Any, ...]:
-    return (
-        row.solution_path,
-        row.solution_length,
-        row.puzzle_id,
-        row.final_orientation,
-        row.author_name,
-        row.submitted_at,
-        row.submission_id,
-        row.run_id,
-        row.solver_commit,
-        row.relative,
-    )
-
-
 def _human_sort_key(row: ResultRow) -> tuple[Any, ...]:
     return (
         row.puzzle_id,
@@ -435,14 +554,16 @@ def _human_sort_key(row: ResultRow) -> tuple[Any, ...]:
 
 def _human_metadata(row: ResultRow) -> dict[str, Any]:
     return {
+        "schema_version": row.envelope.get("schema_version"),
         "author": row.envelope.get("author"),
         "hardware": row.envelope.get("hardware"),
         "idempotency_key": row.idempotency_key,
         "kaggle": row.envelope.get("kaggle"),
+        "provenance": row.envelope.get("provenance"),
         "model": row.envelope.get("model"),
         "orientation": row.envelope.get("orientation"),
         "profile": row.envelope.get("profile"),
-        "proof_hashes": row.envelope.get("proof_hashes"),
+        "proof": row.envelope.get("proof"),
         "record_path": row.relative,
         "run_id": row.run_id,
         "runtime": row.envelope.get("runtime"),
@@ -461,13 +582,8 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         competitions.setdefault(row.competition, []).append(row)
     for competition in sorted(competitions):
         competition_rows = sorted(competitions[competition], key=_human_sort_key)
-        competition_header = (*HUMAN_HEADER, "puzzle_directory")
-        competition_values = [
-            (*_human_tuple(row), f"puzzles/p{row.puzzle_id:04d}")
-            for row in competition_rows
-        ]
         payloads[f"{competition}/index.tsv"] = tsv_payload(
-            competition_header, competition_values
+            WIDE_HEADER, (row.wide_tuple() for row in competition_rows)
         )
         puzzles: dict[int, list[ResultRow]] = {}
         for row in competition_rows:
@@ -485,10 +601,10 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             )
             base = f"{competition}/puzzles/p{puzzle_id:04d}"
             payloads[f"{base}/solutions.tsv"] = tsv_payload(
-                HUMAN_HEADER, (_human_tuple(row) for row in puzzle_rows)
+                WIDE_HEADER, (row.wide_tuple() for row in puzzle_rows)
             )
             payloads[f"{base}/best_solution.tsv"] = tsv_payload(
-                HUMAN_HEADER, (_human_tuple(winner),)
+                WIDE_HEADER, (winner.wide_tuple(),)
             )
             metadata = {
                 "competition": competition,
@@ -503,6 +619,14 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 f"# {competition} - Puzzle {puzzle_id}\n\n"
                 f"Solutions: {len(puzzle_rows)}\n"
                 f"Best length: {winner.solution_length}\n\n"
+                "## Run facts\n\n"
+                f"- Effective beam: `{winner.profile['effective_beam']}`\n"
+                f"- Orientation: `{winner.final_orientation}`\n"
+                f"- Touch radius: `{winner.runtime['touch_bfs_radius']}`\n"
+                f"- Model: `{winner.model_id}`\n"
+                f"- Model class: `{winner.model_class}`\n"
+                f"- Author: `{winner.author_name}`\n"
+                f"- Submitted at: `{winner.submitted_at}`\n\n"
                 "## Best solution\n\n"
                 "~~~text\n"
                 f"{winner.solution_path}\n"
@@ -517,19 +641,7 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
 def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
     index_rows = [row.index_tuple() for row in rows]
     by_author_rows = [
-        (
-            row.author_name,
-            row.kaggle_username,
-            row.run_id,
-            row.competition,
-            row.puzzle_type,
-            row.puzzle_id,
-            row.solution_length,
-            row.submission_id,
-            row.idempotency_key,
-            row.submitted_at,
-            row.relative,
-        )
+        row.wide_tuple()
         for row in sorted(
             rows,
             key=lambda row: (
@@ -562,7 +674,7 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 row.relative,
             ),
         )
-        best_rows.append((*winner.index_tuple(), len(candidates)))
+        best_rows.append(winner.wide_tuple())
 
     runs: dict[str, dict[str, Any]] = {}
     for row in rows:
@@ -587,26 +699,9 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         )
 
     payloads = {
-        "index.tsv": tsv_payload(INDEX_HEADER, index_rows),
-        "by_author.tsv": tsv_payload(
-            (
-                "author_name",
-                "kaggle_username",
-                "run_id",
-                "competition",
-                "puzzle_type",
-                "puzzle_id",
-                "solution_length",
-                "submission_id",
-                "idempotency_key",
-                "submitted_at",
-                "record_path",
-            ),
-            by_author_rows,
-        ),
-        "best_solutions.tsv": tsv_payload(
-            (*INDEX_HEADER, "candidate_count"), best_rows
-        ),
+        "index.tsv": tsv_payload(WIDE_HEADER, index_rows),
+        "by_author.tsv": tsv_payload(WIDE_HEADER, by_author_rows),
+        "best_solutions.tsv": tsv_payload(WIDE_HEADER, best_rows),
         "runs.json": (
             canonical({"schema_version": 1, "runs": runs}) + "\n"
         ).encode("utf-8"),
@@ -664,7 +759,7 @@ def _discovered_human_paths(out: Path, expected: set[str]) -> set[str]:
     return discovered
 
 def build(results: Path, out: Path) -> None:
-    payloads = build_payloads(load_rows(results))
+    payloads = build_payloads(load_rows(results, out / "v2" / "slurm"))
     old_human_paths = _old_human_paths(out)
     new_human_paths = set(
         json.loads(payloads[HUMAN_MANIFEST])["paths"]

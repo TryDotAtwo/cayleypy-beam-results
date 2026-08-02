@@ -21,7 +21,22 @@ SPEC.loader.exec_module(builder)
 GOLDENS = json.loads(
     (ROOT / "tests" / "fixtures" / "golden.json").read_text(encoding="utf-8")
 )["cases"]
-
+V2_GOLDENS = json.loads(
+    (ROOT / "tests" / "fixtures" / "v2-golden.json").read_text(encoding="utf-8")
+)["cases"]
+EXPECTED_WIDE_HEADER = (
+    "puzzle_id", "solution_length", "solution", "beam_effective",
+    "final_orientation", "touch_radius", "model_class", "author_name",
+    "submitted_at", "competition", "puzzle_type", "beam_requested",
+    "beam_alignment_delta", "solution_mode", "collection_status",
+    "collection_index", "solved_depth", "touch_depth", "max_depth",
+    "max_collected_solutions", "model_id", "model_filename",
+    "model_sha256", "model_format", "model_dtype", "model_output_dim",
+    "platform", "gpu_names", "gpu_count", "world_size", "native_sm",
+    "vram_mib_per_gpu", "solve_us", "wall_us", "profile_id",
+    "profile_power", "profile_status", "run_id", "submission_id",
+    "idempotency_key", "solver_commit", "producer_url", "record_path",
+)
 
 def envelope(name: str = "original_unicode_author") -> dict:
     return copy.deepcopy(
@@ -90,6 +105,60 @@ def fingerprint(paths: list[Path]) -> list[str]:
     return [sha256(path.read_bytes()).hexdigest() for path in paths]
 
 
+def test_wide_header_and_v1_mapping_for_all_global_tsvs(tmp_path: Path) -> None:
+    item = record()
+    put(tmp_path, item)
+    builder.build(tmp_path / "results", tmp_path / "data")
+
+    assert builder.WIDE_HEADER == EXPECTED_WIDE_HEADER
+    for name in ("index.tsv", "by_author.tsv", "best_solutions.tsv"):
+        lines = (tmp_path / "data" / name).read_text(encoding="utf-8").splitlines()
+        assert tuple(lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+        assert len(lines[1].split("\t")) == len(EXPECTED_WIDE_HEADER)
+
+    fields = (tmp_path / "data" / "index.tsv").read_text(encoding="utf-8").splitlines()[1].split("\t")
+    values = dict(zip(EXPECTED_WIDE_HEADER, fields, strict=True))
+    envelope = item["envelope"]
+    assert values["beam_effective"] == str(envelope["profile"]["effective_beam"])
+    assert values["beam_requested"] == str(envelope["profile"]["requested_beam"])
+    assert values["touch_radius"] == str(envelope["runtime"]["touch_bfs_radius"])
+    assert values["model_class"] == envelope["profile"]["model_class"]
+    assert values["model_id"] == f"{envelope['model']['filename']}@{envelope['model']['sha256'][:12]}"
+    assert values["gpu_names"] == "|".join(envelope["hardware"]["gpu_names"])
+    assert values["producer_url"] == envelope["kaggle"]["run_url"]
+    assert values["native_sm"] == ""
+    assert values["vram_mib_per_gpu"] == ""
+
+def test_v2_slurm_record_uses_the_same_wide_header(tmp_path: Path) -> None:
+    envelope = copy.deepcopy(V2_GOLDENS[0]["envelope"])
+    submission_id = envelope["client_submission_id"]
+    relative_path = (
+        Path("data/v2/slurm")
+        / builder.safe_segment(envelope["competition"])
+        / builder.safe_segment(envelope["puzzle_type"])
+        / envelope["submitted_at"][:10]
+        / f"{submission_id}.json"
+    )
+    path = tmp_path / relative_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        builder.canonical({"submission_id": submission_id, "envelope": envelope}),
+        encoding="utf-8",
+    )
+
+    builder.build(tmp_path / "results", tmp_path / "data")
+    lines = (tmp_path / "data/index.tsv").read_text(encoding="utf-8").splitlines()
+    assert tuple(lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+    values = dict(zip(EXPECTED_WIDE_HEADER, lines[1].split("\t"), strict=True))
+    assert values["platform"] == "slurm"
+    assert values["native_sm"] == "90"
+    assert values["vram_mib_per_gpu"] == "81559"
+    assert values["world_size"] == "4"
+    assert values["profile_id"] == "h100x4-megaminx-p30-v1"
+    assert values["profile_status"] == "measured"
+    assert values["producer_url"] == ""
+    assert values["solver_commit"] == envelope["provenance"]["solver_commit"]
+
 def test_deterministic_rebuild_best_tie_and_raw_immutability(
     tmp_path: Path,
 ) -> None:
@@ -126,15 +195,15 @@ def test_deterministic_rebuild_best_tie_and_raw_immutability(
         encoding="utf-8"
     )
     assert winner in best
-    assert best.endswith("\t2\n")
+    assert len(best.splitlines()) == 2
     index_lines = (roots[0] / "data" / "index.tsv").read_text(
         encoding="utf-8"
     ).splitlines()
     header = index_lines[0].split("\t")
-    assert header[header.index("solved_depth") + 1] == "solution_path"
+    assert tuple(header) == EXPECTED_WIDE_HEADER
     assert ".".join(first["envelope"]["solution"]["path"]) in index_lines[1]
     best_header = best.splitlines()[0].split("\t")
-    assert best_header[best_header.index("solved_depth") + 1] == "solution_path"
+    assert tuple(best_header) == EXPECTED_WIDE_HEADER
     for payload in output_bytes(roots[0] / "data").values():
         assert b"\r" not in payload
 
@@ -229,21 +298,10 @@ def test_tsv_escaping_and_by_author_shape(tmp_path: Path) -> None:
         encoding="utf-8"
     ).splitlines()
     assert len(lines) == 2
-    assert lines[0].split("\t") == [
-        "author_name",
-        "kaggle_username",
-        "run_id",
-        "competition",
-        "puzzle_type",
-        "puzzle_id",
-        "solution_length",
-        "submission_id",
-        "idempotency_key",
-        "submitted_at",
-        "record_path",
-    ]
-    assert lines[1].startswith(
-        "'\u2003=SUM(1,1)\\u0009line\\u000anext\t"
+    assert tuple(lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+    fields = lines[1].split("\t")
+    assert fields[EXPECTED_WIDE_HEADER.index("author_name")] == (
+        "'\u2003=SUM(1,1)\\u0009line\\u000anext"
     )
 
 
@@ -312,13 +370,8 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
         encoding="utf-8"
     ).splitlines()
     assert len(competition_lines) == 4
-    assert competition_lines[0].split("\t")[:4] == [
-        "solution_path",
-        "solution_length",
-        "puzzle_id",
-        "final_orientation",
-    ]
-    assert [line.split("\t")[2] for line in competition_lines[1:]] == [
+    assert tuple(competition_lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert [line.split("\t")[0] for line in competition_lines[1:]] == [
         "1",
         "1",
         "10",
@@ -333,7 +386,9 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
     ).splitlines()
     assert len(solutions) == 3
     assert len(best) == 2
-    assert best[1].split("\t")[0] == "clockwise"
+    assert tuple(solutions[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert tuple(best[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert best[1].split("\t")[2] == "clockwise"
     metadata = json.loads(
         (puzzle_root / "metadata.json").read_text(encoding="utf-8")
     )
@@ -343,6 +398,13 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
     assert competition in summary
     assert "Puzzle 1" in summary
     assert "clockwise" in summary
+    assert "Effective beam: `65536`" in summary
+    assert "Orientation: `original`" in summary
+    assert "Touch radius: `0`" in summary
+    assert "Model: `toy-model.pt@dddddddddddd`" in summary
+    assert "Model class: `output_move_count`" in summary
+    assert "Author: `Алиса Δ`" in summary
+    assert "Submitted at: `2026-07-29T09:30:00.000Z`" in summary
     assert all(line == line.rstrip() for line in summary.splitlines())
     assert (competition_root / "puzzles" / "p0010" / "solutions.tsv").is_file()
 
