@@ -338,13 +338,8 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
         encoding="utf-8"
     ).splitlines()
     assert len(competition_lines) == 4
-    assert competition_lines[0].split("\t")[:4] == [
-        "solution_path",
-        "solution_length",
-        "puzzle_id",
-        "final_orientation",
-    ]
-    assert [line.split("\t")[2] for line in competition_lines[1:]] == [
+    assert tuple(competition_lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert [line.split("\t")[0] for line in competition_lines[1:]] == [
         "1",
         "1",
         "10",
@@ -359,7 +354,9 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
     ).splitlines()
     assert len(solutions) == 3
     assert len(best) == 2
-    assert best[1].split("\t")[0] == "clockwise"
+    assert tuple(solutions[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert tuple(best[0].split("\t")) == EXPECTED_WIDE_HEADER
+    assert best[1].split("\t")[2] == "clockwise"
     metadata = json.loads(
         (puzzle_root / "metadata.json").read_text(encoding="utf-8")
     )
@@ -369,6 +366,13 @@ def test_human_views_include_every_solution_and_best_per_puzzle(tmp_path: Path) 
     assert competition in summary
     assert "Puzzle 1" in summary
     assert "clockwise" in summary
+    assert "Effective beam: `65536`" in summary
+    assert "Orientation: `original`" in summary
+    assert "Touch radius: `0`" in summary
+    assert "Model: `toy-model.pt@dddddddddddd`" in summary
+    assert "Model class: `output_move_count`" in summary
+    assert "Author: `Алиса Δ`" in summary
+    assert "Submitted at: `2026-07-29T09:30:00.000Z`" in summary
     assert all(line == line.rstrip() for line in summary.splitlines())
     assert (competition_root / "puzzles" / "p0010" / "solutions.tsv").is_file()
 

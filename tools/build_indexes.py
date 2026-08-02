@@ -506,35 +506,6 @@ def _run_record(row: ResultRow) -> dict[str, Any]:
     }
 
 
-HUMAN_HEADER = (
-    "solution_path",
-    "solution_length",
-    "puzzle_id",
-    "final_orientation",
-    "author_name",
-    "submitted_at",
-    "submission_id",
-    "run_id",
-    "solver_commit",
-    "record_path",
-)
-
-
-def _human_tuple(row: ResultRow) -> tuple[Any, ...]:
-    return (
-        row.solution_path,
-        row.solution_length,
-        row.puzzle_id,
-        row.final_orientation,
-        row.author_name,
-        row.submitted_at,
-        row.submission_id,
-        row.run_id,
-        row.solver_commit,
-        row.relative,
-    )
-
-
 def _human_sort_key(row: ResultRow) -> tuple[Any, ...]:
     return (
         row.puzzle_id,
@@ -573,13 +544,8 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         competitions.setdefault(row.competition, []).append(row)
     for competition in sorted(competitions):
         competition_rows = sorted(competitions[competition], key=_human_sort_key)
-        competition_header = (*HUMAN_HEADER, "puzzle_directory")
-        competition_values = [
-            (*_human_tuple(row), f"puzzles/p{row.puzzle_id:04d}")
-            for row in competition_rows
-        ]
         payloads[f"{competition}/index.tsv"] = tsv_payload(
-            competition_header, competition_values
+            WIDE_HEADER, (row.wide_tuple() for row in competition_rows)
         )
         puzzles: dict[int, list[ResultRow]] = {}
         for row in competition_rows:
@@ -597,10 +563,10 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             )
             base = f"{competition}/puzzles/p{puzzle_id:04d}"
             payloads[f"{base}/solutions.tsv"] = tsv_payload(
-                HUMAN_HEADER, (_human_tuple(row) for row in puzzle_rows)
+                WIDE_HEADER, (row.wide_tuple() for row in puzzle_rows)
             )
             payloads[f"{base}/best_solution.tsv"] = tsv_payload(
-                HUMAN_HEADER, (_human_tuple(winner),)
+                WIDE_HEADER, (winner.wide_tuple(),)
             )
             metadata = {
                 "competition": competition,
@@ -615,6 +581,14 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 f"# {competition} - Puzzle {puzzle_id}\n\n"
                 f"Solutions: {len(puzzle_rows)}\n"
                 f"Best length: {winner.solution_length}\n\n"
+                "## Run facts\n\n"
+                f"- Effective beam: `{winner.profile['effective_beam']}`\n"
+                f"- Orientation: `{winner.final_orientation}`\n"
+                f"- Touch radius: `{winner.runtime['touch_bfs_radius']}`\n"
+                f"- Model: `{winner.model_id}`\n"
+                f"- Model class: `{winner.model_class}`\n"
+                f"- Author: `{winner.author_name}`\n"
+                f"- Submitted at: `{winner.submitted_at}`\n\n"
                 "## Best solution\n\n"
                 "~~~text\n"
                 f"{winner.solution_path}\n"
