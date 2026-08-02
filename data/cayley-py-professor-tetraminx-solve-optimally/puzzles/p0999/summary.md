@@ -3,6 +3,16 @@
 Solutions: 6
 Best length: 31
 
+## Run facts
+
+- Effective beam: `33554432`
+- Orientation: `original`
+- Touch radius: `4`
+- Model: `p888-t000_1765097793_e01024.pth@10d0ccebd3bf`
+- Model class: `output1`
+- Author: `public-example-cayleypy-2xt4-tetraminx-example`
+- Submitted at: `2026-08-01T21:00:04.520Z`
+
 ## Best solution
 
 ~~~text

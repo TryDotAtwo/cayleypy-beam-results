@@ -3,6 +3,16 @@
 Solutions: 2
 Best length: 50
 
+## Run facts
+
+- Effective beam: `262144`
+- Orientation: `original`
+- Touch radius: `4`
+- Model: `model.pth@58af301a4f2b`
+- Model class: `output_move_count`
+- Author: `public-example-cayleypy-2xt4-444-example`
+- Submitted at: `2026-08-01T19:11:23.165Z`
+
 ## Best solution
 
 ~~~text
