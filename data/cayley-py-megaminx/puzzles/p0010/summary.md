@@ -1,6 +1,6 @@
 # cayley-py-megaminx - Puzzle 10
 
-Solutions: 426
+Solutions: 427
 Best length: 10
 
 ## Run facts
