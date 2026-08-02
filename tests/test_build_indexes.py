@@ -21,7 +21,9 @@ SPEC.loader.exec_module(builder)
 GOLDENS = json.loads(
     (ROOT / "tests" / "fixtures" / "golden.json").read_text(encoding="utf-8")
 )["cases"]
-
+V2_GOLDENS = json.loads(
+    (ROOT / "tests" / "fixtures" / "v2-golden.json").read_text(encoding="utf-8")
+)["cases"]
 EXPECTED_WIDE_HEADER = (
     "puzzle_id", "solution_length", "solution", "beam_effective",
     "final_orientation", "touch_radius", "model_class", "author_name",
@@ -126,6 +128,36 @@ def test_wide_header_and_v1_mapping_for_all_global_tsvs(tmp_path: Path) -> None:
     assert values["producer_url"] == envelope["kaggle"]["run_url"]
     assert values["native_sm"] == ""
     assert values["vram_mib_per_gpu"] == ""
+
+def test_v2_slurm_record_uses_the_same_wide_header(tmp_path: Path) -> None:
+    envelope = copy.deepcopy(V2_GOLDENS[0]["envelope"])
+    submission_id = envelope["client_submission_id"]
+    relative_path = (
+        Path("data/v2/slurm")
+        / builder.safe_segment(envelope["competition"])
+        / builder.safe_segment(envelope["puzzle_type"])
+        / envelope["submitted_at"][:10]
+        / f"{submission_id}.json"
+    )
+    path = tmp_path / relative_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        builder.canonical({"submission_id": submission_id, "envelope": envelope}),
+        encoding="utf-8",
+    )
+
+    builder.build(tmp_path / "results", tmp_path / "data")
+    lines = (tmp_path / "data/index.tsv").read_text(encoding="utf-8").splitlines()
+    assert tuple(lines[0].split("\t")) == EXPECTED_WIDE_HEADER
+    values = dict(zip(EXPECTED_WIDE_HEADER, lines[1].split("\t"), strict=True))
+    assert values["platform"] == "slurm"
+    assert values["native_sm"] == "90"
+    assert values["vram_mib_per_gpu"] == "81559"
+    assert values["world_size"] == "4"
+    assert values["profile_id"] == "h100x4-megaminx-p30-v1"
+    assert values["profile_status"] == "measured"
+    assert values["producer_url"] == ""
+    assert values["solver_commit"] == envelope["provenance"]["solver_commit"]
 
 def test_deterministic_rebuild_best_tie_and_raw_immutability(
     tmp_path: Path,

@@ -27,6 +27,10 @@ RESULT_PATH = re.compile(
     r"^results/v1/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
     r"(0|[1-9][0-9]*)/(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
 )
+RESULT_PATH_V2 = re.compile(
+    r"^data/v2/slurm/([a-z0-9._-]{1,128})/([a-z0-9._-]{1,128})/"
+    r"(\d{4}-\d{2}-\d{2})/([0-9a-f-]{36})\.json$"
+)
 HUMAN_MANIFEST = ".human-results-manifest.json"
 OUTPUT_NAMES = (
     "index.tsv",
@@ -265,6 +269,9 @@ class ResultRow:
 
     @property
     def solver_commit(self) -> str:
+        if self.envelope.get("schema_version") == 2:
+            provenance = _required_dict(self.envelope.get("provenance"), "PROVENANCE")
+            return _required_string(provenance.get("solver_commit"), "PROVENANCE")
         return _required_string(self.envelope.get("solver_commit"), "PROVENANCE")
 
     @property
@@ -347,9 +354,9 @@ class ResultRow:
             _optional_integer(hardware.get("vram_mib_per_gpu"), "PROVENANCE"),
             _required_integer(timings.get("solve_us"), "PROVENANCE"),
             _required_integer(timings.get("wall_us"), "PROVENANCE"),
-            _required_string(profile.get("selected_profile"), "PROVENANCE"),
+            _required_string(profile.get("selected_profile") if self.envelope.get("schema_version") == 1 else profile.get("profile_evidence_id"), "PROVENANCE"),
             _required_integer(profile.get("profile_power"), "PROVENANCE"),
-            _required_string(profile.get("evidence"), "PROVENANCE"),
+            _required_string(profile.get("evidence") if self.envelope.get("schema_version") == 1 else profile.get("profile_status"), "PROVENANCE"),
             self.run_id,
             self.submission_id,
             self.idempotency_key,
@@ -389,27 +396,43 @@ def _decode_json(path: Path) -> Any:
 
 
 def _validate_path(relative: str, submission_id: str, envelope: dict[str, Any]) -> None:
-    match = RESULT_PATH.fullmatch(relative)
+    version = envelope.get("schema_version")
+    pattern = RESULT_PATH if version == 1 else RESULT_PATH_V2 if version == 2 else re.compile(r"a^")
+    match = pattern.fullmatch(relative)
     if not match or not UUID7.fullmatch(submission_id):
         raise IndexBuildError("PATH")
-    competition, puzzle_type, puzzle_id, day, path_id = match.groups()
-    if path_id != submission_id:
-        raise IndexBuildError("PATH_UUID")
-    try:
-        datetime.strptime(day, "%Y-%m-%d")
+    groups = match.groups()
+    if version == 1:
+        competition, puzzle_type, puzzle_id, day, path_id = groups
         derived = (
             safe_segment(_required_string(envelope.get("competition"), "PROVENANCE")),
             safe_segment(_required_string(envelope.get("puzzle_type"), "PROVENANCE")),
             str(_required_integer(envelope.get("puzzle_id"), "PROVENANCE")),
             _required_string(envelope.get("submitted_at"), "PROVENANCE")[:10],
         )
+        claimed = (competition, puzzle_type, puzzle_id, day)
+    else:
+        competition, puzzle_type, day, path_id = groups
+        derived = (
+            safe_segment(_required_string(envelope.get("competition"), "PROVENANCE")),
+            safe_segment(_required_string(envelope.get("puzzle_type"), "PROVENANCE")),
+            _required_string(envelope.get("submitted_at"), "PROVENANCE")[:10],
+        )
+        claimed = (competition, puzzle_type, day)
+    if path_id != submission_id:
+        raise IndexBuildError("PATH_UUID")
+    try:
+        datetime.strptime(day, "%Y-%m-%d")
     except ValueError:
         raise IndexBuildError("PATH_DAY") from None
-    if derived != (competition, puzzle_type, puzzle_id, day):
+    if derived != claimed:
         raise IndexBuildError("PATH_DERIVATION")
 
-
-def _record_paths(results: Path) -> list[Path]:
+def _record_paths(
+    results: Path,
+    pattern: re.Pattern[str] = RESULT_PATH,
+    relative_root: Path | None = None,
+) -> list[Path]:
     if not results.exists():
         return []
     if not results.is_dir() or results.is_symlink():
@@ -422,19 +445,22 @@ def _record_paths(results: Path) -> list[Path]:
             continue
         if not path.is_file():
             raise IndexBuildError("RESULT_FILE")
-        relative = path.relative_to(results.parent).as_posix()
-        if not RESULT_PATH.fullmatch(relative):
+        relative = path.relative_to(relative_root or results.parent).as_posix()
+        if not pattern.fullmatch(relative):
             raise IndexBuildError("RESULT_PATH")
         output.append(path)
     return sorted(output, key=lambda path: path.relative_to(results.parent).as_posix())
 
 
-def load_rows(results: Path) -> list[ResultRow]:
+def load_rows(results: Path, native_results: Path | None = None) -> list[ResultRow]:
     rows: list[ResultRow] = []
-    schema_validator = load_schema(Path(__file__).resolve().parents[1])
+    schema_root = Path(__file__).resolve().parents[1]
     seen_submission: set[str] = set()
     seen_idempotency: set[str] = set()
-    for path in _record_paths(results):
+    paths = _record_paths(results)
+    if native_results is not None:
+        paths.extend(_record_paths(native_results, RESULT_PATH_V2, results.parent))
+    for path in sorted(paths, key=lambda item: item.relative_to(results.parent).as_posix()):
         relative = path.relative_to(results.parent).as_posix()
         record = _decode_json(path)
         if (
@@ -451,7 +477,7 @@ def load_rows(results: Path) -> list[ResultRow]:
         # Force all indexed fields through their fail-closed type checks.
         row.index_tuple()
         try:
-            validate_schema(envelope, schema_validator)
+            validate_schema(envelope, load_schema(schema_root, envelope.get("schema_version")))
             validate_integrity(envelope)
         except RecordValidationError as exc:
             raise IndexBuildError(f"RECORD_{exc.code}") from None
@@ -466,13 +492,23 @@ def load_rows(results: Path) -> list[ResultRow]:
 
 
 def _run_provenance(row: ResultRow) -> dict[str, Any]:
-    return {
+    common = {
         "author": row.author,
-        "kaggle": _required_dict(row.envelope.get("kaggle"), "PROVENANCE"),
         "model": row.model,
-        "hardware": _required_dict(row.envelope.get("hardware"), "PROVENANCE"),
+        "hardware": row.hardware,
         "profile": row.profile,
         "solver_commit": row.solver_commit,
+    }
+    if row.envelope.get("schema_version") == 2:
+        return {
+            **common,
+            "provenance": _required_dict(
+                row.envelope.get("provenance"), "PROVENANCE"
+            ),
+        }
+    return {
+        **common,
+        "kaggle": _required_dict(row.envelope.get("kaggle"), "PROVENANCE"),
     }
 
 
@@ -518,14 +554,16 @@ def _human_sort_key(row: ResultRow) -> tuple[Any, ...]:
 
 def _human_metadata(row: ResultRow) -> dict[str, Any]:
     return {
+        "schema_version": row.envelope.get("schema_version"),
         "author": row.envelope.get("author"),
         "hardware": row.envelope.get("hardware"),
         "idempotency_key": row.idempotency_key,
         "kaggle": row.envelope.get("kaggle"),
+        "provenance": row.envelope.get("provenance"),
         "model": row.envelope.get("model"),
         "orientation": row.envelope.get("orientation"),
         "profile": row.envelope.get("profile"),
-        "proof_hashes": row.envelope.get("proof_hashes"),
+        "proof": row.envelope.get("proof"),
         "record_path": row.relative,
         "run_id": row.run_id,
         "runtime": row.envelope.get("runtime"),
@@ -721,7 +759,7 @@ def _discovered_human_paths(out: Path, expected: set[str]) -> set[str]:
     return discovered
 
 def build(results: Path, out: Path) -> None:
-    payloads = build_payloads(load_rows(results))
+    payloads = build_payloads(load_rows(results, out / "v2" / "slurm"))
     old_human_paths = _old_human_paths(out)
     new_human_paths = set(
         json.loads(payloads[HUMAN_MANIFEST])["paths"]

@@ -7,6 +7,7 @@ SPEC = importlib.util.spec_from_file_location("validator", ROOT / "tools/validat
 assert SPEC and SPEC.loader
 validator = importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(validator)
 CASES = json.loads((ROOT / "tests/fixtures/golden.json").read_text(encoding="utf-8"))["cases"]
+V2_CASES = json.loads((ROOT / "tests/fixtures/v2-golden.json").read_text(encoding="utf-8"))["cases"]
 def env(name="original_unicode_author"):
     return copy.deepcopy(next(x["envelope"] for x in CASES if x["name"] == name))
 def record(name="original_unicode_author"):
@@ -14,6 +15,13 @@ def record(name="original_unicode_author"):
 def rel(item):
     e=item["envelope"]
     return f"results/v1/{validator.safe_segment(e['competition'])}/{validator.safe_segment(e['puzzle_type'])}/{e['puzzle_id']}/{e['submitted_at'][:10]}/{item['submission_id']}.json"
+def rel_v2(item):
+    e = item["envelope"]
+    return (
+        f"data/v2/slurm/{validator.safe_segment(e['competition'])}/"
+        f"{validator.safe_segment(e['puzzle_type'])}/{e['submitted_at'][:10]}/"
+        f"{item['submission_id']}.json"
+    )
 def commit(repo, msg):
     subprocess.run(["git","-C",repo,"add","."],check=True); subprocess.run(["git","-C",repo,"commit","-qm",msg],check=True)
 def make_repo(tmp_path, items):
@@ -26,6 +34,46 @@ def make_repo(tmp_path, items):
 @pytest.mark.parametrize("name",["original_unicode_author","reflected","empty_path_source"])
 def test_valid_original_reflected_source(tmp_path,name):
     repo,base,head=make_repo(tmp_path,[record(name)]); validator.validate_range(repo,base,head)
+
+def test_v2_schema_path_integrity_and_hardware_cross_checks():
+    envelope = copy.deepcopy(V2_CASES[0]["envelope"])
+    submission_id = envelope["client_submission_id"]
+    relative = (
+        f"data/v2/slurm/{validator.safe_segment(envelope['competition'])}/"
+        f"{validator.safe_segment(envelope['puzzle_type'])}/"
+        f"{envelope['submitted_at'][:10]}/{submission_id}.json"
+    )
+    validator.validate_schema(envelope, validator.load_schema(ROOT, 2))
+    validator.validate_path(relative, submission_id, envelope)
+    validator.validate_integrity(envelope)
+
+    envelope["profile"]["world_size"] = 3
+    with pytest.raises(validator.ValidationError, match="PROFILE_HARDWARE"):
+        validator.validate_integrity(envelope)
+
+def test_v2_git_range_is_append_only_and_fully_validated(tmp_path):
+    repo = tmp_path / "repo-v2"
+    repo.mkdir()
+    (repo / "schemas").mkdir()
+    for version in (1, 2):
+        shutil.copy(
+            ROOT / f"schemas/result-v{version}.schema.json",
+            repo / f"schemas/result-v{version}.schema.json",
+        )
+    subprocess.run(["git", "init", "-q", repo], check=True)
+    subprocess.run(["git", "-C", repo, "config", "user.email", "test@example.invalid"], check=True)
+    subprocess.run(["git", "-C", repo, "config", "user.name", "Test"], check=True)
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    commit(repo, "base")
+    base = subprocess.check_output(["git", "-C", repo, "rev-parse", "HEAD"], text=True).strip()
+    envelope = copy.deepcopy(V2_CASES[0]["envelope"])
+    item = {"submission_id": envelope["client_submission_id"], "envelope": envelope}
+    path = repo / rel_v2(item)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(validator.canonical(item), encoding="utf-8")
+    commit(repo, "append v2")
+    head = subprocess.check_output(["git", "-C", repo, "rev-parse", "HEAD"], text=True).strip()
+    validator.validate_range(repo, base, head)
 
 def test_labeled_states_are_bounded_by_num_classes():
     assert validator.valid_labeled_state([0, 1, 0, 1], 4, 2)
