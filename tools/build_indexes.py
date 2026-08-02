@@ -34,24 +34,49 @@ OUTPUT_NAMES = (
     "best_solutions.tsv",
     "runs.json",
 )
-INDEX_HEADER = (
-    "competition",
-    "puzzle_type",
+WIDE_HEADER = (
     "puzzle_id",
     "solution_length",
+    "solution",
+    "beam_effective",
+    "final_orientation",
+    "touch_radius",
+    "model_class",
+    "author_name",
+    "submitted_at",
+    "competition",
+    "puzzle_type",
+    "beam_requested",
+    "beam_alignment_delta",
+    "solution_mode",
+    "collection_status",
+    "collection_index",
     "solved_depth",
-    "solution_path",
+    "touch_depth",
+    "max_depth",
+    "max_collected_solutions",
+    "model_id",
+    "model_filename",
+    "model_sha256",
+    "model_format",
+    "model_dtype",
+    "model_output_dim",
+    "platform",
+    "gpu_names",
+    "gpu_count",
+    "world_size",
+    "native_sm",
+    "vram_mib_per_gpu",
+    "solve_us",
+    "wall_us",
+    "profile_id",
+    "profile_power",
+    "profile_status",
+    "run_id",
     "submission_id",
     "idempotency_key",
-    "submitted_at",
-    "author_name",
-    "kaggle_username",
-    "run_id",
-    "final_orientation",
-    "model_class",
-    "output_dim",
-    "model_sha256",
     "solver_commit",
+    "producer_url",
     "record_path",
 )
 
@@ -93,6 +118,20 @@ def _required_integer(value: Any, code: str) -> int:
     if type(value) is not int:
         raise IndexBuildError(code)
     return value
+def _optional_string(value: Any, code: str) -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise IndexBuildError(code)
+    return value
+
+
+def _optional_integer(value: Any, code: str) -> int | str:
+    if value is None:
+        return ""
+    if type(value) is not int:
+        raise IndexBuildError(code)
+    return value
 
 
 def _formula_after_ignored_prefix(value: str) -> bool:
@@ -102,7 +141,8 @@ def _formula_after_ignored_prefix(value: str) -> bool:
         if not (character.isspace() or ord(character) < 32 or ord(character) == 127):
             break
         index += 1
-    return value[index:index + 1] in "=+-@"
+    prefix = value[index:index + 1]
+    return bool(prefix) and prefix in "=+-@"
 
 
 def tsv_cell(value: Any) -> str:
@@ -227,27 +267,99 @@ class ResultRow:
     def solver_commit(self) -> str:
         return _required_string(self.envelope.get("solver_commit"), "PROVENANCE")
 
-    def index_tuple(self) -> tuple[Any, ...]:
+    @property
+    def runtime(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("runtime"), "PROVENANCE")
+
+    @property
+    def hardware(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("hardware"), "PROVENANCE")
+
+    @property
+    def timings(self) -> dict[str, Any]:
+        return _required_dict(self.envelope.get("timings"), "PROVENANCE")
+
+    @property
+    def manifest(self) -> dict[str, Any]:
+        return _required_dict(self.model.get("manifest"), "PROVENANCE")
+
+    @property
+    def model_filename(self) -> str:
+        return _required_string(self.model.get("filename"), "PROVENANCE")
+
+    @property
+    def model_id(self) -> str:
+        return f"{self.model_filename}@{self.model_sha256[:12]}"
+
+    @property
+    def gpu_names(self) -> str:
+        names = self.hardware.get("gpu_names")
+        if not isinstance(names, list) or not names or not all(isinstance(name, str) and name for name in names):
+            raise IndexBuildError("PROVENANCE")
+        return "|".join(names)
+
+    @property
+    def producer_url(self) -> str:
+        kaggle = self.envelope.get("kaggle")
+        if kaggle is None:
+            return ""
+        return _required_string(_required_dict(kaggle, "PROVENANCE").get("run_url"), "PROVENANCE")
+
+    def wide_tuple(self) -> tuple[Any, ...]:
+        profile = self.profile
+        runtime = self.runtime
+        hardware = self.hardware
+        timings = self.timings
+        solution = self.solution
+        manifest = self.manifest
         return (
-            self.competition,
-            self.puzzle_type,
             self.puzzle_id,
             self.solution_length,
-            self.solved_depth,
             self.solution_path,
+            _required_integer(profile.get("effective_beam"), "PROVENANCE"),
+            self.final_orientation,
+            _required_integer(runtime.get("touch_bfs_radius"), "PROVENANCE"),
+            self.model_class,
+            self.author_name,
+            self.submitted_at,
+            self.competition,
+            self.puzzle_type,
+            _required_integer(profile.get("requested_beam"), "PROVENANCE"),
+            _required_integer(profile.get("alignment_delta"), "PROVENANCE"),
+            _required_string(runtime.get("solution_mode"), "PROVENANCE"),
+            _required_string(solution.get("collection_status"), "PROVENANCE"),
+            _optional_integer(solution.get("collection_index"), "PROVENANCE"),
+            self.solved_depth,
+            _optional_integer(solution.get("touch_depth"), "PROVENANCE"),
+            _required_integer(runtime.get("max_depth"), "PROVENANCE"),
+            _required_integer(runtime.get("max_collected_solutions"), "PROVENANCE"),
+            self.model_id,
+            self.model_filename,
+            self.model_sha256,
+            _required_string(self.model.get("format"), "PROVENANCE"),
+            _required_string(manifest.get("dtype"), "PROVENANCE"),
+            self.output_dim,
+            _required_string(hardware.get("platform"), "PROVENANCE"),
+            self.gpu_names,
+            _required_integer(hardware.get("accelerator_count"), "PROVENANCE"),
+            _required_integer(hardware.get("world_size"), "PROVENANCE"),
+            _optional_integer(hardware.get("native_sm"), "PROVENANCE"),
+            _optional_integer(hardware.get("vram_mib_per_gpu"), "PROVENANCE"),
+            _required_integer(timings.get("solve_us"), "PROVENANCE"),
+            _required_integer(timings.get("wall_us"), "PROVENANCE"),
+            _required_string(profile.get("selected_profile"), "PROVENANCE"),
+            _required_integer(profile.get("profile_power"), "PROVENANCE"),
+            _required_string(profile.get("evidence"), "PROVENANCE"),
+            self.run_id,
             self.submission_id,
             self.idempotency_key,
-            self.submitted_at,
-            self.author_name,
-            self.kaggle_username,
-            self.run_id,
-            self.final_orientation,
-            self.model_class,
-            self.output_dim,
-            self.model_sha256,
             self.solver_commit,
+            self.producer_url,
             self.relative,
         )
+
+    def index_tuple(self) -> tuple[Any, ...]:
+        return self.wide_tuple()
 
     def primary_key(self) -> tuple[Any, ...]:
         return (
@@ -517,19 +629,7 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
 def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
     index_rows = [row.index_tuple() for row in rows]
     by_author_rows = [
-        (
-            row.author_name,
-            row.kaggle_username,
-            row.run_id,
-            row.competition,
-            row.puzzle_type,
-            row.puzzle_id,
-            row.solution_length,
-            row.submission_id,
-            row.idempotency_key,
-            row.submitted_at,
-            row.relative,
-        )
+        row.wide_tuple()
         for row in sorted(
             rows,
             key=lambda row: (
@@ -562,7 +662,7 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 row.relative,
             ),
         )
-        best_rows.append((*winner.index_tuple(), len(candidates)))
+        best_rows.append(winner.wide_tuple())
 
     runs: dict[str, dict[str, Any]] = {}
     for row in rows:
@@ -587,26 +687,9 @@ def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         )
 
     payloads = {
-        "index.tsv": tsv_payload(INDEX_HEADER, index_rows),
-        "by_author.tsv": tsv_payload(
-            (
-                "author_name",
-                "kaggle_username",
-                "run_id",
-                "competition",
-                "puzzle_type",
-                "puzzle_id",
-                "solution_length",
-                "submission_id",
-                "idempotency_key",
-                "submitted_at",
-                "record_path",
-            ),
-            by_author_rows,
-        ),
-        "best_solutions.tsv": tsv_payload(
-            (*INDEX_HEADER, "candidate_count"), best_rows
-        ),
+        "index.tsv": tsv_payload(WIDE_HEADER, index_rows),
+        "by_author.tsv": tsv_payload(WIDE_HEADER, by_author_rows),
+        "best_solutions.tsv": tsv_payload(WIDE_HEADER, best_rows),
         "runs.json": (
             canonical({"schema_version": 1, "runs": runs}) + "\n"
         ).encode("utf-8"),
