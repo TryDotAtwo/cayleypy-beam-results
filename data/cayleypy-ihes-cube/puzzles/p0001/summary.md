@@ -1,6 +1,6 @@
 # cayleypy-ihes-cube - Puzzle 1
 
-Solutions: 115
+Solutions: 116
 Best length: 8
 
 ## Run facts
