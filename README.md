@@ -1,5 +1,7 @@
 # CayleyPy Beam Results
 
+> Хотите отправить свои решения без токена? См. [публичный Codex-плагин и Python CLI](PUBLISH_RESULTS.md).
+
 This repository is the public, append-only record store for canonical CayleyPy results from Kaggle and native SLURM runs. `ingest/staging` is the trusted publication branch; `main` contains only fully validated, exactly indexed publications.
 
 ## Record contract
