@@ -1,6 +1,6 @@
 # toy-cayley - Puzzle 1
 
-Solutions: 2
+Solutions: 3
 Best length: 1
 
 ## Run facts
