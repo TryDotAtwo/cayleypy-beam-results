@@ -110,7 +110,10 @@ jobs:
               --base "$base" \
               --head HEAD \
               --allow-generated-indexes
-            python tools/build_indexes.py --results results --out data
+            python tools/build_indexes.py \
+              --results results \
+              --native-results data/v2/slurm \
+              --out data
             git add -- data
 
             while IFS= read -r changed; do
@@ -157,14 +160,10 @@ jobs:
 
             generated="$(mktemp -d)"
             trap 'rm -rf -- "$generated"' EXIT
-            python tools/build_indexes.py --results results --out "$generated"
-            cmp --silent data/index.tsv "$generated/index.tsv"
-            cmp --silent data/by_author.tsv "$generated/by_author.tsv"
-            cmp --silent \
-              data/best_solutions.tsv "$generated/best_solutions.tsv"
-            cmp --silent data/runs.json "$generated/runs.json"
-            cmp --silent data/.human-results-manifest.json \
-              "$generated/.human-results-manifest.json"
+            python tools/build_indexes.py \
+              --results results \
+              --native-results data/v2/slurm \
+              --out "$generated"
             python - "$generated" <<'PY'
           import json
           from pathlib import Path
@@ -176,7 +175,14 @@ jobs:
                   encoding="utf-8"
               )
           )
-          for relative in payload["paths"]:
+          fixed = (
+              "index.tsv",
+              "by_author.tsv",
+              "best_solutions.tsv",
+              "runs.json",
+              ".human-results-manifest.json",
+          )
+          for relative in (*fixed, *payload["paths"]):
               if (Path("data") / relative).read_bytes() != (
                   generated / relative
               ).read_bytes():
