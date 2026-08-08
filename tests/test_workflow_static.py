@@ -53,7 +53,10 @@ def test_promotion_rebuilds_and_matches_the_exact_remote_head():
     assert "--allow-generated-indexes" in promote
     assert "git push" in promote
     assert "--force-with-lease=" in promote
-    assert "cmp --silent data/index.tsv" in promote
+    assert "--native-results data/v2/slurm" in promote
+    assert "cmp --silent" not in promote
+    assert '"index.tsv",' in promote
+    assert 'f"generated payload mismatch: {relative}"' in promote
     assert "data/.human-results-manifest.json" in promote
     assert 'payload["paths"]' in promote
     assert "--match-head-commit" in promote

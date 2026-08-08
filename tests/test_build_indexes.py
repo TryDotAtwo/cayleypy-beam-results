@@ -159,6 +159,34 @@ def test_v2_slurm_record_uses_the_same_wide_header(tmp_path: Path) -> None:
     assert values["producer_url"] == ""
     assert values["solver_commit"] == envelope["provenance"]["solver_commit"]
 
+
+def test_v2_input_is_independent_from_output_directory(tmp_path: Path) -> None:
+    envelope = copy.deepcopy(V2_GOLDENS[0]["envelope"])
+    submission_id = envelope["client_submission_id"]
+    native_results = tmp_path / "repository" / "data" / "v2" / "slurm"
+    relative_path = (
+        Path(builder.safe_segment(envelope["competition"]))
+        / builder.safe_segment(envelope["puzzle_type"])
+        / envelope["submitted_at"][:10]
+        / f"{submission_id}.json"
+    )
+    path = native_results / relative_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        builder.canonical({"submission_id": submission_id, "envelope": envelope}),
+        encoding="utf-8",
+    )
+
+    generated = tmp_path / "generated"
+    builder.build(
+        tmp_path / "repository" / "results",
+        generated,
+        native_results=native_results,
+    )
+
+    index = (generated / "index.tsv").read_text(encoding="utf-8")
+    assert submission_id in index
+
 def test_deterministic_rebuild_best_tie_and_raw_immutability(
     tmp_path: Path,
 ) -> None:
