@@ -758,8 +758,14 @@ def _discovered_human_paths(out: Path, expected: set[str]) -> set[str]:
                     discovered.add(candidate.relative_to(out).as_posix())
     return discovered
 
-def build(results: Path, out: Path) -> None:
-    payloads = build_payloads(load_rows(results, out / "v2" / "slurm"))
+def build(
+    results: Path,
+    out: Path,
+    native_results: Path | None = None,
+) -> None:
+    if native_results is None:
+        native_results = out / "v2" / "slurm"
+    payloads = build_payloads(load_rows(results, native_results))
     old_human_paths = _old_human_paths(out)
     new_human_paths = set(
         json.loads(payloads[HUMAN_MANIFEST])["paths"]
@@ -794,9 +800,18 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--native-results", type=Path)
     args = parser.parse_args()
     try:
-        build(args.results.resolve(), args.out.resolve())
+        build(
+            args.results.resolve(),
+            args.out.resolve(),
+            native_results=(
+                args.native_results.resolve()
+                if args.native_results is not None
+                else None
+            ),
+        )
     except IndexBuildError as exc:
         raise SystemExit(f"INDEX_ERROR {exc}") from None
 
