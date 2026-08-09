@@ -1,7 +1,7 @@
-# cayley-py-444-cube - Puzzle 633
+# cayley-py-444-cube - Puzzle 643
 
-Solutions: 2
-Best length: 46
+Solutions: 1
+Best length: 44
 
 ## Run facts
 
@@ -11,12 +11,12 @@ Best length: 46
 - Model: `model.pth@58af301a4f2b`
 - Model class: `output_move_count`
 - Author: `public-example-cayleypy-2xt4-4x4x4-recommended`
-- Submitted at: `2026-08-09T18:34:16.224Z`
+- Submitted at: `2026-08-09T18:22:16.016Z`
 
 ## Best solution
 
 ~~~text
-f0.-d2.-f1.-d3.-r2.r3.-d1.-f2.d3.-r3.f0.-d1.-d2.-r0.-f2.r0.-f3.-r1.d1.-r0.-d0.-d1.-r0.d0.r0.-f0.r3.d0.r1.-d2.-r1.-f0.r2.f2.-r2.f0.d1.f2.-d0.r2.f2.-d1.-f2.r1.-d1.-r2
+f0.r3.r3.-d1.-d0.f2.-r0.-f3.r1.r1.d0.-f0.-r3.-d1.d2.r2.-d3.f1.d0.d3.-f3.d1.r0.d3.-r2.f3.r1.-d2.-r1.-d1.-d3.-r2.-d0.-r3.d1.f1.r1.f1.-d1.f1.f1.d2.-r1.-f1
 ~~~
 
 [All solutions](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)
