@@ -1,6 +1,6 @@
-# cayley-py-444-cube - Puzzle 916
+# cayley-py-444-cube - Puzzle 550
 
-Solutions: 2
+Solutions: 1
 Best length: 45
 
 ## Run facts
@@ -11,12 +11,12 @@ Best length: 45
 - Model: `model.pth@58af301a4f2b`
 - Model class: `output_move_count`
 - Author: `public-example-cayleypy-2xt4-4x4x4-recommended`
-- Submitted at: `2026-08-04T17:36:28.064Z`
+- Submitted at: `2026-08-12T23:32:21.060Z`
 
 ## Best solution
 
 ~~~text
-r0.f1.r1.f1.d3.r0.d0.-d3.f1.r0.-r3.-r3.-d0.f3.d2.f3.r3.f3.d0.-f3.r2.f3.-r3.d0.-f3.-f3.-d3.-d0.r0.-f1.d3.-f2.-r2.-d3.r0.r2.f2.f3.r3.r0.d1.-r0.-d1.-r3.-d2
+r1.f2.-r2.f0.d0.-r3.-d1.-f3.r2.d0.f0.-f2.-d1.-r0.r2.d2.r2.f2.r0.-f2.d1.r2.d3.-f2.-d3.-d0.-f2.-r3.-d1.-d2.r1.-f3.r1.f3.-r1.-d2.-r2.-d2.r2.-d2.f2.-d0.f1.-r3.-f1
 ~~~
 
 [All solutions](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)
