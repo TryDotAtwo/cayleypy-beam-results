@@ -50,7 +50,7 @@
     "state": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 120,
+      "maxItems": 150,
       "items": {
         "type": "integer",
         "minimum": 0,
@@ -81,21 +81,49 @@
       ],
       "oneOf": [
         {
-          "required": ["hd1", "hd2", "nrd", "normalization", "layout"]
+          "required": [
+            "hd1",
+            "hd2",
+            "nrd",
+            "normalization",
+            "layout"
+          ]
         },
         {
           "required": [
-            "backend", "model_arch", "move_count", "num_pieces",
-            "max_piece_size", "num_piece_types", "seq_len", "d_model",
-            "nhead", "head_dim", "num_layers", "ff_dim", "activation",
-            "pooling", "piece_layout", "piece_embed_mode", "input_embedding"
+            "backend",
+            "model_arch",
+            "move_count",
+            "num_pieces",
+            "max_piece_size",
+            "num_piece_types",
+            "seq_len",
+            "d_model",
+            "nhead",
+            "head_dim",
+            "num_layers",
+            "ff_dim",
+            "activation",
+            "pooling",
+            "piece_layout",
+            "piece_embed_mode",
+            "input_embedding"
+          ]
+        },
+        {
+          "required": [
+            "model_family",
+            "blend_weights",
+            "checkpoint_sha256",
+            "script_sha256",
+            "score_contract"
           ]
         }
       ],
       "properties": {
         "state_len": {
           "$ref": "#/$defs/positive_integer",
-          "maximum": 120
+          "maximum": 150
         },
         "num_classes": {
           "$ref": "#/$defs/positive_integer"
@@ -138,18 +166,42 @@
           "type": "string",
           "maxLength": 256
         },
-        "backend": { "const": "piece_transformer" },
-        "model_arch": { "const": "piece_transformer" },
-        "move_count": { "$ref": "#/$defs/positive_integer" },
-        "num_pieces": { "$ref": "#/$defs/positive_integer" },
-        "max_piece_size": { "$ref": "#/$defs/positive_integer" },
-        "num_piece_types": { "$ref": "#/$defs/positive_integer" },
-        "seq_len": { "$ref": "#/$defs/positive_integer" },
-        "d_model": { "$ref": "#/$defs/positive_integer" },
-        "nhead": { "$ref": "#/$defs/positive_integer" },
-        "head_dim": { "$ref": "#/$defs/positive_integer" },
-        "num_layers": { "$ref": "#/$defs/positive_integer" },
-        "ff_dim": { "$ref": "#/$defs/positive_integer" },
+        "backend": {
+          "const": "piece_transformer"
+        },
+        "model_arch": {
+          "const": "piece_transformer"
+        },
+        "move_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "num_pieces": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "max_piece_size": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "num_piece_types": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "seq_len": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "d_model": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "nhead": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "head_dim": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "num_layers": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "ff_dim": {
+          "$ref": "#/$defs/positive_integer"
+        },
         "activation": {
           "type": "string",
           "minLength": 1,
@@ -174,6 +226,33 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 64
+        },
+        "model_family": {
+          "const": "cube555_q_blend"
+        },
+        "blend_weights": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "checkpoint_sha256": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "script_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "score_contract": {
+          "const": "parent_q_fp32_blend_then_clamp_round"
         }
       }
     },
@@ -594,7 +673,8 @@
               "enum": [
                 "batchnorm-folded",
                 "resmlp-layernorm",
-                "piece-transformer"
+                "piece-transformer",
+                "cube555-q-blend"
               ]
             },
             "manifest": {
