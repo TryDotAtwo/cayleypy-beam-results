@@ -15,7 +15,7 @@ from typing import Any, Iterable
 from jsonschema import Draft202012Validator, FormatChecker
 
 MAX_ENVELOPE_BYTES = 256 * 1024
-MAX_STATE_LENGTH = 120
+MAX_STATE_LENGTH = 150
 MAX_MOVE_COUNT = 256
 MAX_PATH_LENGTH = 4096
 UUID7 = re.compile(
@@ -34,7 +34,8 @@ GENERATED_INDEX_PATHS = {
     "data/by_author.tsv",
     "data/best_solutions.tsv",
     "data/runs.json",
-}GENERATED_HUMAN_PATH = re.compile(
+}
+GENERATED_HUMAN_PATH = re.compile(
     r"^data/[a-z0-9._-]{1,128}/(?:index\.tsv|puzzles/p[0-9]{4,}/"
     r"(?:solutions\.tsv|best_solution\.tsv|metadata\.json|summary\.md))$"
 )
@@ -192,7 +193,7 @@ def validate_integrity(envelope: dict[str, Any]) -> None:
     proof = envelope["proof"]
     manifest = envelope["model"]["manifest"]
     n = manifest["state_len"]
-    if n < 1 or n > MAX_STATE_LENGTH or manifest["num_classes"] > n:
+    if n < 1 or (n > 120 and n != 150) or manifest["num_classes"] > n:
         error("STATE_LENGTH")
     generators = proof["generators"]
     if len(generators) > MAX_MOVE_COUNT:

@@ -158,3 +158,15 @@ def test_head_tree_nul_parser_rejects_tab_and_newline_paths(monkeypatch, bad_rel
     monkeypatch.setattr(validator, "git", fake_git)
     with pytest.raises(validator.ValidationError, match="HEAD_PATH"):
         list(validator.head_result_paths(Path("."), "head"))
+
+def test_cube555_150_facelet_blend_proof():
+    item = json.loads((ROOT / 'test_results/cube555_fixture.json').read_text())
+    validator.validate_schema(item, validator.load_schema(ROOT))
+    validator.validate_integrity(item)
+
+
+def test_cube555_wrong_high_facelet_is_rejected():
+    item = json.loads((ROOT / 'test_results/cube555_fixture.json').read_text())
+    item['proof']['initial_state'][149] = 149
+    with pytest.raises(validator.ValidationError):
+        validator.validate_integrity(item)
