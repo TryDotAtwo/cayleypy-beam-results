@@ -2,7 +2,7 @@ name: validate-ingest
 
 on:
   push:
-    branches: [ingest/staging]
+    tags: [ingest/staging]
 
 permissions: {}
 
@@ -42,13 +42,13 @@ jobs:
             *[!0-9]*) exit 1 ;;
           esac
           test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
-          test "$GITHUB_REF" = "refs/heads/ingest/staging"
+          test "$GITHUB_REF" = "refs/tags/ingest/staging"
           test "$GITHUB_ACTOR" = "$EXPECTED_APP_LOGIN"
           test "$SENDER_TYPE" = "Bot"
           test "$SENDER_ID" = "$EXPECTED_BOT_ID"
 
           git fetch --no-tags origin \
-            "+refs/heads/ingest/staging:refs/remotes/origin/ingest/staging"
+            "+refs/tags/ingest/staging:refs/remotes/origin/ingest/staging"
           remote_head="$(git rev-parse origin/ingest/staging)"
           git merge-base --is-ancestor "$GITHUB_HEAD_SHA" "$remote_head"
 

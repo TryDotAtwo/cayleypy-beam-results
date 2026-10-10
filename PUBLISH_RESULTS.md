@@ -7,7 +7,7 @@
 
 Пользователь не вводит endpoint и не создаёт GitHub/Cloudflare token. Публичный Worker уже закреплён внутри CLI.
 
-## Получить ветку через GitHub CLI
+## Получить репозиторий через GitHub CLI
 
 ```bash
 gh repo clone TryDotAtwo/cayleypy-beam-results 

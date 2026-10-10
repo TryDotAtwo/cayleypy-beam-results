@@ -1,0 +1,26 @@
+[
+  {
+    "original_path": "results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/0/2026-10-01/01a0f8e5-ca18-7390-9b2c-5752014ebab8.json",
+    "archive_path": "archive/unvalidated/results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/0/2026-10-01/01a0f8e5-ca18-7390-9b2c-5752014ebab8.json",
+    "sha256": "471586d519e0366923ff8453ac279f67a480ed44fb08925edc040bcc97c809b2",
+    "reason": "v1 MoLab provenance and world_size=1 do not satisfy the v1 Kaggle schema; not promoted as validated solutions"
+  },
+  {
+    "original_path": "results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/1/2026-10-01/01a0f8e5-e0f7-72ee-b594-e8097d22afec.json",
+    "archive_path": "archive/unvalidated/results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/1/2026-10-01/01a0f8e5-e0f7-72ee-b594-e8097d22afec.json",
+    "sha256": "644db66d702ec4fa0a5f16f1fe12f5857db8f5485aad4f9bd43da8adfd53a6bf",
+    "reason": "v1 MoLab provenance and world_size=1 do not satisfy the v1 Kaggle schema; not promoted as validated solutions"
+  },
+  {
+    "original_path": "results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/2/2026-10-01/01a0f8e5-f2c3-7c32-9506-ccdb8701a99e.json",
+    "archive_path": "archive/unvalidated/results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/2/2026-10-01/01a0f8e5-f2c3-7c32-9506-ccdb8701a99e.json",
+    "sha256": "0a89ac2d9d401164390c2b1aa6f92a3253b4e80de111afbb30cbe76de29e5315",
+    "reason": "v1 MoLab provenance and world_size=1 do not satisfy the v1 Kaggle schema; not promoted as validated solutions"
+  },
+  {
+    "original_path": "results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/3/2026-10-01/01a0f8e6-0633-7e1c-a4d0-1f1f613cc6de.json",
+    "archive_path": "archive/unvalidated/results/v1/cube555-molab-validation/cayleypy-150-30-013f074d29c62763/3/2026-10-01/01a0f8e6-0633-7e1c-a4d0-1f1f613cc6de.json",
+    "sha256": "6b63e01e0c82f3f6a45a9e17e799ebfcf70828444985f51263604e9db3987eee",
+    "reason": "v1 MoLab provenance and world_size=1 do not satisfy the v1 Kaggle schema; not promoted as validated solutions"
+  }
+]

@@ -119,7 +119,8 @@ def test_workflow_promotes_only_exact_indexed_head_without_self_wait():
     assert "--allow-generated-indexes" in promote
     assert "git push --force-with-lease" in promote
     assert "workflow_call:" in promote
-    assert "--match-head-commit" in promote
+    assert '--force-with-lease="refs/heads/$BASE_BRANCH:$base"' in promote
+    assert 'git merge-base --is-ancestor "$base" "$candidate"' in promote
     assert "gh pr checks" not in promote
     assert "pull_request:" not in promote
     assert "pull_request_target" not in promote

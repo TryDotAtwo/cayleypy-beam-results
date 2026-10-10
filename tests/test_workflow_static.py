@@ -42,7 +42,7 @@ def test_app_push_gate_uses_exact_login_sender_type_and_numeric_id():
     assert 'test "$GITHUB_ACTOR" = "$EXPECTED_APP_LOGIN"' in validate
     assert 'test "$SENDER_TYPE" = "Bot"' in validate
     assert 'test "$SENDER_ID" = "$EXPECTED_BOT_ID"' in validate
-    assert 'test "$GITHUB_REF" = "refs/heads/ingest/staging"' in validate
+    assert 'test "$GITHUB_REF" = "refs/tags/ingest/staging"' in validate
     assert "git merge-base --is-ancestor" in validate
 
 
@@ -59,7 +59,9 @@ def test_promotion_rebuilds_and_matches_the_exact_remote_head():
     assert 'f"generated payload mismatch: {relative}"' in promote
     assert "data/.human-results-manifest.json" in promote
     assert 'payload["paths"]' in promote
-    assert "--match-head-commit" in promote
+    assert '--force-with-lease="refs/heads/$BASE_BRANCH:$base"' in promote
     assert "gh pr checks" not in promote
     assert "pull_request:" not in promote
-    assert "cayleypy-ingest-approved" in promote
+    assert "gh pr create" not in promote
+    assert "refs/tags/$STAGING_BRANCH" in promote
+    assert "data/README.md" in promote

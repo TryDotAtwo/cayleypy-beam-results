@@ -69,7 +69,7 @@ def test_exact_candidate_check_and_periodic_reconciler_are_declared():
     assert "cayleypy-results/exact-candidate" in promote
     assert "/check-runs" in promote
     assert '"head_sha":"$candidate"' in promote
-    assert "--merge" in promote
+    assert "gh pr merge" not in promote
     assert "--squash" not in promote
     assert 'git merge --no-edit "$base"' in promote
-    assert "refs/heads/$STAGING_BRANCH:$candidate" in promote
+    assert "refs/tags/$STAGING_BRANCH:$candidate" in promote

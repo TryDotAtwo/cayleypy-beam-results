@@ -9,6 +9,11 @@ on:
         required: true
         type: string
   workflow_dispatch:
+    inputs:
+      force_verify:
+        description: Revalidate and rebuild even when the service tag matches main
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -20,8 +25,6 @@ jobs:
     permissions:
       checks: write
       contents: write
-      issues: write
-      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       # actions/checkout v4.2.2
@@ -46,6 +49,7 @@ jobs:
           SENDER_TYPE: ${{ github.event.sender.type }}
           STAGING_BRANCH: ingest/staging
           TRIGGER_HEAD: ${{ inputs.trigger_head }}
+          FORCE_VERIFY: ${{ inputs.force_verify }}
         shell: bash
         run: |
           set -euo pipefail
@@ -79,7 +83,7 @@ jobs:
           for attempt in $(seq 1 40); do
             git fetch --no-tags origin \
               "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
-              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+              "+refs/tags/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
             base="$(git rev-parse "origin/$BASE_BRANCH")"
             latest="$(git rev-parse "origin/$STAGING_BRANCH")"
             if [ -n "$TRIGGER_HEAD" ]; then
@@ -87,11 +91,11 @@ jobs:
               git merge-base --is-ancestor "$TRIGGER_HEAD" "$latest"
             fi
 
-            if git merge-base --is-ancestor "$latest" "$base"; then
+            if git merge-base --is-ancestor "$latest" "$base" && [ "$FORCE_VERIFY" != "true" ]; then
               if [ "$latest" != "$base" ]; then
                 git push \
-                  --force-with-lease="refs/heads/$STAGING_BRANCH:$latest" \
-                  origin "$base:refs/heads/$STAGING_BRANCH"
+                  --force-with-lease="refs/tags/$STAGING_BRANCH:$latest" \
+                  origin "$base:refs/tags/$STAGING_BRANCH"
               fi
               exit 0
             fi
@@ -118,7 +122,7 @@ jobs:
 
             while IFS= read -r changed; do
               case "$changed" in
-                data/index.tsv|data/by_author.tsv|\
+                data/README.md|data/*/README.md|data/index.tsv|data/by_author.tsv|\
                 data/best_solutions.tsv|data/runs.json|\
                 data/.human-results-manifest.json|\
                 data/*/index.tsv|data/*/puzzles/p*/solutions.tsv|\
@@ -134,8 +138,8 @@ jobs:
             candidate="$(git rev-parse HEAD)"
 
             if [ "$candidate" != "$latest" ]; then
-              if ! git push --force-with-lease="refs/heads/$STAGING_BRANCH:$latest" \
-                origin "HEAD:refs/heads/$STAGING_BRANCH"; then
+              if ! git push --force-with-lease="refs/tags/$STAGING_BRANCH:$latest" \
+                origin "HEAD:refs/tags/$STAGING_BRANCH"; then
                 retry_delay
                 continue
               fi
@@ -143,7 +147,7 @@ jobs:
 
             git fetch --no-tags origin \
               "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
-              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+              "+refs/tags/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
             base="$(git rev-parse "origin/$BASE_BRANCH")"
             remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
             if [ "$remote_head" != "$candidate" ] || \
@@ -206,7 +210,7 @@ jobs:
 
             git fetch --no-tags origin \
               "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
-              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
+              "+refs/tags/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
             base="$(git rev-parse "origin/$BASE_BRANCH")"
             remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
             if [ "$remote_head" != "$candidate" ] || \
@@ -218,115 +222,19 @@ jobs:
               exit 0
             fi
 
-            mapfile -t pull_numbers < <(
-              gh pr list \
-                --repo "$GITHUB_REPOSITORY" \
-                --state open \
-                --base "$BASE_BRANCH" \
-                --head "$STAGING_BRANCH" \
-                --limit 2 \
-                --json number \
-                --jq '.[].number'
-            )
-            if [ "${#pull_numbers[@]}" -gt 1 ]; then
-              exit 1
-            fi
-            if [ "${#pull_numbers[@]}" -eq 0 ]; then
-              if ! gh pr create \
-                --repo "$GITHUB_REPOSITORY" \
-                --base "$BASE_BRANCH" \
-                --head "$STAGING_BRANCH" \
-                --title "ingest: publish validated CayleyPy results" \
-                --body "Automated append-only promotion of replay-validated results."; then
-                retry_delay
-                continue
-              fi
-              mapfile -t pull_numbers < <(
-                gh pr list \
-                  --repo "$GITHUB_REPOSITORY" \
-                  --state open \
-                  --base "$BASE_BRANCH" \
-                  --head "$STAGING_BRANCH" \
-                  --limit 2 \
-                  --json number \
-                  --jq '.[].number'
-              )
-              if [ "${#pull_numbers[@]}" -ne 1 ]; then
-                retry_delay
-                continue
-              fi
-            fi
-            pull_number="${pull_numbers[0]}"
-
-            gh label create "cayleypy-ingest-approved" \
-              --repo "$GITHUB_REPOSITORY" \
-              --color "0E8A16" \
-              --description "Exact indexed staging SHA passed replay validation" \
-              --force
-            gh pr edit "$pull_number" \
-              --repo "$GITHUB_REPOSITORY" \
-              --add-label "cayleypy-ingest-approved"
-
-            identity="$(
-              gh pr view "$pull_number" \
-                --repo "$GITHUB_REPOSITORY" \
-                --json state,isCrossRepository,headRefName,baseRefName,headRefOid \
-                --jq '[.state,.isCrossRepository,.headRefName,.baseRefName,.headRefOid] | @tsv'
-            )"
-            IFS=$'\t' read -r \
-              pr_state cross_repo pr_head pr_base pr_sha <<<"$identity"
-            test "$pr_state" = "OPEN"
-            test "$cross_repo" = "false"
-            test "$pr_head" = "$STAGING_BRANCH"
-            test "$pr_base" = "$BASE_BRANCH"
-            if [ "$pr_sha" != "$candidate" ]; then
-              retry_delay
-              continue
-            fi
-
-            git fetch --no-tags origin \
-              "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH" \
-              "+refs/heads/$STAGING_BRANCH:refs/remotes/origin/$STAGING_BRANCH"
-            base="$(git rev-parse "origin/$BASE_BRANCH")"
-            remote_head="$(git rev-parse "origin/$STAGING_BRANCH")"
-            if [ "$remote_head" != "$candidate" ] || \
-               ! git merge-base --is-ancestor "$base" "$candidate"; then
-              retry_delay
-              continue
-            fi
-            python tools/validate_result.py \
-              --base "$base" \
-              --head "$candidate" \
-              --allow-generated-indexes
-
-            if gh pr merge "$pull_number" \
-              --repo "$GITHUB_REPOSITORY" \
-              --merge \
-              --match-head-commit "$candidate"; then
-              merged="$(
-                gh pr view "$pull_number" \
-                  --repo "$GITHUB_REPOSITORY" \
-                  --json mergedAt,headRefOid,mergeCommit \
-                  --jq '[.mergedAt,.headRefOid,.mergeCommit.oid] | @tsv'
-              )"
-              IFS=$'\t' read -r \
-                merged_at merged_head merge_commit <<<"$merged"
-              test -n "$merged_at"
-              test "$merged_head" = "$candidate"
-              test -n "$merge_commit"
-
+            # Main advances only after the exact candidate check above.
+            # The ancestry guard makes this a fast-forward; the lease rejects races.
+            if git push --force-with-lease="refs/heads/$BASE_BRANCH:$base" \
+              origin "$candidate:refs/heads/$BASE_BRANCH"; then
               git fetch --no-tags origin \
                 "+refs/heads/$BASE_BRANCH:refs/remotes/origin/$BASE_BRANCH"
               published="$(git rev-parse "origin/$BASE_BRANCH")"
-              test "$published" = "$merge_commit"
               git merge-base --is-ancestor "$candidate" "$published"
-              git push \
-                --force-with-lease="refs/heads/$STAGING_BRANCH:$candidate" \
-                origin "$published:refs/heads/$STAGING_BRANCH" || true
+              git push --force-with-lease="refs/tags/$STAGING_BRANCH:$candidate" \
+                origin "$published:refs/tags/$STAGING_BRANCH" || true
               exit 0
             fi
-
             retry_delay
           done
-
+          echo "Promotion retries exhausted" >&2
           exit 1
