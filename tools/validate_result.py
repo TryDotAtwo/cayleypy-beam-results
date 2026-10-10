@@ -34,9 +34,10 @@ GENERATED_INDEX_PATHS = {
     "data/by_author.tsv",
     "data/best_solutions.tsv",
     "data/runs.json",
+    "data/README.md",
 }
 GENERATED_HUMAN_PATH = re.compile(
-    r"^data/[a-z0-9._-]{1,128}/(?:index\.tsv|puzzles/p[0-9]{4,}/"
+    r"^data/[a-z0-9._-]{1,128}/(?:README\.md|index\.tsv|puzzles/p[0-9]{4,}/"
     r"(?:solutions\.tsv|best_solution\.tsv|metadata\.json|summary\.md))$"
 )
 

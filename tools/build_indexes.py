@@ -636,6 +636,31 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 "[Metadata](metadata.json)\n"
             )
             payloads[f"{base}/summary.md"] = summary.encode("utf-8")
+    titles = {
+        "cayley-py-444-cube": "Cube 4×4×4",
+        "cayley-py-555-cube": "Cube 5×5×5",
+        "cayley-py-megaminx": "Megaminx",
+        "cayley-py-professor-tetraminx-solve-optimally": "Professor Tetraminx",
+        "cayleypy-ihes-cube": "IHES Cube",
+        "toy-cayley": "Test examples (toy Cayley)",
+    }
+    catalog = ["# Solutions by puzzle\n", "Choose a puzzle family, then an instance. All existing TSV and JSON paths remain available.\n",
+               "| Puzzle family | Instances | Solutions | Browse | Download |", "|---|---:|---:|---|---|"]
+    for competition in sorted(competitions):
+        family_rows = competitions[competition]
+        groups: dict[int, list[ResultRow]] = {}
+        for row in family_rows:
+            groups.setdefault(row.puzzle_id, []).append(row)
+        title = titles.get(competition, competition)
+        catalog.append(f"| {title} | {len(groups)} | {len(family_rows)} | [Instances]({competition}/README.md) | [All solutions TSV]({competition}/index.tsv) |")
+        lines = [f"# {title}\n", "[All puzzle families](../README.md) · [All solutions TSV](index.tsv)\n",
+                 "Each instance links to its shortest recorded solution and all submitted solutions. These are recorded results, not claims of optimality.\n",
+                 "| Instance | Best length | Solutions |", "|---:|---:|---:|"]
+        for puzzle_id in sorted(groups):
+            items = groups[puzzle_id]
+            lines.append(f"| [{puzzle_id}](puzzles/p{puzzle_id:04d}/summary.md) | {min(x.solution_length for x in items)} | [{len(items)}](puzzles/p{puzzle_id:04d}/solutions.tsv) |")
+        payloads[f"{competition}/README.md"] = ("\n".join(lines) + "\n").encode("utf-8")
+    payloads["README.md"] = ("\n".join(catalog) + "\n").encode("utf-8")
     return payloads
 
 def build_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
