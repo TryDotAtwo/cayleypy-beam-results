@@ -1,0 +1,11 @@
+{
+  "refs/heads/codex/cayleypy-results-ingest": "b7ce82e7d98ddabd6874047e36f354defea87962",
+  "refs/heads/codex/cayleypy-results-publisher": "1670b5c1cf5584415e807e43e5ec930d79f86020",
+  "refs/heads/codex/cube555-results-schema": "6422b88d314fd07e22aa6321e31ea1c24422a691",
+  "refs/heads/codex/fix-main-duplicate-idempotency": "d101bba03c65f235f4464320b93f4e72ce7116a0",
+  "refs/heads/codex/fix-native-v2-promotion": "0adf627ad7d68f8820b72d2712045b499a30c432",
+  "refs/heads/codex/fix-piece-transformer-results": "988e00e5f2f7caa1bf654d9700fd4bdba47a7eeb",
+  "refs/heads/codex/human-readable-results": "3eb351a363dc08ee8e8b49af2299f9fb08cf8f9a",
+  "refs/heads/ingest/staging": "46fa8305d6e088e22a68ad2645f8aa4b042792b7",
+  "refs/heads/main": "9455524b1f4b424299a94c25a6a382752170a822"
+}
