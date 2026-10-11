@@ -12,6 +12,26 @@ def env(name="original_unicode_author"):
     return copy.deepcopy(next(x["envelope"] for x in CASES if x["name"] == name))
 def record(name="original_unicode_author"):
     item = env(name); return {"submission_id": item["client_submission_id"], "envelope": item}
+
+
+def test_warm_receipt_does_not_bypass_append_only_or_duplicates(tmp_path, monkeypatch):
+    monkeypatch.setenv("CAYLEYPY_VALIDATION_CACHE", str(tmp_path / "trusted-receipt.json"))
+    item = record()
+    repo, base, head = make_repo(tmp_path, [item])
+    validator.validate_range(repo, base, head)
+    duplicate = copy.deepcopy(item)
+    duplicate["submission_id"] = "018f7a24-8f6b-7c8e-9d1b-2a3b4c5d6e80"
+    path = repo / rel(duplicate)
+    path.write_text(validator.canonical(duplicate), encoding="utf-8")
+    commit(repo, "duplicate semantic record")
+    with pytest.raises(validator.ValidationError, match="DUPLICATE_IDEMPOTENCY"):
+        validator.validate_range(repo, head, "HEAD")
+    path.unlink()
+    original = repo / rel(item)
+    original.write_text(validator.canonical(item) + "\n", encoding="utf-8")
+    commit(repo, "modify old record")
+    with pytest.raises(validator.ValidationError, match="DIFF_APPEND_ONLY"):
+        validator.validate_range(repo, head, "HEAD")
 def rel(item):
     e=item["envelope"]
     return f"results/v1/{validator.safe_segment(e['competition'])}/{validator.safe_segment(e['puzzle_type'])}/{e['puzzle_id']}/{e['submitted_at'][:10]}/{item['submission_id']}.json"

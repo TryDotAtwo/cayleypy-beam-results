@@ -16,9 +16,10 @@ try:
         load_schema,
         validate_integrity,
         validate_schema,
+        ValidationCache,
     )
 except ModuleNotFoundError:
-    from validate_result import ValidationError as RecordValidationError, load_schema, validate_integrity, validate_schema
+    from validate_result import ValidationError as RecordValidationError, load_schema, validate_integrity, validate_schema, ValidationCache
 
 UUID7 = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
@@ -452,9 +453,10 @@ def _record_paths(
     return sorted(output, key=lambda path: path.relative_to(results.parent).as_posix())
 
 
-def load_rows(results: Path, native_results: Path | None = None) -> list[ResultRow]:
+def load_rows(results: Path, native_results: Path | None = None, *, cache: ValidationCache | None = None) -> list[ResultRow]:
     rows: list[ResultRow] = []
     schema_root = Path(__file__).resolve().parents[1]
+    cache = cache or ValidationCache(schema_root)
     seen_submission: set[str] = set()
     seen_idempotency: set[str] = set()
     paths = _record_paths(results)
@@ -477,8 +479,7 @@ def load_rows(results: Path, native_results: Path | None = None) -> list[ResultR
         # Force all indexed fields through their fail-closed type checks.
         row.index_tuple()
         try:
-            validate_schema(envelope, load_schema(schema_root, envelope.get("schema_version")))
-            validate_integrity(envelope)
+            cache.validate(envelope)
         except RecordValidationError as exc:
             raise IndexBuildError(f"RECORD_{exc.code}") from None
         if submission_id in seen_submission:
@@ -488,6 +489,7 @@ def load_rows(results: Path, native_results: Path | None = None) -> list[ResultR
         seen_submission.add(submission_id)
         seen_idempotency.add(row.idempotency_key)
         rows.append(row)
+    cache.save()
     return sorted(rows, key=ResultRow.primary_key)
 
 
@@ -790,7 +792,10 @@ def build(
 ) -> None:
     if native_results is None:
         native_results = out / "v2" / "slurm"
-    payloads = build_payloads(load_rows(results, native_results))
+    cache = ValidationCache(Path(__file__).resolve().parents[1])
+    payloads = build_payloads(load_rows(results, native_results, cache=cache))
+    if cache.path is not None:
+        payloads[".validation-cache.json"] = cache.payload()
     old_human_paths = _old_human_paths(out)
     new_human_paths = set(
         json.loads(payloads[HUMAN_MANIFEST])["paths"]
