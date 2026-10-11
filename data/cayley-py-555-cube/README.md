@@ -8,6 +8,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 |---:|---:|---:|
 | [35](puzzles/p0035/summary.md) | 1 | [2001](puzzles/p0035/solutions.tsv) |
 | [107](puzzles/p0107/summary.md) | 105 | [5](puzzles/p0107/solutions.tsv) |
+| [169](puzzles/p0169/summary.md) | 105 | [22](puzzles/p0169/solutions.tsv) |
 | [218](puzzles/p0218/summary.md) | 106 | [1](puzzles/p0218/solutions.tsv) |
 | [233](puzzles/p0233/summary.md) | 99 | [3](puzzles/p0233/solutions.tsv) |
 | [293](puzzles/p0293/summary.md) | 109 | [8](puzzles/p0293/solutions.tsv) |
