@@ -4,12 +4,26 @@ from pathlib import Path
 import tempfile
 import time
 
-from tools.validate_result import validate_range
+from tools.validate_result import validate_range, diff_changes, ValidationError, RESULT_PATH, RESULT_PATH_V2
 from tools.build_indexes import build
+
+
+def validate_source_changes(root: Path, base: str, head: str = "HEAD") -> None:
+    """Source PRs may edit code, but cannot rewrite accepted raw results."""
+    for status, relative in diff_changes(root, base, head):
+        if relative.startswith(("results/", "data/v2/slurm/")) and (
+            status != "A" or not (RESULT_PATH.fullmatch(relative) or RESULT_PATH_V2.fullmatch(relative))
+        ):
+            raise ValidationError("DIFF_APPEND_ONLY", f"{status}:{relative}")
+        if relative == "data/.validation-cache.json":
+            raise ValidationError("SOURCE_RECEIPT_EDIT", relative)
 
 
 def main():
     root = Path.cwd()
+    base = os.environ.get("PUBLICATION_REVIEW_BASE")
+    if base:
+        validate_source_changes(root, base)
     with tempfile.TemporaryDirectory() as directory:
         temporary = Path(directory)
         # Never trust the candidate's validation receipt during source review.
