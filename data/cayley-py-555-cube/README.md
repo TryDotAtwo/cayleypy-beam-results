@@ -18,5 +18,5 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [839](puzzles/p0839/summary.md) | 105 | [1](puzzles/p0839/solutions.tsv) |
 | [992](puzzles/p0992/summary.md) | 112 | [1](puzzles/p0992/solutions.tsv) |
 | [999](puzzles/p0999/summary.md) | 103 | [6](puzzles/p0999/solutions.tsv) |
-| [1000](puzzles/p1000/summary.md) | 116 | [31](puzzles/p1000/solutions.tsv) |
+| [1000](puzzles/p1000/summary.md) | 116 | [45](puzzles/p1000/solutions.tsv) |
 | [1020](puzzles/p1020/summary.md) | 104 | [37](puzzles/p1020/solutions.tsv) |
