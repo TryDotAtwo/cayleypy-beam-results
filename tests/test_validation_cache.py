@@ -62,3 +62,25 @@ def test_workflows_seed_only_from_main_and_compare_receipt():
     workflow = (ROOT / ".github/workflows/merge-ingest.yml").read_text()
     assert '".validation-cache.json",' in workflow
     assert ': > "$CAYLEYPY_VALIDATION_CACHE"' in workflow
+
+
+@pytest.mark.parametrize("status,path", [
+    ("M", "results/v1/record.json"),
+    ("D", "results/v1/record.json"),
+    ("M", "data/v2/slurm/record.json"),
+    ("A", "data/.validation-cache.json"),
+])
+def test_source_review_rejects_raw_rewrite_and_receipt_injection(monkeypatch, status, path):
+    from tools import verify_catalog
+    monkeypatch.setattr(verify_catalog, "diff_changes", lambda *args: [(status, path)])
+    with pytest.raises(validator.ValidationError):
+        verify_catalog.validate_source_changes(ROOT, "base")
+
+
+def test_source_review_allows_code_and_new_records(monkeypatch):
+    from tools import verify_catalog
+    monkeypatch.setattr(verify_catalog, "diff_changes", lambda *args: [
+        ("M", "tools/validate_result.py"),
+        ("A", "results/v1/example/cube/1/2026-10-11/018f7a24-8f6b-7c8e-9d1b-2a3b4c5d6e80.json"),
+    ])
+    verify_catalog.validate_source_changes(ROOT, "base")
