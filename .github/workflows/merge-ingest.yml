@@ -50,6 +50,7 @@ jobs:
           STAGING_BRANCH: ingest/staging
           TRIGGER_HEAD: ${{ inputs.trigger_head }}
           FORCE_VERIFY: ${{ inputs.force_verify }}
+          CAYLEYPY_VALIDATION_CACHE: ${{ runner.temp }}/semantic-validation.json
         shell: bash
         run: |
           set -euo pipefail
@@ -76,6 +77,13 @@ jobs:
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # Trust receipts only from protected main, never from the ingest tag.
+          if [ "$FORCE_VERIFY" != "true" ]; then
+            git show "origin/main:data/.validation-cache.json" > "$CAYLEYPY_VALIDATION_CACHE" 2>/dev/null || : > "$CAYLEYPY_VALIDATION_CACHE"
+          else
+            : > "$CAYLEYPY_VALIDATION_CACHE"
+          fi
+
           retry_delay() {
             sleep "$((attempt < 5 ? attempt : 5))"
           }
@@ -91,7 +99,7 @@ jobs:
               git merge-base --is-ancestor "$TRIGGER_HEAD" "$latest"
             fi
 
-            if git merge-base --is-ancestor "$latest" "$base" && [ "$FORCE_VERIFY" != "true" ]; then
+            if git merge-base --is-ancestor "$latest" "$base" && [ "$FORCE_VERIFY" != "true" ] && git cat-file -e "$base:data/.validation-cache.json" 2>/dev/null; then
               if [ "$latest" != "$base" ]; then
                 git push \
                   --force-with-lease="refs/tags/$STAGING_BRANCH:$latest" \
@@ -124,7 +132,7 @@ jobs:
               case "$changed" in
                 data/README.md|data/*/README.md|data/index.tsv|data/by_author.tsv|\
                 data/best_solutions.tsv|data/runs.json|\
-                data/.human-results-manifest.json|\
+                data/.human-results-manifest.json|data/.validation-cache.json|\
                 data/*/index.tsv|data/*/puzzles/p*/solutions.tsv|\
                 data/*/puzzles/p*/best_solution.tsv|\
                 data/*/puzzles/p*/metadata.json|\
@@ -185,6 +193,7 @@ jobs:
               "best_solutions.tsv",
               "runs.json",
               ".human-results-manifest.json",
+              ".validation-cache.json",
           )
           for relative in (*fixed, *payload["paths"]):
               if (Path("data") / relative).read_bytes() != (

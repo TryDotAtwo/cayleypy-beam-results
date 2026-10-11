@@ -5,12 +5,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
+from importlib.metadata import version as package_version
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -35,6 +37,7 @@ GENERATED_INDEX_PATHS = {
     "data/best_solutions.tsv",
     "data/runs.json",
     "data/README.md",
+    "data/.validation-cache.json",
 }
 GENERATED_HUMAN_PATH = re.compile(
     r"^data/[a-z0-9._-]{1,128}/(?:README\.md|index\.tsv|puzzles/p[0-9]{4,}/"
@@ -92,6 +95,64 @@ def load_schema(root: Path, version: int = 1) -> Draft202012Validator:
         (root / f"schemas/result-v{version}.schema.json").read_text(encoding="utf-8")
     )
     return Draft202012Validator(schema, format_checker=FormatChecker())
+
+
+class ValidationCache:
+    """Semantic receipts, opt-in and seeded ONLY from protected main by CI.
+
+    Never load a receipt from the candidate checkout. Paths, canonical bytes,
+    append-only rules and global uniqueness are still checked on every pass.
+    """
+
+    def __init__(self, root: Path) -> None:
+        configured = os.environ.get("CAYLEYPY_VALIDATION_CACHE")
+        self.path = Path(configured) if configured else None
+        fingerprint = hashlib.sha256(Path(__file__).read_bytes())
+        for schema in sorted((root / "schemas").glob("*.json")):
+            fingerprint.update(schema.name.encode())
+            fingerprint.update(schema.read_bytes())
+        fingerprint.update(package_version("jsonschema").encode())
+        fingerprint.update(str(sys.version_info[:2]).encode())
+        self.contract = fingerprint.hexdigest()
+        self.entries: set[str] = set()
+        self.schemas: dict[int, Draft202012Validator] = {}
+        self.hits = self.misses = 0
+        if self.path is not None and self.path.is_file():
+            try:
+                receipt = json.loads(self.path.read_text(encoding="utf-8"))
+                entries = receipt["entries"]
+                if receipt["contract"] == self.contract and isinstance(entries, list) and all(
+                    isinstance(key, str) and re.fullmatch(r"[0-9a-f]{64}", key)
+                    for key in entries
+                ):
+                    self.entries = set(entries)
+            except (ValueError, KeyError, TypeError):
+                pass  # A missing/obsolete receipt requires full validation.
+        self.root = root
+
+    def validate(self, envelope: dict[str, Any]) -> None:
+        key = digest(envelope)
+        if self.path is not None and key in self.entries:
+            self.hits += 1
+            return
+        version = envelope.get("schema_version")
+        if version not in self.schemas:
+            self.schemas[version] = load_schema(self.root, version)
+        validate_schema(envelope, self.schemas[version])
+        validate_integrity(envelope)
+        self.misses += 1
+        self.entries.add(key)
+
+    def payload(self) -> bytes:
+        return (canonical({"contract": self.contract, "entries": sorted(self.entries)}) + "\n").encode()
+
+    def save(self) -> None:
+        if self.path is not None:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            temporary = self.path.with_suffix(".tmp")
+            temporary.write_bytes(self.payload())
+            temporary.replace(self.path)
+        print(f"SEMANTIC_VALIDATION checked={self.misses} reused={self.hits}")
 
 
 def validate_schema(
@@ -357,11 +418,14 @@ def validate_record(
     head: str,
     relative: str,
     validator: Draft202012Validator,
+    cache: ValidationCache | None = None,
+    raw: bytes | None = None,
 ) -> tuple[str, str]:
-    try:
-        raw = git(root, "show", f"{head}:{relative}", text=False)
-    except subprocess.CalledProcessError as exc:
-        error("READ", str(exc))
+    if raw is None:
+        try:
+            raw = git(root, "show", f"{head}:{relative}", text=False)
+        except subprocess.CalledProcessError as exc:
+            error("READ", str(exc))
     if len(raw) > MAX_ENVELOPE_BYTES + 4096:
         error("RECORD_SIZE")
     try:
@@ -381,9 +445,12 @@ def validate_record(
     submission_id = record["submission_id"]
     envelope = record["envelope"]
     version = envelope.get("schema_version")
-    validate_schema(envelope, load_schema(root, version))
+    if cache is None:
+        validate_schema(envelope, load_schema(root, version))
+        validate_integrity(envelope)
+    else:
+        cache.validate(envelope)
     validate_path(relative, submission_id, envelope)
-    validate_integrity(envelope)
     return submission_id, envelope["idempotency_key"]
 
 
@@ -461,6 +528,7 @@ def validate_range(
     allow_generated_indexes: bool = False,
 ) -> None:
     validator = load_schema(root)
+    cache = ValidationCache(root)
     changes = diff_changes(root, base, head)
     for status, relative in changes:
         if allow_generated_indexes and is_generated_path(relative):
@@ -483,9 +551,9 @@ def validate_range(
             error("DIFF_MODE", relative)
     seen_ids: set[str] = set()
     seen_idempotency: set[str] = set()
-    for relative in head_result_paths(root, head):
+    for relative, raw in read_records(root, head):
         submission_id, idempotency = validate_record(
-            root, head, relative, validator
+            root, head, relative, validator, cache, raw
         )
         if submission_id in seen_ids:
             error("DUPLICATE_SUBMISSION", submission_id)
@@ -493,6 +561,35 @@ def validate_range(
             error("DUPLICATE_IDEMPOTENCY", idempotency)
         seen_ids.add(submission_id)
         seen_idempotency.add(idempotency)
+    cache.save()
+
+
+def read_records(root: Path, head: str) -> Iterable[tuple[str, bytes]]:
+    """Read immutable Git blobs with one bounded streaming process."""
+    with subprocess.Popen(
+        ["git", "-C", str(root), "cat-file", "--batch"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+    ) as process:
+        assert process.stdin is not None and process.stdout is not None
+        try:
+            for relative in head_result_paths(root, head):
+                process.stdin.write(f"{head}:{relative}\n".encode("utf-8"))
+                process.stdin.flush()
+                header = process.stdout.readline().split()
+                if len(header) != 3 or header[1] != b"blob":
+                    error("READ", relative)
+                size = int(header[2])
+                if size > MAX_ENVELOPE_BYTES + 4096:
+                    error("RECORD_SIZE")
+                raw = process.stdout.read(size)
+                if len(raw) != size or process.stdout.read(1) != b"\n":
+                    error("READ", relative)
+                yield relative, raw
+        finally:
+            process.stdin.close()
+            process.stdout.close()
+        if process.wait() != 0:
+            error("READ", "git cat-file failed")
 
 
 def main() -> int:

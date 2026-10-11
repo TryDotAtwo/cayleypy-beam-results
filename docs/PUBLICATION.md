@@ -15,3 +15,22 @@ Canonical records: `results/v1/<competition>/<puzzle-type>/<puzzle-id>/<date>/<u
 Author metadata is a producer claim, not identity verification. Acceptance by the service is not confirmation that a result has reached main: CLI callers should use `--wait` and check the final publication receipt.
 
 Local verification: `python -m pytest tests plugins/cayleypy-results-publisher/tests -q`, `python tools/build_indexes.py --results results --out data`, and `python tools/validate_result.py --base <base> --head <candidate> --allow-generated-indexes`.
+# Incremental semantic validation
+
+CI reuses semantic receipts only from protected `main`, loaded into runner-local
+temporary storage before inspecting the ingest tag. Receipts bind the complete
+canonical envelope SHA-256 to the validator source, every schema, jsonschema
+version and Python major/minor version. New or changed envelopes are fully
+validated and replayed. A changed contract or absent/malformed receipt falls back
+to a full audit. Standalone commands remain full-validation by default.
+
+Every pass still checks canonical record bytes, paths, file modes, append-only
+changes and global submission/idempotency uniqueness. The final candidate's
+catalog and receipt are independently rebuilt and compared before the existing
+exact-candidate check and guarded main update. No branch protections are removed.
+`force_verify` discards saved receipts for a complete semantic audit. Source PRs
+also start with an empty receipt and compare the regenerated public catalog.
+
+The first promotion after deployment bootstraps the receipt even without new
+results. Subsequent promotions replay only unseen envelopes; logs expose checked
+and reused counts. HTTP 202 remains acceptance, not proof of main publication.

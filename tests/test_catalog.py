@@ -4,14 +4,14 @@ from tools.build_indexes import build_payloads, load_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 
-def test_catalog_links_and_every_instance():
+def test_catalog_links_and_every_instance(tmp_path):
     # Use existing fixture helpers to exercise multiple records deterministically.
     import importlib.util
     spec = importlib.util.spec_from_file_location('fixtures_builder', ROOT/'tests/test_build_indexes.py')
     fixture = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(fixture)
     from tempfile import TemporaryDirectory
-    with TemporaryDirectory(dir=ROOT.parent/'test_results') as temp:
+    with TemporaryDirectory(dir=tmp_path) as temp:
         root = Path(temp)
         fixture.put(root, fixture.record())
         rows = load_rows(root/'results', root/'native')
