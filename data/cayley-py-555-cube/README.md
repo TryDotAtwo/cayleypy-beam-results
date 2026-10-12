@@ -33,7 +33,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [640](puzzles/p0640/summary.md) | 142 | [4](puzzles/p0640/solutions.tsv) |
 | [733](puzzles/p0733/summary.md) | 109 | [47](puzzles/p0733/solutions.tsv) |
 | [741](puzzles/p0741/summary.md) | 109 | [3](puzzles/p0741/solutions.tsv) |
-| [747](puzzles/p0747/summary.md) | 109 | [2](puzzles/p0747/solutions.tsv) |
+| [747](puzzles/p0747/summary.md) | 109 | [4](puzzles/p0747/solutions.tsv) |
 | [748](puzzles/p0748/summary.md) | 106 | [2](puzzles/p0748/solutions.tsv) |
 | [763](puzzles/p0763/summary.md) | 103 | [6](puzzles/p0763/solutions.tsv) |
 | [766](puzzles/p0766/summary.md) | 106 | [16](puzzles/p0766/solutions.tsv) |
