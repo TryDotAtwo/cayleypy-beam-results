@@ -67,3 +67,4 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [1000](puzzles/p1000/summary.md) | 116 | [45](puzzles/p1000/solutions.tsv) |
 | [1002](puzzles/p1002/summary.md) | 122 | [22](puzzles/p1002/solutions.tsv) |
 | [1020](puzzles/p1020/summary.md) | 104 | [37](puzzles/p1020/solutions.tsv) |
+| [1023](puzzles/p1023/summary.md) | 107 | [11](puzzles/p1023/solutions.tsv) |
