@@ -44,6 +44,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [457](puzzles/p0457/summary.md) | 113 | [4](puzzles/p0457/solutions.tsv) |
 | [468](puzzles/p0468/summary.md) | 116 | [7](puzzles/p0468/solutions.tsv) |
 | [471](puzzles/p0471/summary.md) | 111 | [11](puzzles/p0471/solutions.tsv) |
+| [479](puzzles/p0479/summary.md) | 113 | [6](puzzles/p0479/solutions.tsv) |
 | [483](puzzles/p0483/summary.md) | 107 | [4](puzzles/p0483/solutions.tsv) |
 | [492](puzzles/p0492/summary.md) | 114 | [1](puzzles/p0492/solutions.tsv) |
 | [503](puzzles/p0503/summary.md) | 107 | [3](puzzles/p0503/solutions.tsv) |
