@@ -20,7 +20,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [215](puzzles/p0215/summary.md) | 107 | [9](puzzles/p0215/solutions.tsv) |
 | [218](puzzles/p0218/summary.md) | 106 | [1](puzzles/p0218/solutions.tsv) |
 | [221](puzzles/p0221/summary.md) | 111 | [2](puzzles/p0221/solutions.tsv) |
-| [229](puzzles/p0229/summary.md) | 111 | [1](puzzles/p0229/solutions.tsv) |
+| [229](puzzles/p0229/summary.md) | 111 | [2](puzzles/p0229/solutions.tsv) |
 | [233](puzzles/p0233/summary.md) | 99 | [3](puzzles/p0233/solutions.tsv) |
 | [235](puzzles/p0235/summary.md) | 115 | [8](puzzles/p0235/solutions.tsv) |
 | [257](puzzles/p0257/summary.md) | 113 | [24](puzzles/p0257/solutions.tsv) |
