@@ -79,7 +79,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [566](puzzles/p0566/summary.md) | 116 | [1](puzzles/p0566/solutions.tsv) |
 | [571](puzzles/p0571/summary.md) | 107 | [18](puzzles/p0571/solutions.tsv) |
 | [582](puzzles/p0582/summary.md) | 108 | [3](puzzles/p0582/solutions.tsv) |
-| [585](puzzles/p0585/summary.md) | 105 | [6](puzzles/p0585/solutions.tsv) |
+| [585](puzzles/p0585/summary.md) | 105 | [12](puzzles/p0585/solutions.tsv) |
 | [592](puzzles/p0592/summary.md) | 106 | [28](puzzles/p0592/solutions.tsv) |
 | [603](puzzles/p0603/summary.md) | 101 | [3](puzzles/p0603/solutions.tsv) |
 | [607](puzzles/p0607/summary.md) | 107 | [2](puzzles/p0607/solutions.tsv) |
