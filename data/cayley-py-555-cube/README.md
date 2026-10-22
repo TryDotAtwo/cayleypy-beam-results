@@ -167,7 +167,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [978](puzzles/p0978/summary.md) | 128 | [1](puzzles/p0978/solutions.tsv) |
 | [986](puzzles/p0986/summary.md) | 110 | [2](puzzles/p0986/solutions.tsv) |
 | [992](puzzles/p0992/summary.md) | 112 | [1](puzzles/p0992/solutions.tsv) |
-| [995](puzzles/p0995/summary.md) | 103 | [1](puzzles/p0995/solutions.tsv) |
+| [995](puzzles/p0995/summary.md) | 103 | [2](puzzles/p0995/solutions.tsv) |
 | [996](puzzles/p0996/summary.md) | 106 | [109](puzzles/p0996/solutions.tsv) |
 | [997](puzzles/p0997/summary.md) | 115 | [19](puzzles/p0997/solutions.tsv) |
 | [998](puzzles/p0998/summary.md) | 118 | [7](puzzles/p0998/solutions.tsv) |
