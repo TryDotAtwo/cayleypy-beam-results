@@ -115,6 +115,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [669](puzzles/p0669/summary.md) | 111 | [2](puzzles/p0669/solutions.tsv) |
 | [672](puzzles/p0672/summary.md) | 112 | [9](puzzles/p0672/solutions.tsv) |
 | [673](puzzles/p0673/summary.md) | 105 | [4](puzzles/p0673/solutions.tsv) |
+| [674](puzzles/p0674/summary.md) | 96 | [4](puzzles/p0674/solutions.tsv) |
 | [676](puzzles/p0676/summary.md) | 100 | [1](puzzles/p0676/solutions.tsv) |
 | [685](puzzles/p0685/summary.md) | 109 | [7](puzzles/p0685/solutions.tsv) |
 | [690](puzzles/p0690/summary.md) | 116 | [15](puzzles/p0690/solutions.tsv) |
