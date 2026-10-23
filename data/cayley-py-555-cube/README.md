@@ -194,3 +194,4 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [1005](puzzles/p1005/summary.md) | 109 | [6](puzzles/p1005/solutions.tsv) |
 | [1020](puzzles/p1020/summary.md) | 104 | [37](puzzles/p1020/solutions.tsv) |
 | [1023](puzzles/p1023/summary.md) | 107 | [11](puzzles/p1023/solutions.tsv) |
+| [1028](puzzles/p1028/summary.md) | 114 | [3](puzzles/p1028/solutions.tsv) |
