@@ -80,7 +80,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [464](puzzles/p0464/summary.md) | 110 | [3](puzzles/p0464/solutions.tsv) |
 | [468](puzzles/p0468/summary.md) | 116 | [7](puzzles/p0468/solutions.tsv) |
 | [471](puzzles/p0471/summary.md) | 111 | [11](puzzles/p0471/solutions.tsv) |
-| [476](puzzles/p0476/summary.md) | 118 | [18](puzzles/p0476/solutions.tsv) |
+| [476](puzzles/p0476/summary.md) | 118 | [36](puzzles/p0476/solutions.tsv) |
 | [479](puzzles/p0479/summary.md) | 113 | [6](puzzles/p0479/solutions.tsv) |
 | [483](puzzles/p0483/summary.md) | 107 | [4](puzzles/p0483/solutions.tsv) |
 | [489](puzzles/p0489/summary.md) | 107 | [2](puzzles/p0489/solutions.tsv) |
