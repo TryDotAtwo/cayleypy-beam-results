@@ -135,6 +135,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [710](puzzles/p0710/summary.md) | 106 | [3](puzzles/p0710/solutions.tsv) |
 | [722](puzzles/p0722/summary.md) | 104 | [1](puzzles/p0722/solutions.tsv) |
 | [726](puzzles/p0726/summary.md) | 118 | [22](puzzles/p0726/solutions.tsv) |
+| [730](puzzles/p0730/summary.md) | 108 | [3](puzzles/p0730/solutions.tsv) |
 | [733](puzzles/p0733/summary.md) | 109 | [47](puzzles/p0733/solutions.tsv) |
 | [738](puzzles/p0738/summary.md) | 110 | [3](puzzles/p0738/solutions.tsv) |
 | [741](puzzles/p0741/summary.md) | 109 | [3](puzzles/p0741/solutions.tsv) |
