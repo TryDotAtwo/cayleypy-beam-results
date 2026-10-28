@@ -67,6 +67,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [371](puzzles/p0371/summary.md) | 101 | [4](puzzles/p0371/solutions.tsv) |
 | [378](puzzles/p0378/summary.md) | 108 | [1](puzzles/p0378/solutions.tsv) |
 | [379](puzzles/p0379/summary.md) | 117 | [15](puzzles/p0379/solutions.tsv) |
+| [381](puzzles/p0381/summary.md) | 115 | [5](puzzles/p0381/solutions.tsv) |
 | [390](puzzles/p0390/summary.md) | 110 | [1](puzzles/p0390/solutions.tsv) |
 | [393](puzzles/p0393/summary.md) | 107 | [4](puzzles/p0393/solutions.tsv) |
 | [395](puzzles/p0395/summary.md) | 113 | [5](puzzles/p0395/solutions.tsv) |
