@@ -16,6 +16,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Final, Literal
 from urllib.error import HTTPError, URLError
@@ -447,6 +448,7 @@ class PollConfig:
     timeout_seconds: float = 300.0
     interval_seconds: float = 2.0
     request_interval_seconds: float = 0.2
+    request_interval_seconds: float = 0.2
 
 
 @dataclass(frozen=True)
@@ -689,11 +691,7 @@ def _safe_status_url(url: str, endpoint_origin: str) -> None:
         unresolved = len(receipts) - published - duplicate - rejected
         if unresolved == 0 or time.monotonic() >= deadline:
             return PollSummary(published, duplicate, rejected, unresolved)
-        time.sleep(max(0.0, config.interval_seconds)) duplicate, rejected, unresolved)
         time.sleep(max(0.0, config.interval_seconds))
- duplicate, rejected, unresolved)
-        time.sleep(max(0.0, config.interval_seconds))
-
 
 def init_config(source: Literal["kaggle", "native"], output: Path) -> None:
     if output.exists():
