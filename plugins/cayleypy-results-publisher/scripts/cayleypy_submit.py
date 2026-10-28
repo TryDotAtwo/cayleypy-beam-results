@@ -15,6 +15,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Final, Literal
 from urllib.error import HTTPError, URLError
@@ -445,6 +446,7 @@ class SubmitConfig:
 class PollConfig:
     timeout_seconds: float = 300.0
     interval_seconds: float = 2.0
+    request_interval_seconds: float = 0.2
 
 
 @dataclass(frozen=True)
@@ -601,11 +603,7 @@ def submit_parts(parts: list[ArchivePart], config: SubmitConfig, transport: Any)
 
 def _safe_status_url(url: str, endpoint_origin: str) -> None:
     parsed = urlparse(url)
-    if _origin(url) != _origin(endpoint_origin) or not parsed.path.startswith("/v1/submissions/"):
-        raise ClientError("STATUS_URL_UNSAFE")
-
-
-def poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) -> PollSummary:
+    if _origin(url) != _origin(endpoint_origin) or not parsedef poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) -> PollSummary:
     endpoint, receipts = manifest.get("endpoint_origin"), manifest.get("receipts")
     if not isinstance(endpoint, str) or not isinstance(receipts, list):
         raise ClientError("MANIFEST_INVALID")
@@ -614,11 +612,58 @@ def poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) 
             raise ClientError("MANIFEST_INVALID")
         _safe_status_url(receipt["status_url"], endpoint)
     deadline = time.monotonic() + max(0.0, config.timeout_seconds)
+    next_request_at = 0.0
+
+    def request_with_backoff(url: str, headers: dict[str, str]) -> HttpResponse | None:
+        nonlocal next_request_at
+        attempt = 0
+        initial_attempt = True
+        while True:
+            now = time.monotonic()
+            if not initial_attempt and now >= deadline:
+                return None
+            pace = next_request_at - now if config.timeout_seconds > 0 else 0.0
+            if pace > 0:
+                time.sleep(pace)
+                if not initial_attempt and time.monotonic() >= deadline:
+                    return None
+            response = transport.request("GET", url, None, headers)
+            initial_attempt = False
+            next_request_at = time.monotonic() + max(0.0, config.request_interval_seconds)
+            if response.status != 429 and not 500 <= response.status <= 599:
+                return response
+            retry_after = next(
+                (value for name, value in response.headers.items() if name.lower() == "retry-after"),
+                None,
+            )
+            delay = None
+            if retry_after is not None:
+                try:
+                    delay = max(0.0, float(retry_after))
+                except ValueError:
+                    try:
+                        retry_at = parsedate_to_datetime(retry_after)
+                        if retry_at.tzinfo is None:
+                            retry_at = retry_at.replace(tzinfo=timezone.utc)
+                        delay = max(0.0, retry_at.timestamp() - time.time())
+                    except (TypeError, ValueError, OverflowError):
+                        delay = None
+            if delay is None:
+                delay = min(30.0, 2.0 ** min(attempt, 5))
+            now = time.monotonic()
+            if now + delay >= deadline:
+                return None
+            time.sleep(delay)
+            attempt += 1
+
     while True:
         for receipt in receipts:
             if receipt.get("state") in {"published", "duplicate", "rejected"}:
                 continue
-            response = transport.request("GET", receipt["status_url"], None, {"Accept": "application/json", "User-Agent": CLIENT_USER_AGENT})
+            headers = {"Accept": "application/json", "User-Agent": CLIENT_USER_AGENT}
+            response = request_with_backoff(receipt["status_url"], headers)
+            if response is None:
+                break
             if response.status == 200:
                 state = _safe_json_response(response).get("state")
                 if state in {"staged", "published"}:
@@ -633,8 +678,8 @@ def poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) 
                 github_url = receipt.get("github_url")
                 if not isinstance(github_url, str) or not github_url.startswith("https://raw.githubusercontent.com/TryDotAtwo/cayleypy-beam-results/"):
                     raise ClientError("GITHUB_URL_UNSAFE")
-                github = transport.request("GET", github_url, None, {"Accept": "application/json", "User-Agent": CLIENT_USER_AGENT})
-                if github.status == 200:
+                github = request_with_backoff(github_url, headers)
+                if github is not None and github.status == 200:
                     receipt["state"] = "published"
             else:
                 raise ClientError("STATUS_HTTP", str(response.status))
@@ -644,6 +689,9 @@ def poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) 
         unresolved = len(receipts) - published - duplicate - rejected
         if unresolved == 0 or time.monotonic() >= deadline:
             return PollSummary(published, duplicate, rejected, unresolved)
+        time.sleep(max(0.0, config.interval_seconds)) duplicate, rejected, unresolved)
+        time.sleep(max(0.0, config.interval_seconds))
+ duplicate, rejected, unresolved)
         time.sleep(max(0.0, config.interval_seconds))
 
 
