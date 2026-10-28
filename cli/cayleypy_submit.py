@@ -689,9 +689,7 @@ def _safe_status_url(url: str, endpoint_origin: str) -> None:
         unresolved = len(receipts) - published - duplicate - rejected
         if unresolved == 0 or time.monotonic() >= deadline:
             return PollSummary(published, duplicate, rejected, unresolved)
-        time.sleep(max(0.0, config.interval_seconds)) duplicate, rejected, unresolved)
         time.sleep(max(0.0, config.interval_seconds))
-
 
 def init_config(source: Literal["kaggle", "native"], output: Path) -> None:
     if output.exists():
