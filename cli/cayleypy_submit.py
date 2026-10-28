@@ -603,7 +603,11 @@ def submit_parts(parts: list[ArchivePart], config: SubmitConfig, transport: Any)
 
 def _safe_status_url(url: str, endpoint_origin: str) -> None:
     parsed = urlparse(url)
-    if _origin(url) != _origin(endpoint_origin) or not parsedef poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) -> PollSummary:
+    if _origin(url) != _origin(endpoint_origin) or not parsed.path.startswith("/v1/submissions/"):
+        raise ClientError("STATUS_URL_UNSAFE")
+
+
+def poll_manifest(manifest: dict[str, Any], config: PollConfig, transport: Any) -> PollSummary:
     endpoint, receipts = manifest.get("endpoint_origin"), manifest.get("receipts")
     if not isinstance(endpoint, str) or not isinstance(receipts, list):
         raise ClientError("MANIFEST_INVALID")
@@ -632,10 +636,7 @@ def _safe_status_url(url: str, endpoint_origin: str) -> None:
             next_request_at = time.monotonic() + max(0.0, config.request_interval_seconds)
             if response.status != 429 and not 500 <= response.status <= 599:
                 return response
-            retry_after = next(
-                (value for name, value in response.headers.items() if name.lower() == "retry-after"),
-                None,
-            )
+            retry_after = next((value for name, value in response.headers.items() if name.lower() == "retry-after"), None)
             delay = None
             if retry_after is not None:
                 try:
@@ -650,8 +651,7 @@ def _safe_status_url(url: str, endpoint_origin: str) -> None:
                         delay = None
             if delay is None:
                 delay = min(30.0, 2.0 ** min(attempt, 5))
-            now = time.monotonic()
-            if now + delay >= deadline:
+            if time.monotonic() + delay >= deadline:
                 return None
             time.sleep(delay)
             attempt += 1
