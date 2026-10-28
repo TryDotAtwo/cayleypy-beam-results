@@ -193,6 +193,29 @@ class TransportTests(unittest.TestCase):
         transport = FakeTransport([submit.HttpResponse(200, {}, json.dumps({"state": "duplicate"}).encode())])
         summary = submit.poll_manifest(manifest, submit.PollConfig(timeout_seconds=0), transport)
         self.assertEqual((summary.published, summary.duplicate, summary.rejected, summary.unresolved), (0, 1, 0, 0))
+    def test_poll_retries_rate_limited_status_request(self) -> None:
+        submission_id = str(self.envelope()["client_submission_id"])
+        manifest = {
+            "manifest_version": 1,
+            "endpoint_origin": submit.OFFICIAL_ENDPOINT_BASE,
+            "receipts": [{
+                "submission_id": submission_id,
+                "idempotency_key": "d" * 64,
+                "status_url": submit.OFFICIAL_ENDPOINT_BASE + "/v1/submissions/" + submission_id,
+                "github_url": "https://example.invalid",
+                "state": "accepted",
+            }],
+            "parts": [],
+        }
+        transport = FakeTransport([
+            submit.HttpResponse(429, {"Retry-After": "0"}, b'{"error":"rate_limited"}'),
+            submit.HttpResponse(200, {}, json.dumps({"state": "staged"}).encode()),
+        ])
+        config = submit.PollConfig(timeout_seconds=1, request_interval_seconds=0)
+        summary = submit.poll_manifest(manifest, config, transport)
+        self.assertEqual(summary.published, 1)
+        self.assertEqual(len(transport.requests), 2)
+
     def test_poll_rejects_cross_origin_status_url(self) -> None:
         manifest = {"manifest_version": 1, "endpoint_origin": submit.OFFICIAL_ENDPOINT_BASE, "parts": [], "receipts": [{"submission_id": "x", "idempotency_key": "d" * 64, "status_url": "https://evil.example/v1/submissions/x", "github_url": "https://example.invalid", "state": "accepted"}]}
         with self.assertRaisesRegex(submit.ClientError, "STATUS_URL_UNSAFE"):
