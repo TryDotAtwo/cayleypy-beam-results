@@ -129,6 +129,26 @@ def test_wide_header_and_v1_mapping_for_all_global_tsvs(tmp_path: Path) -> None:
     assert values["native_sm"] == ""
     assert values["vram_mib_per_gpu"] == ""
 
+def test_missing_optional_kaggle_run_url_is_reconstructed(
+    tmp_path: Path,
+) -> None:
+    item = record()
+    kaggle = item["envelope"]["kaggle"]
+    del kaggle["run_url"]
+    rehash(item)
+    put(tmp_path, item)
+
+    builder.build(tmp_path / "results", tmp_path / "data")
+
+    index = (tmp_path / "data" / "index.tsv").read_text(encoding="utf-8")
+    lines = index.splitlines()
+    values = dict(zip(EXPECTED_WIDE_HEADER, lines[1].split("\\t"), strict=True))
+    expected = (
+        f"https://www.kaggle.com/code/{kaggle['owner']}/"
+        f"{kaggle['slug']}/{kaggle['version']}"
+    )
+    assert values["producer_url"] == expected
+
 def test_v2_slurm_record_uses_the_same_wide_header(tmp_path: Path) -> None:
     envelope = copy.deepcopy(V2_GOLDENS[0]["envelope"])
     submission_id = envelope["client_submission_id"]

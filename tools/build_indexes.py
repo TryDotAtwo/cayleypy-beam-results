@@ -311,7 +311,14 @@ class ResultRow:
         kaggle = self.envelope.get("kaggle")
         if kaggle is None:
             return ""
-        return _required_string(_required_dict(kaggle, "PROVENANCE").get("run_url"), "PROVENANCE")
+        kaggle = _required_dict(kaggle, "PROVENANCE")
+        run_url = kaggle.get("run_url")
+        if run_url is not None:
+            return _required_string(run_url, "PROVENANCE")
+        owner = _required_string(kaggle.get("owner"), "PROVENANCE")
+        slug = _required_string(kaggle.get("slug"), "PROVENANCE")
+        version = _required_integer(kaggle.get("version"), "PROVENANCE")
+        return f"https://www.kaggle.com/code/{owner}/{slug}/{version}"
 
     def wide_tuple(self) -> tuple[Any, ...]:
         profile = self.profile
