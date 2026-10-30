@@ -144,7 +144,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [623](puzzles/p0623/summary.md) | 103 | [38](puzzles/p0623/solutions.tsv) |
 | [624](puzzles/p0624/summary.md) | 110 | [28](puzzles/p0624/solutions.tsv) |
 | [625](puzzles/p0625/summary.md) | 107 | [1](puzzles/p0625/solutions.tsv) |
-| [630](puzzles/p0630/summary.md) | 106 | [4](puzzles/p0630/solutions.tsv) |
+| [630](puzzles/p0630/summary.md) | 106 | [8](puzzles/p0630/solutions.tsv) |
 | [640](puzzles/p0640/summary.md) | 142 | [4](puzzles/p0640/solutions.tsv) |
 | [641](puzzles/p0641/summary.md) | 111 | [22](puzzles/p0641/solutions.tsv) |
 | [649](puzzles/p0649/summary.md) | 109 | [5](puzzles/p0649/solutions.tsv) |
