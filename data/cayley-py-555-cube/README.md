@@ -6,6 +6,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 
 | Instance | Best length | Solutions |
 |---:|---:|---:|
+| [31](puzzles/p0031/summary.md) | 103 | [2](puzzles/p0031/solutions.tsv) |
 | [35](puzzles/p0035/summary.md) | 1 | [3103](puzzles/p0035/solutions.tsv) |
 | [107](puzzles/p0107/summary.md) | 105 | [5](puzzles/p0107/solutions.tsv) |
 | [155](puzzles/p0155/summary.md) | 113 | [3](puzzles/p0155/solutions.tsv) |
