@@ -125,10 +125,12 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [528](puzzles/p0528/summary.md) | 102 | [1](puzzles/p0528/solutions.tsv) |
 | [534](puzzles/p0534/summary.md) | 108 | [3](puzzles/p0534/solutions.tsv) |
 | [536](puzzles/p0536/summary.md) | 118 | [14](puzzles/p0536/solutions.tsv) |
+| [539](puzzles/p0539/summary.md) | 109 | [2](puzzles/p0539/solutions.tsv) |
 | [548](puzzles/p0548/summary.md) | 114 | [2](puzzles/p0548/solutions.tsv) |
 | [552](puzzles/p0552/summary.md) | 108 | [3](puzzles/p0552/solutions.tsv) |
 | [555](puzzles/p0555/summary.md) | 113 | [4](puzzles/p0555/solutions.tsv) |
 | [558](puzzles/p0558/summary.md) | 108 | [1](puzzles/p0558/solutions.tsv) |
+| [559](puzzles/p0559/summary.md) | 113 | [2](puzzles/p0559/solutions.tsv) |
 | [560](puzzles/p0560/summary.md) | 102 | [3](puzzles/p0560/solutions.tsv) |
 | [562](puzzles/p0562/summary.md) | 104 | [4](puzzles/p0562/solutions.tsv) |
 | [565](puzzles/p0565/summary.md) | 105 | [4](puzzles/p0565/solutions.tsv) |
