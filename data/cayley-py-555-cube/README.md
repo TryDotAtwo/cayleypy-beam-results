@@ -80,6 +80,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [371](puzzles/p0371/summary.md) | 101 | [4](puzzles/p0371/solutions.tsv) |
 | [378](puzzles/p0378/summary.md) | 108 | [1](puzzles/p0378/solutions.tsv) |
 | [379](puzzles/p0379/summary.md) | 117 | [15](puzzles/p0379/solutions.tsv) |
+| [380](puzzles/p0380/summary.md) | 110 | [21](puzzles/p0380/solutions.tsv) |
 | [381](puzzles/p0381/summary.md) | 115 | [5](puzzles/p0381/solutions.tsv) |
 | [385](puzzles/p0385/summary.md) | 105 | [26](puzzles/p0385/solutions.tsv) |
 | [390](puzzles/p0390/summary.md) | 110 | [1](puzzles/p0390/solutions.tsv) |
