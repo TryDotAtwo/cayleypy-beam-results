@@ -200,6 +200,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [710](puzzles/p0710/summary.md) | 106 | [3](puzzles/p0710/solutions.tsv) |
 | [722](puzzles/p0722/summary.md) | 104 | [1](puzzles/p0722/solutions.tsv) |
 | [723](puzzles/p0723/summary.md) | 107 | [1](puzzles/p0723/solutions.tsv) |
+| [725](puzzles/p0725/summary.md) | 107 | [4](puzzles/p0725/solutions.tsv) |
 | [726](puzzles/p0726/summary.md) | 118 | [22](puzzles/p0726/solutions.tsv) |
 | [730](puzzles/p0730/summary.md) | 108 | [3](puzzles/p0730/solutions.tsv) |
 | [731](puzzles/p0731/summary.md) | 107 | [10](puzzles/p0731/solutions.tsv) |
