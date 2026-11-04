@@ -224,7 +224,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [805](puzzles/p0805/summary.md) | 109 | [3](puzzles/p0805/solutions.tsv) |
 | [807](puzzles/p0807/summary.md) | 107 | [11](puzzles/p0807/solutions.tsv) |
 | [809](puzzles/p0809/summary.md) | 115 | [4](puzzles/p0809/solutions.tsv) |
-| [812](puzzles/p0812/summary.md) | 110 | [2](puzzles/p0812/solutions.tsv) |
+| [812](puzzles/p0812/summary.md) | 110 | [3](puzzles/p0812/solutions.tsv) |
 | [814](puzzles/p0814/summary.md) | 102 | [3](puzzles/p0814/solutions.tsv) |
 | [818](puzzles/p0818/summary.md) | 112 | [2](puzzles/p0818/solutions.tsv) |
 | [822](puzzles/p0822/summary.md) | 108 | [7](puzzles/p0822/solutions.tsv) |
