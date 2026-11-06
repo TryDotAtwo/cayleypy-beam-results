@@ -219,7 +219,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [747](puzzles/p0747/summary.md) | 109 | [4](puzzles/p0747/solutions.tsv) |
 | [748](puzzles/p0748/summary.md) | 106 | [4](puzzles/p0748/solutions.tsv) |
 | [751](puzzles/p0751/summary.md) | 111 | [4](puzzles/p0751/solutions.tsv) |
-| [758](puzzles/p0758/summary.md) | 114 | [21](puzzles/p0758/solutions.tsv) |
+| [758](puzzles/p0758/summary.md) | 114 | [43](puzzles/p0758/solutions.tsv) |
 | [759](puzzles/p0759/summary.md) | 109 | [1](puzzles/p0759/solutions.tsv) |
 | [760](puzzles/p0760/summary.md) | 110 | [13](puzzles/p0760/solutions.tsv) |
 | [761](puzzles/p0761/summary.md) | 105 | [9](puzzles/p0761/solutions.tsv) |
