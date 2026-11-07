@@ -153,6 +153,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [536](puzzles/p0536/summary.md) | 118 | [14](puzzles/p0536/solutions.tsv) |
 | [538](puzzles/p0538/summary.md) | 106 | [20](puzzles/p0538/solutions.tsv) |
 | [539](puzzles/p0539/summary.md) | 109 | [2](puzzles/p0539/solutions.tsv) |
+| [540](puzzles/p0540/summary.md) | 114 | [2](puzzles/p0540/solutions.tsv) |
 | [548](puzzles/p0548/summary.md) | 114 | [2](puzzles/p0548/solutions.tsv) |
 | [550](puzzles/p0550/summary.md) | 102 | [4](puzzles/p0550/solutions.tsv) |
 | [552](puzzles/p0552/summary.md) | 108 | [3](puzzles/p0552/solutions.tsv) |
