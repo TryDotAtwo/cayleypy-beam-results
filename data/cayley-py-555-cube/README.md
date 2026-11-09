@@ -45,6 +45,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [233](puzzles/p0233/summary.md) | 99 | [3](puzzles/p0233/solutions.tsv) |
 | [235](puzzles/p0235/summary.md) | 115 | [16](puzzles/p0235/solutions.tsv) |
 | [242](puzzles/p0242/summary.md) | 108 | [5](puzzles/p0242/solutions.tsv) |
+| [243](puzzles/p0243/summary.md) | 103 | [9](puzzles/p0243/solutions.tsv) |
 | [245](puzzles/p0245/summary.md) | 109 | [1](puzzles/p0245/solutions.tsv) |
 | [246](puzzles/p0246/summary.md) | 104 | [1](puzzles/p0246/solutions.tsv) |
 | [252](puzzles/p0252/summary.md) | 112 | [15](puzzles/p0252/solutions.tsv) |
@@ -122,7 +123,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [438](puzzles/p0438/summary.md) | 116 | [8](puzzles/p0438/solutions.tsv) |
 | [439](puzzles/p0439/summary.md) | 111 | [14](puzzles/p0439/solutions.tsv) |
 | [440](puzzles/p0440/summary.md) | 110 | [2](puzzles/p0440/solutions.tsv) |
-| [443](puzzles/p0443/summary.md) | 107 | [52](puzzles/p0443/solutions.tsv) |
+| [443](puzzles/p0443/summary.md) | 107 | [82](puzzles/p0443/solutions.tsv) |
 | [444](puzzles/p0444/summary.md) | 108 | [1](puzzles/p0444/solutions.tsv) |
 | [446](puzzles/p0446/summary.md) | 110 | [1](puzzles/p0446/solutions.tsv) |
 | [450](puzzles/p0450/summary.md) | 108 | [6](puzzles/p0450/solutions.tsv) |
