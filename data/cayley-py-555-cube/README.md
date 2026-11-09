@@ -75,6 +75,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [307](puzzles/p0307/summary.md) | 115 | [3](puzzles/p0307/solutions.tsv) |
 | [309](puzzles/p0309/summary.md) | 119 | [2](puzzles/p0309/solutions.tsv) |
 | [312](puzzles/p0312/summary.md) | 114 | [4](puzzles/p0312/solutions.tsv) |
+| [314](puzzles/p0314/summary.md) | 108 | [2](puzzles/p0314/solutions.tsv) |
 | [317](puzzles/p0317/summary.md) | 111 | [5](puzzles/p0317/solutions.tsv) |
 | [318](puzzles/p0318/summary.md) | 114 | [13](puzzles/p0318/solutions.tsv) |
 | [322](puzzles/p0322/summary.md) | 100 | [14](puzzles/p0322/solutions.tsv) |
@@ -338,3 +339,4 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [1023](puzzles/p1023/summary.md) | 107 | [11](puzzles/p1023/solutions.tsv) |
 | [1024](puzzles/p1024/summary.md) | 112 | [12](puzzles/p1024/solutions.tsv) |
 | [1028](puzzles/p1028/summary.md) | 114 | [3](puzzles/p1028/solutions.tsv) |
+| [1031](puzzles/p1031/summary.md) | 105 | [3](puzzles/p1031/solutions.tsv) |
