@@ -216,6 +216,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [681](puzzles/p0681/summary.md) | 107 | [13](puzzles/p0681/solutions.tsv) |
 | [682](puzzles/p0682/summary.md) | 114 | [6](puzzles/p0682/solutions.tsv) |
 | [685](puzzles/p0685/summary.md) | 109 | [7](puzzles/p0685/solutions.tsv) |
+| [689](puzzles/p0689/summary.md) | 119 | [5](puzzles/p0689/solutions.tsv) |
 | [690](puzzles/p0690/summary.md) | 116 | [15](puzzles/p0690/solutions.tsv) |
 | [691](puzzles/p0691/summary.md) | 115 | [9](puzzles/p0691/solutions.tsv) |
 | [697](puzzles/p0697/summary.md) | 115 | [2](puzzles/p0697/solutions.tsv) |
@@ -263,7 +264,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [809](puzzles/p0809/summary.md) | 115 | [4](puzzles/p0809/solutions.tsv) |
 | [812](puzzles/p0812/summary.md) | 110 | [3](puzzles/p0812/solutions.tsv) |
 | [814](puzzles/p0814/summary.md) | 102 | [3](puzzles/p0814/solutions.tsv) |
-| [818](puzzles/p0818/summary.md) | 112 | [2](puzzles/p0818/solutions.tsv) |
+| [818](puzzles/p0818/summary.md) | 112 | [4](puzzles/p0818/solutions.tsv) |
 | [822](puzzles/p0822/summary.md) | 108 | [9](puzzles/p0822/solutions.tsv) |
 | [823](puzzles/p0823/summary.md) | 109 | [5](puzzles/p0823/solutions.tsv) |
 | [824](puzzles/p0824/summary.md) | 118 | [3](puzzles/p0824/solutions.tsv) |
