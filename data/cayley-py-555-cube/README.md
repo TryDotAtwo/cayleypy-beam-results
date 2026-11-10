@@ -327,6 +327,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [960](puzzles/p0960/summary.md) | 108 | [3](puzzles/p0960/solutions.tsv) |
 | [961](puzzles/p0961/summary.md) | 111 | [10](puzzles/p0961/solutions.tsv) |
 | [962](puzzles/p0962/summary.md) | 110 | [5](puzzles/p0962/solutions.tsv) |
+| [964](puzzles/p0964/summary.md) | 120 | [18](puzzles/p0964/solutions.tsv) |
 | [965](puzzles/p0965/summary.md) | 103 | [1](puzzles/p0965/solutions.tsv) |
 | [970](puzzles/p0970/summary.md) | 102 | [3](puzzles/p0970/solutions.tsv) |
 | [973](puzzles/p0973/summary.md) | 111 | [40](puzzles/p0973/solutions.tsv) |
