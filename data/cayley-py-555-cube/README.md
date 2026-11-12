@@ -124,6 +124,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [424](puzzles/p0424/summary.md) | 110 | [1](puzzles/p0424/solutions.tsv) |
 | [426](puzzles/p0426/summary.md) | 114 | [12](puzzles/p0426/solutions.tsv) |
 | [428](puzzles/p0428/summary.md) | 102 | [5](puzzles/p0428/solutions.tsv) |
+| [432](puzzles/p0432/summary.md) | 106 | [29](puzzles/p0432/solutions.tsv) |
 | [433](puzzles/p0433/summary.md) | 111 | [5](puzzles/p0433/solutions.tsv) |
 | [434](puzzles/p0434/summary.md) | 104 | [12](puzzles/p0434/solutions.tsv) |
 | [436](puzzles/p0436/summary.md) | 102 | [6](puzzles/p0436/solutions.tsv) |
