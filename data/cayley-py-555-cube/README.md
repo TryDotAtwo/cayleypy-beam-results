@@ -164,6 +164,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [504](puzzles/p0504/summary.md) | 104 | [2](puzzles/p0504/solutions.tsv) |
 | [505](puzzles/p0505/summary.md) | 111 | [28](puzzles/p0505/solutions.tsv) |
 | [512](puzzles/p0512/summary.md) | 102 | [37](puzzles/p0512/solutions.tsv) |
+| [514](puzzles/p0514/summary.md) | 102 | [28](puzzles/p0514/solutions.tsv) |
 | [517](puzzles/p0517/summary.md) | 99 | [1](puzzles/p0517/solutions.tsv) |
 | [519](puzzles/p0519/summary.md) | 107 | [6](puzzles/p0519/solutions.tsv) |
 | [523](puzzles/p0523/summary.md) | 107 | [3](puzzles/p0523/solutions.tsv) |
