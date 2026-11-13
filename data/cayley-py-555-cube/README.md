@@ -360,7 +360,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [965](puzzles/p0965/summary.md) | 103 | [1](puzzles/p0965/solutions.tsv) |
 | [970](puzzles/p0970/summary.md) | 102 | [3](puzzles/p0970/solutions.tsv) |
 | [971](puzzles/p0971/summary.md) | 115 | [16](puzzles/p0971/solutions.tsv) |
-| [973](puzzles/p0973/summary.md) | 111 | [40](puzzles/p0973/solutions.tsv) |
+| [973](puzzles/p0973/summary.md) | 111 | [58](puzzles/p0973/solutions.tsv) |
 | [974](puzzles/p0974/summary.md) | 116 | [5](puzzles/p0974/solutions.tsv) |
 | [976](puzzles/p0976/summary.md) | 108 | [1](puzzles/p0976/solutions.tsv) |
 | [978](puzzles/p0978/summary.md) | 128 | [1](puzzles/p0978/solutions.tsv) |
