@@ -41,7 +41,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [215](puzzles/p0215/summary.md) | 107 | [9](puzzles/p0215/solutions.tsv) |
 | [216](puzzles/p0216/summary.md) | 116 | [11](puzzles/p0216/solutions.tsv) |
 | [218](puzzles/p0218/summary.md) | 106 | [1](puzzles/p0218/solutions.tsv) |
-| [221](puzzles/p0221/summary.md) | 111 | [2](puzzles/p0221/solutions.tsv) |
+| [221](puzzles/p0221/summary.md) | 111 | [6](puzzles/p0221/solutions.tsv) |
 | [226](puzzles/p0226/summary.md) | 106 | [3](puzzles/p0226/solutions.tsv) |
 | [227](puzzles/p0227/summary.md) | 109 | [2](puzzles/p0227/solutions.tsv) |
 | [228](puzzles/p0228/summary.md) | 104 | [8](puzzles/p0228/solutions.tsv) |
@@ -157,7 +157,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [464](puzzles/p0464/summary.md) | 110 | [6](puzzles/p0464/solutions.tsv) |
 | [466](puzzles/p0466/summary.md) | 110 | [4](puzzles/p0466/solutions.tsv) |
 | [468](puzzles/p0468/summary.md) | 116 | [7](puzzles/p0468/solutions.tsv) |
-| [469](puzzles/p0469/summary.md) | 105 | [1](puzzles/p0469/solutions.tsv) |
+| [469](puzzles/p0469/summary.md) | 105 | [2](puzzles/p0469/solutions.tsv) |
 | [470](puzzles/p0470/summary.md) | 104 | [2](puzzles/p0470/solutions.tsv) |
 | [471](puzzles/p0471/summary.md) | 111 | [24](puzzles/p0471/solutions.tsv) |
 | [476](puzzles/p0476/summary.md) | 118 | [36](puzzles/p0476/solutions.tsv) |
@@ -281,7 +281,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [765](puzzles/p0765/summary.md) | 101 | [4](puzzles/p0765/solutions.tsv) |
 | [766](puzzles/p0766/summary.md) | 106 | [18](puzzles/p0766/solutions.tsv) |
 | [768](puzzles/p0768/summary.md) | 108 | [6](puzzles/p0768/solutions.tsv) |
-| [771](puzzles/p0771/summary.md) | 105 | [1](puzzles/p0771/solutions.tsv) |
+| [771](puzzles/p0771/summary.md) | 105 | [2](puzzles/p0771/solutions.tsv) |
 | [772](puzzles/p0772/summary.md) | 114 | [4](puzzles/p0772/solutions.tsv) |
 | [773](puzzles/p0773/summary.md) | 109 | [40](puzzles/p0773/solutions.tsv) |
 | [774](puzzles/p0774/summary.md) | 112 | [6](puzzles/p0774/solutions.tsv) |
