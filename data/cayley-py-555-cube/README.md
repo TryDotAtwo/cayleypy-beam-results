@@ -292,7 +292,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [791](puzzles/p0791/summary.md) | 109 | [1](puzzles/p0791/solutions.tsv) |
 | [795](puzzles/p0795/summary.md) | 105 | [51](puzzles/p0795/solutions.tsv) |
 | [799](puzzles/p0799/summary.md) | 115 | [5](puzzles/p0799/solutions.tsv) |
-| [803](puzzles/p0803/summary.md) | 109 | [1](puzzles/p0803/solutions.tsv) |
+| [803](puzzles/p0803/summary.md) | 109 | [3](puzzles/p0803/solutions.tsv) |
 | [804](puzzles/p0804/summary.md) | 118 | [6](puzzles/p0804/solutions.tsv) |
 | [805](puzzles/p0805/summary.md) | 109 | [3](puzzles/p0805/solutions.tsv) |
 | [807](puzzles/p0807/summary.md) | 107 | [16](puzzles/p0807/solutions.tsv) |
@@ -341,6 +341,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [909](puzzles/p0909/summary.md) | 107 | [3](puzzles/p0909/solutions.tsv) |
 | [910](puzzles/p0910/summary.md) | 118 | [6](puzzles/p0910/solutions.tsv) |
 | [912](puzzles/p0912/summary.md) | 116 | [2](puzzles/p0912/solutions.tsv) |
+| [913](puzzles/p0913/summary.md) | 111 | [12](puzzles/p0913/solutions.tsv) |
 | [914](puzzles/p0914/summary.md) | 98 | [4](puzzles/p0914/solutions.tsv) |
 | [919](puzzles/p0919/summary.md) | 113 | [28](puzzles/p0919/solutions.tsv) |
 | [920](puzzles/p0920/summary.md) | 102 | [1](puzzles/p0920/solutions.tsv) |
@@ -378,7 +379,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [978](puzzles/p0978/summary.md) | 128 | [1](puzzles/p0978/solutions.tsv) |
 | [979](puzzles/p0979/summary.md) | 109 | [2](puzzles/p0979/solutions.tsv) |
 | [986](puzzles/p0986/summary.md) | 108 | [4](puzzles/p0986/solutions.tsv) |
-| [989](puzzles/p0989/summary.md) | 105 | [7](puzzles/p0989/solutions.tsv) |
+| [989](puzzles/p0989/summary.md) | 105 | [14](puzzles/p0989/solutions.tsv) |
 | [992](puzzles/p0992/summary.md) | 112 | [1](puzzles/p0992/solutions.tsv) |
 | [995](puzzles/p0995/summary.md) | 103 | [2](puzzles/p0995/solutions.tsv) |
 | [996](puzzles/p0996/summary.md) | 106 | [109](puzzles/p0996/solutions.tsv) |
