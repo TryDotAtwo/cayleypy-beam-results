@@ -396,7 +396,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [1012](puzzles/p1012/summary.md) | 106 | [7](puzzles/p1012/solutions.tsv) |
 | [1015](puzzles/p1015/summary.md) | 107 | [3](puzzles/p1015/solutions.tsv) |
 | [1020](puzzles/p1020/summary.md) | 104 | [39](puzzles/p1020/solutions.tsv) |
-| [1021](puzzles/p1021/summary.md) | 109 | [3](puzzles/p1021/solutions.tsv) |
+| [1021](puzzles/p1021/summary.md) | 109 | [6](puzzles/p1021/solutions.tsv) |
 | [1023](puzzles/p1023/summary.md) | 107 | [44](puzzles/p1023/solutions.tsv) |
 | [1024](puzzles/p1024/summary.md) | 112 | [12](puzzles/p1024/solutions.tsv) |
 | [1027](puzzles/p1027/summary.md) | 115 | [8](puzzles/p1027/solutions.tsv) |
