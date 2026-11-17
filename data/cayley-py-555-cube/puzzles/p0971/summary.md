@@ -1,6 +1,6 @@
 # cayley-py-555-cube - Puzzle 971
 
-Solutions: 16
+Solutions: 32
 Best length: 115
 
 ## Run facts
