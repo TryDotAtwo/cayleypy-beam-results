@@ -23,6 +23,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [175](puzzles/p0175/summary.md) | 99 | [2](puzzles/p0175/solutions.tsv) |
 | [176](puzzles/p0176/summary.md) | 108 | [16](puzzles/p0176/solutions.tsv) |
 | [178](puzzles/p0178/summary.md) | 108 | [14](puzzles/p0178/solutions.tsv) |
+| [181](puzzles/p0181/summary.md) | 117 | [19](puzzles/p0181/solutions.tsv) |
 | [182](puzzles/p0182/summary.md) | 114 | [2](puzzles/p0182/solutions.tsv) |
 | [183](puzzles/p0183/summary.md) | 101 | [6](puzzles/p0183/solutions.tsv) |
 | [186](puzzles/p0186/summary.md) | 110 | [2](puzzles/p0186/solutions.tsv) |
