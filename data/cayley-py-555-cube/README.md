@@ -191,7 +191,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [519](puzzles/p0519/summary.md) | 107 | [6](puzzles/p0519/solutions.tsv) |
 | [520](puzzles/p0520/summary.md) | 108 | [2](puzzles/p0520/solutions.tsv) |
 | [521](puzzles/p0521/summary.md) | 111 | [1](puzzles/p0521/solutions.tsv) |
-| [523](puzzles/p0523/summary.md) | 107 | [6](puzzles/p0523/solutions.tsv) |
+| [523](puzzles/p0523/summary.md) | 107 | [9](puzzles/p0523/solutions.tsv) |
 | [526](puzzles/p0526/summary.md) | 108 | [5](puzzles/p0526/solutions.tsv) |
 | [528](puzzles/p0528/summary.md) | 102 | [1](puzzles/p0528/solutions.tsv) |
 | [534](puzzles/p0534/summary.md) | 108 | [3](puzzles/p0534/solutions.tsv) |
