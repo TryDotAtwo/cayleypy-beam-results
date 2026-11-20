@@ -337,6 +337,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [843](puzzles/p0843/summary.md) | 107 | [2](puzzles/p0843/solutions.tsv) |
 | [844](puzzles/p0844/summary.md) | 110 | [1](puzzles/p0844/solutions.tsv) |
 | [848](puzzles/p0848/summary.md) | 102 | [44](puzzles/p0848/solutions.tsv) |
+| [851](puzzles/p0851/summary.md) | 99 | [3](puzzles/p0851/solutions.tsv) |
 | [852](puzzles/p0852/summary.md) | 98 | [2](puzzles/p0852/solutions.tsv) |
 | [856](puzzles/p0856/summary.md) | 114 | [18](puzzles/p0856/solutions.tsv) |
 | [858](puzzles/p0858/summary.md) | 110 | [14](puzzles/p0858/solutions.tsv) |
