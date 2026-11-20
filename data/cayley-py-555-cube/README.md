@@ -421,4 +421,4 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [1027](puzzles/p1027/summary.md) | 115 | [8](puzzles/p1027/solutions.tsv) |
 | [1028](puzzles/p1028/summary.md) | 114 | [3](puzzles/p1028/solutions.tsv) |
 | [1029](puzzles/p1029/summary.md) | 107 | [1](puzzles/p1029/solutions.tsv) |
-| [1031](puzzles/p1031/summary.md) | 105 | [3](puzzles/p1031/solutions.tsv) |
+| [1031](puzzles/p1031/summary.md) | 105 | [6](puzzles/p1031/solutions.tsv) |
