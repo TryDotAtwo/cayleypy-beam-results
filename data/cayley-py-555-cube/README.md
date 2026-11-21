@@ -139,7 +139,7 @@ Each instance links to its shortest recorded solution and all submitted solution
 | [411](puzzles/p0411/summary.md) | 111 | [37](puzzles/p0411/solutions.tsv) |
 | [412](puzzles/p0412/summary.md) | 108 | [36](puzzles/p0412/solutions.tsv) |
 | [414](puzzles/p0414/summary.md) | 112 | [12](puzzles/p0414/solutions.tsv) |
-| [415](puzzles/p0415/summary.md) | 109 | [13](puzzles/p0415/solutions.tsv) |
+| [415](puzzles/p0415/summary.md) | 109 | [23](puzzles/p0415/solutions.tsv) |
 | [416](puzzles/p0416/summary.md) | 110 | [8](puzzles/p0416/solutions.tsv) |
 | [417](puzzles/p0417/summary.md) | 105 | [2](puzzles/p0417/solutions.tsv) |
 | [418](puzzles/p0418/summary.md) | 112 | [4](puzzles/p0418/solutions.tsv) |
