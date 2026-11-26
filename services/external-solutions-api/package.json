@@ -1,0 +1,7 @@
+{
+  "name": "cayleypy-external-solutions",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node --test test/*.test.mjs", "dry-run": "wrangler deploy --dry-run"},
+  "devDependencies": {"miniflare": "4.20260722.1", "wrangler": "4.115.0"}
+}
