@@ -1,0 +1,5 @@
+# Worker source recovery candidate
+
+Do not bind Cloudflare production to this branch until the currently deployed version and its runtime configuration have been compared against the candidate. The TypeScript base is MultiGPUBeamSearch commit `c37ce051c20132a3d59a9f2e2e7e20ef54afe8db`. This is a historical baseline, not a claim of byte-for-byte equivalence with the deployed Worker. The GitHub writer and its test expectations use `refs/tags/ingest/staging` per the publication migration `c39910c85f3004e6d665b5b048a5094d22628c61`. Runtime secrets stay in Cloudflare.
+
+Before cutover: record the active Cloudflare version and rollback point, compare code and binding identities against it, run `npm ci` and `npm run ci:cloudflare` from this directory, validate the deployment without promoting traffic, then verify `/healthz` and publication with an authorized canary. Keep the existing required checks and the `ingest/staging` tag. This migration does not authorize or implement any new submission format.
