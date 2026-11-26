@@ -1,11 +1,13 @@
-const COMPETITION = "cayley-py-555-cube";
+const SLUG = /^[a-z0-9][a-z0-9-]{0,79}$/;
+const VERSION = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$/;
+const MAX_PUZZLE_ID = 2147483647;
 const MAX_BYTES = 256 * 1024;
 const MAX_BATCH = 24;
 const MAX_PATH = 1024;
 const MAX_MOVES = 3000;
 const MOVE = /^-?[A-Za-z][A-Za-z0-9_]{0,23}$/;
 const HASH = /^[0-9a-f]{64}$/;
-const METHODS = new Set(["exact_enumeration", "team_submission", "algebraic", "search", "other"]);
+const METHODS = new Set(["exact_enumeration", "team_submission", "algebraic", "search", "bfs", "beam_search", "human", "other"]);
 const encoder = new TextEncoder();
 
 function json(value, status = 200, extra = {}) {
@@ -70,12 +72,13 @@ async function add(req, env) {
     if(e.message==="CONTENT_ENCODING") return fail("CONTENT_ENCODING",415);
     return fail("INVALID_JSON",400);
   }
-  if (!hasKeys(body,["competition","solutions"]) || body.competition!==COMPETITION ||
+  if (!hasKeys(body,["competition","context_version","solutions"]) || typeof body.competition!=="string" || !SLUG.test(body.competition) || typeof body.context_version!=="string" || !VERSION.test(body.context_version) ||
       !Array.isArray(body.solutions) || !body.solutions.length || body.solutions.length>MAX_BATCH) return fail("INVALID_BATCH",400);
+  const {competition,context_version:version}=body;
   let total=0;
   const items=[];
   for(const [i,x] of body.solutions.entries()){
-    if(!hasKeys(x,["puzzle_id","path","source"]) || !Number.isInteger(x.puzzle_id) || x.puzzle_id<0 || x.puzzle_id>1034 ||
+    if(!hasKeys(x,["puzzle_id","path","source"]) || !Number.isInteger(x.puzzle_id) || x.puzzle_id<0 || x.puzzle_id>MAX_PUZZLE_ID ||
         !Array.isArray(x.path) || x.path.length>MAX_PATH || x.path.some(m=>typeof m!=="string" || !MOVE.test(m)))return fail("INVALID_SOLUTION",400,i);
     const source=sourceRecord(x.source);
     if(!source)return fail("INVALID_SOURCE",400,i);
@@ -87,9 +90,9 @@ async function add(req, env) {
   // D1 context is seeded administratively from a pinned puzzle snapshot; never accept context from the caller.
   const {results:rows}=await env.DB.prepare(
     `SELECT c.puzzle_id,c.start_json,c.goal_json,c.kind,m.moves_json
-      FROM contexts c JOIN move_sets m ON m.version=c.version AND m.kind=c.kind
-      WHERE c.version=? AND c.puzzle_id IN (${ids.map(()=>"?").join(",")})`
-  ).bind(env.CONTEXT_VERSION,...ids).all();
+      FROM contexts c JOIN move_sets m ON m.competition=c.competition AND m.version=c.version AND m.kind=c.kind
+      WHERE c.competition=? AND c.version=? AND c.puzzle_id IN (${ids.map(()=>"?").join(",")})`
+  ).bind(competition,version,...ids).all();
   const trusted=new Map(), moveSets=new Map();
   for(const r of rows){
     if(!moveSets.has(r.kind)) moveSets.set(r.kind,JSON.parse(r.moves_json));
@@ -109,30 +112,31 @@ async function add(req, env) {
   }
   const prepared=await Promise.all(items.map(async x=>{
     const path=JSON.stringify(x.path), source=JSON.stringify(x.source);
-    const [id,sourceId]=await Promise.all([sha(JSON.stringify([COMPETITION,env.CONTEXT_VERSION,x.puzzle_id,x.path])),sha(source)]);
+    const [id,sourceId]=await Promise.all([sha(JSON.stringify([competition,version,x.puzzle_id,x.path])),sha(source)]);
     return {id,sourceId,source,path,puzzle:x.puzzle_id,length:x.path.length};
   }));
   const statements=prepared.flatMap(x=>[
-    env.DB.prepare("INSERT INTO solutions VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING")
-      .bind(x.id,env.CONTEXT_VERSION,x.puzzle,x.path,x.length),
+    env.DB.prepare("INSERT INTO solutions (id,competition,version,puzzle_id,path_json,length) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING")
+      .bind(x.id,competition,version,x.puzzle,x.path,x.length),
     env.DB.prepare("INSERT INTO provenances VALUES (?, ?, ?) ON CONFLICT(solution_id,source_id) DO NOTHING")
       .bind(x.id,x.sourceId,x.source),
   ]);
   const writes=await env.DB.batch(statements);
   const results=prepared.map((x,i)=>({id:x.id,status:writes[2*i].meta.changes?"created":writes[2*i+1].meta.changes?"source_added":"existing"}));
-  return json({context_version:env.CONTEXT_VERSION,results},results.some(x=>x.status!=="existing")?201:200);
+  return json({competition,context_version:version,results},results.some(x=>x.status!=="existing")?201:200);
 }
 function rowOutput(r) {
-  return {id:r.id,competition:COMPETITION,context_version:r.version,puzzle_id:r.puzzle_id,
+  return {id:r.id,competition:r.competition,context_version:r.version,puzzle_id:r.puzzle_id,
           path:JSON.parse(r.path_json),length:r.length,verification:"replay_passed"};
 }
 async function list(url,env) {
   const params=url.searchParams;
   const puzzle=params.get("puzzle_id")??"", after=params.get("after")??"", n=params.get("limit")??"24";
-  if(params.get("competition")!==COMPETITION || !/^(0|[1-9][0-9]{0,3})$/.test(puzzle) || Number(puzzle)>1034 ||
-     (after&&!HASH.test(after)) || !/^[1-9][0-9]?$/.test(n) || Number(n)>50 || [...params.keys()].some(k=>!["competition","puzzle_id","after","limit"].includes(k) || params.getAll(k).length!==1))return fail("INVALID_QUERY",400);
-  const {results}=await env.DB.prepare("SELECT * FROM solutions WHERE version=? AND puzzle_id=? AND id>? ORDER BY id LIMIT ?")
-      .bind(env.CONTEXT_VERSION,Number(puzzle),after,Number(n)+1).all();
+  const competition=params.get("competition")??"", version=params.get("context_version")??"";
+  if(!SLUG.test(competition) || !VERSION.test(version) || !/^(0|[1-9][0-9]{0,9})$/.test(puzzle) || Number(puzzle)>MAX_PUZZLE_ID ||
+     (after&&!HASH.test(after)) || !/^[1-9][0-9]?$/.test(n) || Number(n)>50 || [...params.keys()].some(k=>!["competition","context_version","puzzle_id","after","limit"].includes(k) || params.getAll(k).length!==1))return fail("INVALID_QUERY",400);
+  const {results}=await env.DB.prepare("SELECT * FROM solutions WHERE competition=? AND version=? AND puzzle_id=? AND id>? ORDER BY id LIMIT ?")
+      .bind(competition,version,Number(puzzle),after,Number(n)+1).all();
   const page=results.slice(0,Number(n));
   return json({solutions:page.map(rowOutput),next_cursor:results.length>page.length?page.at(-1).id:null});
 }
@@ -149,8 +153,13 @@ export default {async fetch(req,env) {
   const url=new URL(req.url);
   try {
     if(url.pathname==="/healthz"&&req.method==="GET"){
-      const r=await env.DB.prepare("SELECT COUNT(*) AS count FROM contexts WHERE version=?").bind(env.CONTEXT_VERSION).first();
-      return json({status:r.count===1035?"ready":"context_incomplete",context_version:env.CONTEXT_VERSION,puzzles:r.count},r.count===1035?200:503);
+      const r=await env.DB.prepare("SELECT COUNT(*) AS contexts FROM competitions").first();
+      return json({status:r.contexts?"ready":"context_empty",contexts:r.contexts},r.contexts?200:503);
+    }
+    if(url.pathname==="/v1/contexts"&&req.method==="GET"){
+      if(url.search) return fail("INVALID_QUERY",400);
+      const {results}=await env.DB.prepare("SELECT slug AS competition,version AS context_version,puzzle_count FROM competitions ORDER BY slug,version LIMIT 101").all();
+      return json({contexts:results.slice(0,100),truncated:results.length>100});
     }
     if(url.pathname==="/v1/solutions"){
       if(req.method==="POST")return await add(req,env);

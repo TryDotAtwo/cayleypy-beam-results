@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import sys
 
+COMPETITION = "cayley-py-555-cube"
 VERSION = "cube555-kaggle-v1"
 EXPECTED = {
     "test.csv": "c9e4d5f61378af1940be5501c581e9c898a1a29eba040035c3dd50ca75139e9d",
@@ -40,10 +41,11 @@ def seed(inputs, output):
         raise ValueError("invalid official puzzle coverage")
     # Fail if this version exists, rather than silently accepting a different context.
     with output.open("x",encoding="utf8",newline="\n") as f:
-        f.write(f"INSERT INTO move_sets VALUES ({sql(VERSION)},'cube555',{sql(j(moves))});\n")
+        f.write(f"INSERT INTO competitions VALUES ({sql(COMPETITION)},{sql(VERSION)},{len(rows)});\n")
+        f.write(f"INSERT INTO move_sets VALUES ({sql(COMPETITION)},{sql(VERSION)},'cube555',{sql(j(moves))});\n")
         g=sql(j(goal))
         for i,a in sorted(rows):
-            f.write(f"INSERT INTO contexts VALUES ({sql(VERSION)},{i},{sql(j(a))},{g},'cube555');\n")
+            f.write(f"INSERT INTO contexts VALUES ({sql(COMPETITION)},{sql(VERSION)},{i},{sql(j(a))},{g},'cube555');\n")
     print(j({"version":VERSION,"puzzles":len(rows),"generators":len(moves),"sql_sha256":hashlib.sha256(output.read_bytes()).hexdigest()}))
 
 if __name__=="__main__":

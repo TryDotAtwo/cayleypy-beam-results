@@ -1,18 +1,27 @@
-# External Cube555 solutions
+# External CayleyPy solutions
 
-This Cloudflare Worker is a separate import and read API. It does not change the existing ML beam-search submission API, the GitHub publication workflow, or the existing catalog. It stores external solutions in a separate D1 database and serves the verified catalog by puzzle ID.
+This Cloudflare Worker is a separate import and read API. It does not change the existing ML beam-search submission API, the GitHub publication workflow, or the existing catalog. It stores external solutions in a separate D1 database and serves the verified catalog by competition, context version, and puzzle ID.
 
 `POST /v1/solutions` uses a dedicated owner-issued bearer token. Only submit paths and provenance that may be published. Read endpoints are intentionally public. Example (the moves are schematic; the API replays the actual path):
 
 ```json
-{"competition":"cayley-py-555-cube","solutions":[{"puzzle_id":35,"path":["r0","-d1"],"source":{"method":"exact_enumeration","url":"https://example.org/public-result","version":"1","credit":"Dataset compiler","license":"CC0-1.0"}}]}
+{"competition":"cayley-py-555-cube","context_version":"cube555-kaggle-v1","solutions":[{"puzzle_id":35,"path":["r0","-d1"],"source":{"method":"exact_enumeration","url":"https://example.org/public-result","version":"1","credit":"Dataset compiler","license":"CC0-1.0"}}]}
 ```
 
-Methods: `exact_enumeration`, `team_submission`, `algebraic`, `search`, `other`. An optional `label` preserves the original source label. The link must be public HTTPS without a query, fragment or credentials. Version, credit and license are attribution claims, not independently verified authorship. GPU, model, runtime and score are not accepted fields. The server uses only its pinned start states, target and generators, verifies the complete path, and rejects the whole request before any writes if a path fails. It does not assert optimality or exhaustiveness. Repeating the same path and provenance returns `existing`; a new provenance for that path returns `source_added`. Limits: 24 paths, 3,000 total moves and 256 KiB per request, 1,024 moves per path.
+Methods: `exact_enumeration`, `team_submission`, `algebraic`, `search`, `bfs`, `beam_search`, `human`, `other`. An optional `label` preserves the original source label. The link must be public HTTPS without a query, fragment or credentials. Version, credit and license are attribution claims, not independently verified authorship. GPU, model, runtime and score are not accepted fields. The server uses only its pinned start states, target and generators, verifies the complete path, and rejects the whole request before any writes if a path fails. It does not assert optimality or exhaustiveness. Repeating the same path and provenance returns `existing`; a new provenance for that path returns `source_added`. Limits: 24 paths, 3,000 total moves and 256 KiB per request, 1,024 moves per path.
 
-- `GET /v1/solutions?competition=cayley-py-555-cube&puzzle_id=35`: paginate via `next_cursor` / `after`; optional `limit` (1–50).
+- `GET /v1/solutions?competition=cayley-py-555-cube&context_version=cube555-kaggle-v1&puzzle_id=35`: paginate via `next_cursor` / `after`; optional `limit` (1–50).
 - `GET /v1/solutions/<id>`: includes sources, with `next_source_cursor` / `source_after` if more than 50.
-- `GET /healthz`: ready only after 1,035 official contexts are seeded.
+- `GET /v1/contexts`: lists up to 100 registered competition versions.
+- `GET /healthz`: ready once a context is registered.
+
+## Register a new puzzle family
+
+No Worker change required. Use a reviewed JSON manifest with a known SHA-256 and run `python seed_context.py manifest.json --sha256 <approved-sha256> family-seed.sql`. Apply the reviewed seed to the API database. Upload requests cannot define or alter contexts. Each version has independent IDs and solutions; use a new version for changed rules. Supported now: exact-target permutation puzzles, including repeated labels (up to 512 positions and 256 named permutations per move set). Other transition rules or goals, such as up-to-symmetry matching, require a separately implemented verifier.
+
+```json
+{"competition":"toy-demo","context_version":"v1","move_sets":{"tiny":{"swap":[1,0,2]}},"puzzles":[{"puzzle_id":7,"kind":"tiny","start":[1,0,0],"target":[0,1,0]}]}
+```
 
 ## Deploy and seed
 

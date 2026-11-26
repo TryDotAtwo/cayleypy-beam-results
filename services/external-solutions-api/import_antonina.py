@@ -45,7 +45,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs): return None
 
 def send(url, rows, token):
-    data=json.dumps({"competition":COMP,"solutions":rows},separators=(",",":")).encode()
+    data=json.dumps({"competition":COMP,"context_version":"cube555-kaggle-v1","solutions":rows},separators=(",",":")).encode()
     opener=urllib.request.build_opener(NoRedirect)
     for attempt in range(5):
         try:

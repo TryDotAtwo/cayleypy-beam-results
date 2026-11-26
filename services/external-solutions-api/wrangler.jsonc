@@ -4,7 +4,6 @@
   "compatibility_date": "2026-07-28",
   "workers_dev": true,
   "preview_urls": false,
-  "vars": {"CONTEXT_VERSION": "cube555-kaggle-v1"},
   "d1_databases": [{
     "binding": "DB",
     "database_name": "cayleypy-external-solutions",

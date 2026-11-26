@@ -21,7 +21,7 @@ try {
   for(let i=0;i<parts.length;i+=50) await d1.batch(parts.slice(i,i+50).map(x=>d1.prepare(x)));
   const base=await mf.ready;
   const health=await (await fetch(new URL("/healthz",base))).json();
-  assert.equal(health.puzzles,1035);
+  assert.equal(health.contexts,1);
   assert.equal(health.status,"ready");
   const child=spawn("python",["import_antonina.py",resolve(csv),"--endpoint",new URL("/v1/solutions",base).href,"--state",join(scratch,"checkpoint.json")],{
     stdio:"inherit",env:{...process.env,EXTERNAL_SOLUTIONS_UPLOAD_TOKEN:key}
