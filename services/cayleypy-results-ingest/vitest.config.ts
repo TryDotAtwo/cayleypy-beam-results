@@ -33,7 +33,7 @@ export default defineConfig({
     }),
   ],
   test: {
-    include: ["test/ingest-transport.test.ts", "test/ingress-do.test.ts", "test/receipt.test.ts", "test/worker-v2.test.ts", "test/worker.test.ts", "test/consumer.test.ts", "test/replay.test.ts", "test/github-app.test.ts", "test/github-writer.test.ts"],
+    include: ["test/ingest-transport.test.ts", "test/ingress-do.test.ts", "test/receipt.test.ts", "test/worker-v2.test.ts", "test/worker.test.ts", "test/consumer.test.ts", "test/replay.test.ts", "test/github-app.test.ts", "test/github-writer.test.ts", "test/external-publisher.test.ts"],
     deps: {
       optimizer: {
         ssr: {
