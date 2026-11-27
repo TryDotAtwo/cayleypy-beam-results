@@ -81,6 +81,12 @@ describe("Wrangler named-environment publication bindings", () => {
         database_id: "0cbcdbb8-d382-451d-8940-fc33c761fef3",
         migrations_dir: "migrations",
       }),
+      expect.objectContaining({
+        binding: "EXTERNAL_SOLUTIONS_DB",
+        database_name: "cayleypy-external-solutions-staging",
+        database_id: "d81e1863-9fd2-4fd2-a95c-23f66d47147f",
+        migrations_dir: "../external-solutions-api/migrations",
+      }),
     ]);
     expect(JSON.stringify(buildConfig)).not.toContain("GITHUB_APP_PRIVATE_KEY");
     const packageJson = JSON.parse(
