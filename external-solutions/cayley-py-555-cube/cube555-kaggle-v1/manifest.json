@@ -1,0 +1,134 @@
+{
+  "competition": "cayley-py-555-cube",
+  "context_version": "cube555-kaggle-v1",
+  "solutions": 15311,
+  "puzzles": 1035,
+  "source": {
+    "url": "https://www.kaggle.com/datasets/antoninadolgorukova/cube555-solutions/data",
+    "version": "1",
+    "credit": "Antonina Dolgorukova (dataset compiler)",
+    "license": "CC0-1.0",
+    "csv_sha256": "aa3a4eeb5d4359599c0c0ada2af5debcaf6dcc742f33862df1903ab218c2d63c"
+  },
+  "source_label_counts": {
+    "geodesics": 5531,
+    "resmlp_q": 1889,
+    "transformer_q": 963,
+    "algebraic_reduce": 1254,
+    "team_submission": 5674
+  },
+  "index_sha256": "8eebf30b72c9f40dcbd03827f3df3d0e1551c1b31a72205fd3ace80a23612418",
+  "shards": [
+    {
+      "file": "solutions-from-0000.tsv",
+      "rows": 631,
+      "sha256": "a7f95c480dd49eec1890ba988a141117f6f9c0c45533e2abc7b5769d4e98949b"
+    },
+    {
+      "file": "solutions-from-0054.tsv",
+      "rows": 4753,
+      "sha256": "dafc5cc5cafd65e4e59947b392eae8f45fe955136fe5c73fada6b6d5d840effc"
+    },
+    {
+      "file": "solutions-from-0055.tsv",
+      "rows": 1168,
+      "sha256": "8a5004f47583f96ccc52482889587b8831d16696ba014ba19a120f12ecb6983c"
+    },
+    {
+      "file": "solutions-from-0208.tsv",
+      "rows": 695,
+      "sha256": "16a7eebcb1f45a4e3cfcfbcf011ab9fb5a1b2a47aacd3551e09d3c5472063ef2"
+    },
+    {
+      "file": "solutions-from-0288.tsv",
+      "rows": 616,
+      "sha256": "182ab138c7dbc58d6904eda1967b90a7a29209087a61cf6cb4b489c7219dc38c"
+    },
+    {
+      "file": "solutions-from-0351.tsv",
+      "rows": 560,
+      "sha256": "10b0d272f9bb0801cbc9bdd0be4b2d7c784ff8ad393d13c1f708fb58592c0a5c"
+    },
+    {
+      "file": "solutions-from-0409.tsv",
+      "rows": 534,
+      "sha256": "47096ba5e9290ad2daf3d07c22b5368025d3880664b8bcb44cd5d570f0513fd7"
+    },
+    {
+      "file": "solutions-from-0461.tsv",
+      "rows": 505,
+      "sha256": "47eb437073ef5691d99e3366f5fa989f32ed3acbc00b55cc64020a8aec89ae5d"
+    },
+    {
+      "file": "solutions-from-0507.tsv",
+      "rows": 484,
+      "sha256": "11acfc8f35011e3a5acdb0a6d7315bf26b2931b05b0188ced2e5828963e7da7c"
+    },
+    {
+      "file": "solutions-from-0553.tsv",
+      "rows": 490,
+      "sha256": "edde172f708103763e360404b2b537d0985ac55925bf61e185174310b6d31397"
+    },
+    {
+      "file": "solutions-from-0602.tsv",
+      "rows": 470,
+      "sha256": "a89daf77e80e4bd7e6da67c3edbce85c5291a97fedbc5bc7b0c1124668a2b605"
+    },
+    {
+      "file": "solutions-from-0644.tsv",
+      "rows": 459,
+      "sha256": "03748b83fb7c3de36ad175f5f90b6298be9143ee443d530d47dc2c17cb617ced"
+    },
+    {
+      "file": "solutions-from-0683.tsv",
+      "rows": 448,
+      "sha256": "009b2b0b58471f6ee313ab99c01186942b56062fa2cc26fb124fc61f1686f1db"
+    },
+    {
+      "file": "solutions-from-0725.tsv",
+      "rows": 425,
+      "sha256": "697ae771b96538220cc99509fdaa642d4cee711593f57839d8ce141dffe8ef53"
+    },
+    {
+      "file": "solutions-from-0762.tsv",
+      "rows": 432,
+      "sha256": "16542a8130273a9db938bd242717700d5fd361722f8babf70c9c811147646799"
+    },
+    {
+      "file": "solutions-from-0795.tsv",
+      "rows": 403,
+      "sha256": "a0ff41ce6539c2b84041042a0a373414d4e8b352160b840ce14b46de87e963a4"
+    },
+    {
+      "file": "solutions-from-0830.tsv",
+      "rows": 406,
+      "sha256": "b2064d869bd788d543281d3f4ed4408a2e91bb60c090d0fdfb0f46118c56abbc"
+    },
+    {
+      "file": "solutions-from-0872.tsv",
+      "rows": 385,
+      "sha256": "a3f19415cec557dd576dda4e3147843b7a938e7599360cc7767b8a39342170ae"
+    },
+    {
+      "file": "solutions-from-0909.tsv",
+      "rows": 382,
+      "sha256": "1f969145cf905e9bc948f6c07b66209d3e80ded68a668c63010b12cb47e8fdf6"
+    },
+    {
+      "file": "solutions-from-0943.tsv",
+      "rows": 388,
+      "sha256": "75014fd83a5b04fc8fe799dfe49bb9547fbcf2eb079fb0095d5021eedec2ca51"
+    },
+    {
+      "file": "solutions-from-0976.tsv",
+      "rows": 411,
+      "sha256": "87005d8d2f0125c215c5966eef990363551cdfe4ea283195af7ce3d368499ad3"
+    },
+    {
+      "file": "solutions-from-1011.tsv",
+      "rows": 266,
+      "sha256": "25a3c05b6e9724332f7606ac4dd89153eae7cb0b8612f187353d576dd9763daf"
+    }
+  ],
+  "verification": "All solution IDs matched the live Cloudflare ingest receipts; the Worker replayed each path against the pinned competition context."
+}

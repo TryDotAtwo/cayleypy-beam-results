@@ -5,7 +5,7 @@
 | Что отправляете | Как отправить | Где появится |
 |---|---|---|
 | Результаты ML beam search с данными запуска | [CLI или Codex-плагин](#ml-beam-search) | Таблицы и страницы GitHub после проверки и публикации в `main` |
-| Точное перечисление, алгебра, BFS, решения из командных сабмитов или другие готовые пути | [API внешних решений](#external-solutions) | Публичный API Cloudflare; эти записи не добавляются в GitHub TSV/JSON |
+| Точное перечисление, алгебра, BFS, решения из командных сабмитов или другие готовые пути | [API внешних решений](#external-solutions) | Cloudflare принимает и проверяет; [опубликованный набор Cube555](external-solutions/cayley-py-555-cube/cube555-kaggle-v1/) хранится файлами в GitHub отдельно от ML-каталога |
 
 <a id="ml-beam-search"></a>
 ## ML beam search
@@ -172,6 +172,8 @@ curl --fail-with-body -sS \
 
 На запрос: до 24 решений, 3 000 ходов суммарно и 256 КиБ JSON; на решение до 1 024 ходов. Загружайте крупный набор отдельными пачками и сохраняйте ответы. Сервер воспроизводит каждый путь по зарегистрированным правилам; если путь не достигает цели, вся пачка отклоняется до записи. Успех: HTTP `201` при новой записи или новом источнике, `200` при повторе. Для каждого элемента ответ содержит `id` и статус `created`, `source_added` или `existing`. После обрыва можно повторить идентичную пачку без дублей.
 
-**Проверка:** откройте `https://cayleypy-results-ingest-staging.tupa-expert.workers.dev/v1/solutions/<id>` и проверьте `verification: replay_passed` и `sources`. Токен для чтения не нужен. [Пример: решения Cube555 для задачи 35](https://cayleypy-results-ingest-staging.tupa-expert.workers.dev/v1/solutions?competition=cayley-py-555-cube&context_version=cube555-kaggle-v1&puzzle_id=35). Для списка по задаче добавьте `limit` (до 50), а для следующей страницы передайте `next_cursor` из ответа в параметре `after`. Проверка доказывает достижение цели, а не кратчайший путь или полноту перечисления.
+**Проверка приёма:** откройте `https://cayleypy-results-ingest-staging.tupa-expert.workers.dev/v1/solutions/<id>` и проверьте `verification: replay_passed` и `sources`. Токен для чтения не нужен. [Пример: решения Cube555 для задачи 35](https://cayleypy-results-ingest-staging.tupa-expert.workers.dev/v1/solutions?competition=cayley-py-555-cube&context_version=cube555-kaggle-v1&puzzle_id=35). Для списка по задаче добавьте `limit` (до 50), а для следующей страницы передайте `next_cursor` из ответа в параметре `after`. Проверка доказывает достижение цели, а не кратчайший путь или полноту перечисления.
+
+Приём API не означает, что новый результат уже появился в GitHub. Проверяйте опубликованный коммит или каталог внешних решений отдельно от ответа Cloudflare.
 
 [Регистрация контекста и воспроизводимый импорт Cube555](https://github.com/TryDotAtwo/cayleypy-beam-results/tree/a2cad545a910aaff1ed8ecb157a30f999ceb28ee/services/external-solutions-api).
