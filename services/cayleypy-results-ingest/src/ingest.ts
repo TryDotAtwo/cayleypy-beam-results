@@ -9,6 +9,8 @@ export interface IngestRateLimit {
 }
 
 export interface WorkerEnv extends IngestEnv {
+  EXTERNAL_SOLUTIONS_DB?: D1Database;
+  EXTERNAL_SOLUTIONS_UPLOAD_TOKEN?: string;
   INGEST_MODE?: string;
   INGEST_RATE_LIMIT?: IngestRateLimit;
   GITHUB_WRITER?: GitHubWriterNamespace;

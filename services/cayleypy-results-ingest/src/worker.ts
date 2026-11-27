@@ -1,3 +1,4 @@
+import externalSolutions from "../../external-solutions-api/worker.mjs";
 import { forwardIngest } from "./ingest-transport.js";
 import { consumeValidationMessage } from "./consumer.js";
 export { resolveIngestMode, type IngestMode } from "./mode.js";
@@ -85,6 +86,13 @@ export async function fetchRequest(
   _ctx: ExecutionContext,
 ): Promise<Response> {
   const pathname = new URL(request.url).pathname;
+  if (pathname === "/v1/contexts" || pathname === "/v1/solutions" || /^\/v1\/solutions\/[0-9a-f]{64}$/.test(pathname)) {
+    if (!env.EXTERNAL_SOLUTIONS_DB) return errorResponse(503, "external_solutions_unavailable");
+    return externalSolutions.fetch(request, {
+      DB: env.EXTERNAL_SOLUTIONS_DB,
+      UPLOAD_TOKEN: env.EXTERNAL_SOLUTIONS_UPLOAD_TOKEN,
+    });
+  }
   if (pathname === "/v1/results") {
     if (request.method !== "POST") return methodNotAllowed("POST");
     return handlePostResults(request, env, 1);
