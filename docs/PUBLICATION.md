@@ -1,6 +1,6 @@
 # Publication protocol
 
-`main` is the only branch. The mutable `ingest/staging` **tag** is a service checkpoint, not a release tag. Users read all published solutions from `main`.
+`main` is the only publication branch for the GitHub ML beam-search catalog. The mutable `ingest/staging` **tag** is a service checkpoint, not a release tag. The [external solutions API](../PUBLISH_RESULTS.md#external-solutions) validates and stages paths in a separate Cloudflare database. Published external snapshots live as tracked files under [external-solutions/](../external-solutions/), outside the generated ML catalog. API acceptance and GitHub publication are separate states.
 
 The existing Cloudflare service validates each submission and appends immutable records to the service tag. Trusted App tag pushes trigger `validate-ingest`. Promotion validates append-only paths, schemas, hashes, replay and duplicates, rebuilds TSV/JSON and browsing pages, and compares a second clean rebuild byte-for-byte. It creates `cayleypy-results/exact-candidate` on the exact candidate before advancing `main`.
 

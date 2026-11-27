@@ -142,7 +142,7 @@ def test_missing_optional_kaggle_run_url_is_reconstructed(
 
     index = (tmp_path / "data" / "index.tsv").read_text(encoding="utf-8")
     lines = index.splitlines()
-    values = dict(zip(EXPECTED_WIDE_HEADER, lines[1].split("\\t"), strict=True))
+    values = dict(zip(EXPECTED_WIDE_HEADER, lines[1].split("\t"), strict=True))
     expected = (
         f"https://www.kaggle.com/code/{kaggle['owner']}/"
         f"{kaggle['slug']}/{kaggle['version']}"

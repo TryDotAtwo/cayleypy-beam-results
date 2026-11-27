@@ -18,7 +18,8 @@ Existing TSV/JSON files and per-instance `summary.md`, `solutions.tsv`, `best_so
 
 ## Submit your solutions
 
-[Submission guide](PUBLISH_RESULTS.md): use the standalone Python CLI or the Codex publisher plugin. Both are available on `main`; no separate branch is needed.
+- [ML beam-search runs](PUBLISH_RESULTS.md#ml-beam-search): use the Python CLI or Codex publisher plugin to publish to this repository.
+- [External solutions](PUBLISH_RESULTS.md#external-solutions): upload verified paths from exact enumeration, BFS, algebraic methods, and other sources to the Cloudflare API. [Browse all 15,311 external Cube555 solutions on GitHub](external-solutions/cayley-py-555-cube/cube555-kaggle-v1/). These TSV files are separate from the ML catalog.
 
 ## Data and publication
 
