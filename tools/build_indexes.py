@@ -584,8 +584,54 @@ def _human_metadata(row: ResultRow) -> dict[str, Any]:
     }
 
 
+BROWSE_MAX_ROWS = 180
+BROWSE_MAX_BYTES = 256 * 1024
+
+
+def browse_pages(payload: bytes, download_name: str, *, max_rows: int = BROWSE_MAX_ROWS,
+                 max_bytes: int = BROWSE_MAX_BYTES) -> tuple[dict[str, bytes], bytes]:
+    """Split escaped UTF-8 TSV lines without changing or dropping any cell."""
+    header, *rows = payload.splitlines(keepends=True)
+    if len(rows) <= max_rows and len(payload) <= max_bytes:
+        return {}, b""
+    pages: dict[str, bytes] = {}
+    links = ["# Browse solutions", "", f"[Download the complete TSV](../{download_name})",
+             "", "| Page | Puzzle ID range | Rows |", "|---|---|---:|"]
+    chunk: list[bytes] = []
+    size = len(header)
+    def finish() -> None:
+        filename = f"part-{len(pages) + 1:04d}/index.tsv"
+        pages[filename] = header + b"".join(chunk)
+        first = chunk[0].split(b"\t", 1)[0].decode("ascii")
+        last = chunk[-1].split(b"\t", 1)[0].decode("ascii")
+        links.append(f"| [{len(pages)}]({filename}) | {first}-{last} | {len(chunk)} |")
+    for row in rows:
+        if len(row) + len(header) > max_bytes:
+            raise IndexBuildError("ROW_TOO_LARGE_FOR_BROWSE")
+        if chunk and (size + len(row) > max_bytes or len(chunk) >= max_rows):
+            finish()
+            chunk = []
+            size = len(header)
+        chunk.append(row)
+        size += len(row)
+    if chunk:
+        finish()
+    return pages, ("\n".join(links) + "\n").encode("utf-8")
+
+
+def add_browse_pages(payloads: dict[str, bytes], root: str, filename: str) -> bool:
+    pages, readme = browse_pages(payloads[f"{root}/{filename}"], filename)
+    if not pages:
+        return False
+    payloads[f"{root}/browse/README.md"] = readme
+    payloads.update({f"{root}/browse/{name}": value for name, value in pages.items()})
+    return True
+
+
 def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
     payloads: dict[str, bytes] = {}
+    family_pages: set[str] = set()
+    puzzle_pages: set[str] = set()
     competitions: dict[str, list[ResultRow]] = {}
     for row in rows:
         competitions.setdefault(row.competition, []).append(row)
@@ -594,6 +640,8 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         payloads[f"{competition}/index.tsv"] = tsv_payload(
             WIDE_HEADER, (row.wide_tuple() for row in competition_rows)
         )
+        if add_browse_pages(payloads, competition, "index.tsv"):
+            family_pages.add(competition)
         puzzles: dict[int, list[ResultRow]] = {}
         for row in competition_rows:
             puzzles.setdefault(row.puzzle_id, []).append(row)
@@ -612,6 +660,8 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
             payloads[f"{base}/solutions.tsv"] = tsv_payload(
                 WIDE_HEADER, (row.wide_tuple() for row in puzzle_rows)
             )
+            if add_browse_pages(payloads, base, "solutions.tsv"):
+                puzzle_pages.add(base)
             payloads[f"{base}/best_solution.tsv"] = tsv_payload(
                 WIDE_HEADER, (winner.wide_tuple(),)
             )
@@ -640,8 +690,9 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
                 "~~~text\n"
                 f"{winner.solution_path}\n"
                 "~~~\n\n"
-                "[All solutions](solutions.tsv) | "
-                "[Best solution](best_solution.tsv) | "
+                + ("[Browse all solutions](browse/README.md) | [All solutions TSV](solutions.tsv) | "
+                   if base in puzzle_pages else "[All solutions](solutions.tsv) | ")
+                + "[Best solution](best_solution.tsv) | "
                 "[Metadata](metadata.json)\n"
             )
             payloads[f"{base}/summary.md"] = summary.encode("utf-8")
@@ -665,9 +716,13 @@ def human_payloads(rows: list[ResultRow]) -> dict[str, bytes]:
         lines = [f"# {title}\n", "[All puzzle families](../README.md) · [All solutions TSV](index.tsv)\n",
                  "Each instance links to its shortest recorded solution and all submitted solutions. These are recorded results, not claims of optimality.\n",
                  "| Instance | Best length | Solutions |", "|---:|---:|---:|"]
+        if competition in family_pages:
+            lines.insert(2, "[Browse all solutions in small pages](browse/README.md)\n")
         for puzzle_id in sorted(groups):
             items = groups[puzzle_id]
-            lines.append(f"| [{puzzle_id}](puzzles/p{puzzle_id:04d}/summary.md) | {min(x.solution_length for x in items)} | [{len(items)}](puzzles/p{puzzle_id:04d}/solutions.tsv) |")
+            puzzle = f"puzzles/p{puzzle_id:04d}"
+            listing = "browse/README.md" if f"{competition}/{puzzle}" in puzzle_pages else "solutions.tsv"
+            lines.append(f"| [{puzzle_id}]({puzzle}/summary.md) | {min(x.solution_length for x in items)} | [{len(items)}]({puzzle}/{listing}) |")
         payloads[f"{competition}/README.md"] = ("\n".join(lines) + "\n").encode("utf-8")
     payloads["README.md"] = ("\n".join(catalog) + "\n").encode("utf-8")
     return payloads

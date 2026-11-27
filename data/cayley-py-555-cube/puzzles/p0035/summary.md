@@ -19,4 +19,4 @@ Best length: 1
 -f0
 ~~~
 
-[All solutions](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)
+[Browse all solutions](browse/README.md) | [All solutions TSV](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)

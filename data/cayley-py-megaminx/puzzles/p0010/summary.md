@@ -19,4 +19,4 @@ Best length: 10
 -B.-BL.-U.-BL.BR.FL.-DL.-R.-BL.F
 ~~~
 
-[All solutions](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)
+[Browse all solutions](browse/README.md) | [All solutions TSV](solutions.tsv) | [Best solution](best_solution.tsv) | [Metadata](metadata.json)

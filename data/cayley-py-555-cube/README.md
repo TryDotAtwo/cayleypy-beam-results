@@ -2,13 +2,15 @@
 
 [All puzzle families](../README.md) · [All solutions TSV](index.tsv)
 
+[Browse all solutions in small pages](browse/README.md)
+
 Each instance links to its shortest recorded solution and all submitted solutions. These are recorded results, not claims of optimality.
 
 | Instance | Best length | Solutions |
 |---:|---:|---:|
 | [30](puzzles/p0030/summary.md) | 110 | [4](puzzles/p0030/solutions.tsv) |
 | [31](puzzles/p0031/summary.md) | 103 | [4](puzzles/p0031/solutions.tsv) |
-| [35](puzzles/p0035/summary.md) | 1 | [3103](puzzles/p0035/solutions.tsv) |
+| [35](puzzles/p0035/summary.md) | 1 | [3103](puzzles/p0035/browse/README.md) |
 | [107](puzzles/p0107/summary.md) | 105 | [5](puzzles/p0107/solutions.tsv) |
 | [147](puzzles/p0147/summary.md) | 111 | [17](puzzles/p0147/solutions.tsv) |
 | [148](puzzles/p0148/summary.md) | 114 | [3](puzzles/p0148/solutions.tsv) |
