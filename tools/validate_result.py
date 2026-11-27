@@ -529,6 +529,10 @@ def validate_range(
 ) -> None:
     validator = load_schema(root)
     cache = ValidationCache(root)
+    if __name__ == "__main__" and not __package__:
+        from validate_external_publication import PATH as EXTERNAL_BATCH_PATH, validate_batch
+    else:
+        from tools.validate_external_publication import PATH as EXTERNAL_BATCH_PATH, validate_batch
     changes = diff_changes(root, base, head)
     for status, relative in changes:
         if allow_generated_indexes and is_generated_path(relative):
@@ -541,6 +545,15 @@ def validate_range(
             ).split()
             if not mode_tokens or mode_tokens[0] != "100644":
                 error("DIFF_MODE", relative)
+            continue
+        if EXTERNAL_BATCH_PATH.fullmatch(relative):
+            mode = git(root, "ls-tree", head, "--", relative).split()
+            if status != "A" or not mode or mode[0] != "100644":
+                error("EXTERNAL_APPEND_ONLY", relative)
+            try:
+                validate_batch(relative, git(root, "show", f"{head}:{relative}", text=False))
+            except (TypeError, ValueError, UnicodeError):
+                error("EXTERNAL_BATCH_INVALID", relative)
             continue
         if status != "A" or not (RESULT_PATH.fullmatch(relative) or RESULT_PATH_V2.fullmatch(relative)):
             error("DIFF_APPEND_ONLY", f"{status}:{relative}")

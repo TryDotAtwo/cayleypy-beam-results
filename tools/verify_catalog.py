@@ -6,6 +6,7 @@ import time
 
 from tools.validate_result import validate_range, diff_changes, ValidationError, RESULT_PATH, RESULT_PATH_V2
 from tools.build_indexes import build
+from tools.validate_external_publication import PATH as EXTERNAL_BATCH_PATH, validate_batch
 
 
 def validate_source_changes(root: Path, base: str, head: str = "HEAD") -> None:
@@ -15,6 +16,14 @@ def validate_source_changes(root: Path, base: str, head: str = "HEAD") -> None:
             status != "A" or not (RESULT_PATH.fullmatch(relative) or RESULT_PATH_V2.fullmatch(relative))
         ):
             raise ValidationError("DIFF_APPEND_ONLY", f"{status}:{relative}")
+        if relative.startswith("external-solutions/accepted/"):
+            if status != "A" or not EXTERNAL_BATCH_PATH.fullmatch(relative):
+                raise ValidationError("EXTERNAL_APPEND_ONLY", relative)
+            from tools.validate_result import git
+            mode = git(root, "ls-tree", head, "--", relative).split()
+            if not mode or mode[0] != "100644":
+                raise ValidationError("EXTERNAL_MODE", relative)
+            validate_batch(relative, git(root, "show", f"{head}:{relative}", text=False))
         if relative == "data/.validation-cache.json":
             raise ValidationError("SOURCE_RECEIPT_EDIT", relative)
 
