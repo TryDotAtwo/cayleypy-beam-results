@@ -1,0 +1,17 @@
+{
+  "canonical_file": "solutions-from-0054.tsv",
+  "parts": [
+    {
+      "file": "solutions-from-0054-part-01.tsv",
+      "rows": 2895,
+      "bytes": 449965,
+      "sha256": "a9e412e5f34e7174e876d3ba4e58c3ba52d6c88caf8ede40d5cc64d4af5e8cb6"
+    },
+    {
+      "file": "solutions-from-0054-part-02.tsv",
+      "rows": 1858,
+      "bytes": 289928,
+      "sha256": "6bdb9f6a592bda23eefc0a66cbf680655773dff919edf74dc5897a49cd57ec80"
+    }
+  ]
+}

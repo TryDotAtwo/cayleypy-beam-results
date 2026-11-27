@@ -9,7 +9,7 @@ Moves are dot-separated in the original Kaggle notation. The solution ID matches
 | Puzzle IDs | Solutions | Git file |
 |---|---:|---|
 | 0–53 | 631 | [solutions-from-0000.tsv](solutions-from-0000.tsv) |
-| 54–54 | 4,753 | [solutions-from-0054.tsv](solutions-from-0054.tsv) |
+| 54–54 | 4,753 | [Part 1 (2,895)](solutions-from-0054-part-01.tsv) · [Part 2 (1,858)](solutions-from-0054-part-02.tsv) · [Full TSV](solutions-from-0054.tsv) |
 | 55–207 | 1,168 | [solutions-from-0055.tsv](solutions-from-0055.tsv) |
 | 208–287 | 695 | [solutions-from-0208.tsv](solutions-from-0208.tsv) |
 | 288–350 | 616 | [solutions-from-0288.tsv](solutions-from-0288.tsv) |

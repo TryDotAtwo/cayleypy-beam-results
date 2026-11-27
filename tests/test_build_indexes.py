@@ -472,3 +472,14 @@ def test_human_view_manifest_removes_stale_generated_files(tmp_path: Path) -> No
     rebuilt = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert rebuilt["paths"] == sorted(rebuilt["paths"])
     assert all((tmp_path / "data" / path).is_file() for path in rebuilt["paths"])
+
+def test_browse_pages_keep_every_encoded_row_in_order():
+    source = b"puzzle_id\tsolution\n1\tX\n1\tY\n9\tZ\n"
+    pages, links = builder.browse_pages(source, "index.tsv", max_rows=2, max_bytes=100)
+    chunks = [value for name, value in pages.items() if name.endswith(".tsv")]
+    assert [name for name in pages if name.endswith(".tsv")] == ["part-0001/index.tsv", "part-0002/index.tsv"]
+    assert chunks[0] + chunks[1].split(b"\n", 1)[1] == source
+    assert b"1-1" in links and b"9-9" in links and b"../index.tsv" in links
+    pages, _ = builder.browse_pages(source, "index.tsv", max_rows=100, max_bytes=24)
+    assert len(pages) == 3 and all(len(data) <= 24 for data in pages.values())
+    assert builder.browse_pages(source, "index.tsv", max_rows=3, max_bytes=100) == ({}, b"")

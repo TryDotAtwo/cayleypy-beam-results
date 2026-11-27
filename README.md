@@ -5,7 +5,7 @@ Browse recorded solutions by puzzle and instance. No installation is needed.
 | Puzzle | Browse instances | All solutions |
 |---|---|---|
 | Cube 4×4×4 | [Instances](data/cayley-py-444-cube/README.md) | [TSV](data/cayley-py-444-cube/index.tsv) |
-| Cube 5×5×5 | [Instances](data/cayley-py-555-cube/README.md) | [TSV](data/cayley-py-555-cube/index.tsv) |
+| Cube 5×5×5 | [Instances](data/cayley-py-555-cube/README.md) | [Browse](data/cayley-py-555-cube/browse/README.md) · [Download TSV](data/cayley-py-555-cube/index.tsv) |
 | Megaminx | [Instances](data/cayley-py-megaminx/README.md) | [TSV](data/cayley-py-megaminx/index.tsv) |
 | Professor Tetraminx | [Instances](data/cayley-py-professor-tetraminx-solve-optimally/README.md) | [TSV](data/cayley-py-professor-tetraminx-solve-optimally/index.tsv) |
 | IHES Cube | [Instances](data/cayleypy-ihes-cube/README.md) | [TSV](data/cayleypy-ihes-cube/index.tsv) |
