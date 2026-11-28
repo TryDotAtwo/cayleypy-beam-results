@@ -9,7 +9,7 @@
   "exports": {
     "GitHubWriter": { "type": "durable-object", "storage": "sqlite" }
   },
-  "triggers": { "crons": ["*/1 * * * *"] },
+  "triggers": { "crons": ["*/15 * * * *"] },
   "vars": {
     "INGEST_MODE": "normal",
     "REPO_OWNER": "TryDotAtwo",

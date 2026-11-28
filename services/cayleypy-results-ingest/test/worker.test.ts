@@ -741,6 +741,16 @@ describe("mode-gated scheduled recovery", () => {
       state: "staged",
     });
     expect(await env.RAW_RESULTS.head(row!.raw_r2_key)).toBeNull();
+
+    let repeatDeletes = 0;
+    const countingBucket = proxyBucket({
+      delete: async (...args: Parameters<R2Bucket["delete"]>) => {
+        repeatDeletes += 1;
+        return env.RAW_RESULTS.delete(...args);
+      },
+    });
+    await scheduled(controller(), customBindings("normal", { bucket: countingBucket }), context());
+    expect(repeatDeletes).toBe(0);
   });
   test.each(["store_only", "reject", undefined, "", "Normal", "unknown"])(
     "mode %s is a strict recovery no-op",

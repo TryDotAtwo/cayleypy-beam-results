@@ -8,7 +8,7 @@
   "exports": {
     "GitHubWriter": { "type": "durable-object", "storage": "sqlite" }
   },
-  "triggers": { "crons": ["*/1 * * * *"] },
+  "triggers": { "crons": ["*/15 * * * *"] },
   "vars": {
     "INGEST_MODE": "reject",
     "REPO_OWNER": "TryDotAtwo",
@@ -40,7 +40,7 @@
       "durable_objects": {
         "bindings": [{ "name": "GITHUB_WRITER", "class_name": "GitHubWriter" }]
       },
-      "triggers": { "crons": ["*/1 * * * *"] },
+      "triggers": { "crons": ["*/15 * * * *"] },
       "vars": {
         "INGEST_MODE": "store_only",
         "REPO_OWNER": "TryDotAtwo",
@@ -72,7 +72,7 @@
       "durable_objects": {
         "bindings": [{ "name": "GITHUB_WRITER", "class_name": "GitHubWriter" }]
       },
-      "triggers": { "crons": ["*/1 * * * *"] },
+      "triggers": { "crons": ["*/15 * * * *"] },
       "vars": {
         "INGEST_MODE": "reject",
         "REPO_OWNER": "TryDotAtwo",

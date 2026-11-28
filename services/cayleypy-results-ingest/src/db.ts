@@ -83,10 +83,17 @@ export async function findValidatedSubmissions(db: D1Database, limit: number): P
 
 export async function findStagedSubmissions(db: D1Database, limit: number): Promise<SubmissionRow[]> {
   const result = await db
-    .prepare("SELECT submission_id, idempotency_key, run_id, author_name, competition, puzzle_type, puzzle_id, state, raw_r2_key, safe_error, retry_count, updated_at, github_path, github_commit_sha FROM submissions WHERE state IN (?,?) ORDER BY updated_at, submission_id LIMIT ?")
+    .prepare("SELECT submission_id, idempotency_key, run_id, author_name, competition, puzzle_type, puzzle_id, state, raw_r2_key, safe_error, retry_count, updated_at, github_path, github_commit_sha FROM submissions WHERE state IN (?,?) AND raw_r2_key NOT LIKE 'cleaned:%' ORDER BY updated_at, submission_id LIMIT ?")
     .bind("staged", "published", limit)
     .all<SubmissionRow>();
   return result.results;
+}
+
+export async function markRawCleaned(db: D1Database, id: string): Promise<void> {
+  await db
+    .prepare("UPDATE submissions SET raw_r2_key = 'cleaned:' || submission_id WHERE submission_id = ? AND state IN (?,?) AND raw_r2_key NOT LIKE 'cleaned:%'")
+    .bind(id, "staged", "published")
+    .run();
 }
 
 export async function deleteStagedSubmission(db: D1Database, id: string): Promise<boolean> {
